@@ -33,57 +33,115 @@
 /**
  * Main class for the wcs payment plugin
  */
-class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway
-{
+class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
-    public function __construct()
-    {
-        $this->id = 'wirecard_checkout_seamless';
-        $this->icon = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/icon.png';
-        $this->has_fields = true;
-        $this->method_title = __('Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless');
-        $this->method_description = __(
-            'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source <br>' .
-            'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-            'woocommerce-wirecard-checkout-seamless'
-        );
+	public function __construct() {
+		$this->id                 = 'woocommerce_wirecard_checkout_seamless';
+		$this->icon               = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/icon.png';
+		$this->has_fields         = true;
+		$this->method_title       = __( 'Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless' );
+		$this->method_description = __(
+			'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source <br>' .
+			'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
+			'woocommerce-wirecard-checkout-seamless'
+		);
 
-        $this->init_form_fields();
-        $this->init_settings();
-    }
+		$this->init_form_fields();
+		$this->init_settings();
 
-    function init_form_fields()
-    {
-    }
+		$this->title = $this->settings['title'];
+	}
 
-    function process_payment($order_id)
-    {
-    }
+	/**
+	 * Initialize Gateway Settings Form Fields
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	function init_form_fields() {
+		$this->form_fields = array(
+			'enabled' => array(
+				'title' => __('Enable/Disable', 'woocommerce-wirecard-checkout-seamless'),
+				'type' => 'checkbox',
+				'label' => __('Enable Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless'),
+				'default' => 'yes'
+			),
+			'title' => array(
+				'title' => __('Title', 'woocommerce-wirecard-checkout-seamless'),
+				'type' => 'text',
+				'description' => __('This controls the titlte which the user sees during checkout', 'woocommerce-wirecard-checkout-seamless'),
+				'default' => __('Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless'),
+				'desc_tip' => true
+			)
+		);
+	}
 
-    /**
-     * displays form for e.g. credit card data
-     */
-    function payment_fields()
-    {
-    }
+	/**
+	 * Handles payment and processes the order
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order_id
+	 *
+	 * @return array
+	 */
+	function process_payment( $order_id ) {
+		global $woocommerce;
 
-    /**
-     * validate input data from payment_fields
-     *
-     * @return boolean
-     */
-    function validate_fields()
-    {
-        // call wd_add_notice('text'); if you want to show an error message to user
+		//TODO: Check for response state and implement behavior according to this
 
-        // return true if form validation ok
-        // return false if validation fails
-    }
+		/* if payment fails add notice
+		wc_add_notice( __('Payment error:', 'woothemes') . $error_message, 'error' );
+		return; */
 
-    /**
-     * validate response from server and edit payment informations
-     */
-    function confirm()
-    {
-    }
+		// Create order
+		//TODO: Create only for success and pending
+		$order = new WC_Order($order_id);
+
+		// Update order status
+		$order->update_status('on-hold', __('Awaiting cheque payment', 'woocommerce'));
+		// Complete order if auto deposit
+		// $order->payment_complete();
+
+		//TODO: Add order note for internal comment
+		// $order->add_order_note( __('Here should be the response information', 'woothemes') );
+
+		// Reduce stock levels
+		$order->reduce_order_stock();
+
+		// Remove cart
+		$woocommerce->cart->empty_cart();
+
+		// Return thankyou redirect
+		//TODO: Implement redirection for pending, cancel, failure
+		return array(
+			'result' => 'success',
+			'redirect' => $this->get_return_url( $order )
+		);
+	}
+
+	/**
+	 * displays form for e.g. credit card data
+	 */
+	function payment_fields() {
+	}
+
+	/**
+	 * validate input data from payment_fields
+	 *
+	 * @return boolean
+	 */
+	function validate_fields() {
+		// call wd_add_notice('text'); if you want to show an error message to user
+
+		// return true if form validation ok
+		// return false if validation fails
+	}
+
+	/**
+	 * validate response from server and edit payment informations
+	 */
+	function confirm() {
+	}
 }
