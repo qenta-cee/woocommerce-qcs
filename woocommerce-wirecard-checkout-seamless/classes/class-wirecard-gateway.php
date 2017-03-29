@@ -31,25 +31,22 @@
  */
 
 /**
- * Main class for the wcs payment plugin
+ * Class WC_Gateway_Wirecard_Checkout_Seamless
  */
-class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
+class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	public function __construct() {
-		$this->id                 = 'woocommerce_wirecard_checkout_seamless';
-		$this->icon               = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/icon.png';
-		$this->has_fields         = true;
-		$this->method_title       = __( 'Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless' );
-		$this->method_description = __(
-			'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source <br>' .
-			'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-			'woocommerce-wirecard-checkout-seamless'
-		);
-
+		$this->has_fields = true;
 		$this->init_form_fields();
+		$this->payment_name = '';
 		$this->init_settings();
 
 		$this->title = $this->settings['title'];
+
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+			$this,
+			'process_admin_options'
+		) );
 	}
 
 	/**
@@ -61,20 +58,44 @@ class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function init_form_fields() {
 		$this->form_fields = array(
-			'enabled' => array(
-				'title' => __('Enable/Disable', 'woocommerce-wirecard-checkout-seamless'),
-				'type' => 'checkbox',
-				'label' => __('Enable Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless'),
+			'enabled'    => array(
+				'title'   => __( 'Enable/Disable', 'woocommerce-wirecard-checkout-seamless' ),
+				'type'    => 'checkbox',
+				'label'   => __( 'Enable Wirecard Checkout Seamless ' . $this->payment_name,
+					'woocommerce-wirecard-checkout-seamless' ),
 				'default' => 'yes'
 			),
-			'title' => array(
-				'title' => __('Title', 'woocommerce-wirecard-checkout-seamless'),
-				'type' => 'text',
-				'description' => __('This controls the titlte which the user sees during checkout', 'woocommerce-wirecard-checkout-seamless'),
-				'default' => __('Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless'),
-				'desc_tip' => true
+			'title'      => array(
+				'title'       => __( 'Title', 'woocommerce-wirecard-checkout-seamless' ),
+				'type'        => 'text',
+				'description' => __( 'This controls the titlte which the user sees during checkout',
+					'woocommerce-wirecard-checkout-seamless' ),
+				'default'     => __( 'Wirecard Checkout Seamless ' . $this->payment_name,
+					'woocommerce-wirecard-checkout-seamless' ),
+				'desc_tip'    => true
+			),
+			'customerId' => array(
+				'title'   => __( 'CustomerId', 'woocommerce-wirecard-checkout-seamless' ),
+				'type'    => 'text',
+				'default' => 'D200001'
 			)
 		);
+	}
+
+	/**
+	 * Admin Panel Options.
+	 *
+	 * @since 1.0.0
+	 */
+	public function admin_options() {
+		?>
+		<h3><?php echo ( ! empty( $this->method_title ) ) ? $this->method_title : __( 'Settings',
+				'woocommerce-wirecard-checkout-seamless' ); ?></h3>
+		<?php echo ( ! empty( $this->method_description ) ) ? wpautop( $this->method_description ) : ''; ?>
+		<table class="form-table">
+			<?php $this->generate_settings_html(); // Generate the HTML For the settings form. ?>
+		</table>
+		<?php
 	}
 
 	/**
@@ -97,10 +118,10 @@ class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		// Create order
 		//TODO: Create only for success and pending
-		$order = new WC_Order($order_id);
+		$order = new WC_Order( $order_id );
 
 		// Update order status
-		$order->update_status('on-hold', __('Awaiting cheque payment', 'woocommerce'));
+		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
 		// Complete order if auto deposit
 		// $order->payment_complete();
 
@@ -116,7 +137,7 @@ class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		// Return thankyou redirect
 		//TODO: Implement redirection for pending, cancel, failure
 		return array(
-			'result' => 'success',
+			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order )
 		);
 	}
