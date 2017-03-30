@@ -30,6 +30,9 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+define('WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless');
+define('WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0');
+
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
  */
@@ -79,6 +82,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				'type'    => 'text',
 				'default' => 'D200001'
 			)
+			//TODO: Add all desired setting fields
 		);
 	}
 
@@ -119,6 +123,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		// Create order
 		//TODO: Create only for success and pending
 		$order = new WC_Order( $order_id );
+		//$payment_type = WirecardCEE_QMore_PaymentType::CCARD;
+		//$redirect = $this->initiate_payment($order, $payment_type);
 
 		// Update order status
 		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
