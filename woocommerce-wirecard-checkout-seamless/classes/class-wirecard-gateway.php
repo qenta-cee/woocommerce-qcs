@@ -30,8 +30,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-define('WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless');
-define('WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0');
+define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -50,6 +50,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$this,
 			'process_admin_options'
 		) );
+
+		// Payment listener/API hook
+		add_action(
+			'woocommerce_api_wc_gateway_wirecard_checkout_seamless',
+			array(
+				$this,
+				'dispatch_callback'
+			)
+		);
 	}
 
 	/**
@@ -114,38 +123,200 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function process_payment( $order_id ) {
 		global $woocommerce;
 
-		//TODO: Check for response state and implement behavior according to this
-
-		/* if payment fails add notice
-		wc_add_notice( __('Payment error:', 'woothemes') . $error_message, 'error' );
-		return; */
-
-		// Create order
-		//TODO: Create only for success and pending
 		$order = new WC_Order( $order_id );
-		//$payment_type = WirecardCEE_QMore_PaymentType::CCARD;
-		//$redirect = $this->initiate_payment($order, $payment_type);
+		// CCARD for Testing
+		$payment_type = WirecardCEE_QMore_PaymentType::CCARD;
 
-		// Update order status
-		$order->update_status( 'on-hold', __( 'Awaiting cheque payment', 'woocommerce' ) );
-		// Complete order if auto deposit
-		// $order->payment_complete();
+		$redirect = $this->initiate_payment( $order, $payment_type );
 
-		//TODO: Add order note for internal comment
-		// $order->add_order_note( __('Here should be the response information', 'woothemes') );
+		if ( ! $redirect ) {
+			return;
+		}
 
-		// Reduce stock levels
-		$order->reduce_order_stock();
-
-		// Remove cart
-		$woocommerce->cart->empty_cart();
-
-		// Return thankyou redirect
-		//TODO: Implement redirection for pending, cancel, failure
 		return array(
 			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order )
+			'redirect' => $redirect
 		);
+	}
+
+	/**
+	 * Initialization of Wirecard payment
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order
+	 * @param $payment_type
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	function initiate_payment( $order, $payment_type ) {
+
+		if ( isset( WC()->session->wirecard_checkout_seamless_redirect_url ) && WC()->session->wirecard_checkout_seamless_redirect_url['id'] == $order->id ) {
+			return WC()->session->wirecard_checkout_seamless_redirect_url['url'];
+		}
+
+		try {
+			$client = new WirecardCEE_QMore_FrontendClient(
+				array(
+					'CUSTOMER_ID' => 'D200001',
+					'SHOP_ID'     => 'seamless',
+					'SECRET'      => 'B8AKTPWBRMNBV455FG6M2DANE99WU2',
+					'LANGUAGE'    => 'en'
+				)
+			);
+
+			$version = WirecardCEE_QMore_FrontendClient::generatePluginVersion(
+				'wordpress_woocommerce',
+				WC()->version,
+				WOOCOMMERCE_GATEWAY_WCS_NAME,
+				WOOCOMMERCE_GATEWAY_WCS_VERSION
+			);
+
+			$client->setPluginVersion( $version );
+
+			//TODO: Create orderReference
+			$client->setOrderReference( sprintf( 'Configtest #', uniqid() ) );
+
+			$returnUrl = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
+				site_url( '/', is_ssl() ? 'https' : 'http' ) );
+
+			//TODO: Create consumerData
+			$consumerData = new WirecardCEE_Stdlib_ConsumerData();
+			$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] )->setIpAddress( $_SERVER['REMOTE_ADDR'] );
+
+			//TODO: Add specific values
+			$client->setAmount( '10' )
+			       ->setCurrency( 'EUR' )
+			       ->setPaymentType( $payment_type )
+			       ->setOrderDescription( 'Configtest #' . uniqid() )
+			       ->setSuccessUrl( $returnUrl )
+			       ->setPendingUrl( $returnUrl )
+			       ->setCancelUrl( $returnUrl )
+			       ->setFailureUrl( $returnUrl )
+			       ->setConfirmUrl( $returnUrl )
+			       ->setServiceUrl( $returnUrl )
+			       ->setConsumerData( $consumerData );
+
+			$client->wooOrderId = $order->id;
+			$initResponse       = $client->initiate();
+
+			if ( $initResponse->hasFailed() ) {
+				wc_add_notice(
+					__( "Response failed! Error: {$initResponse->getError()->getMessage()}", 'woocommerce-wcs' ),
+					'error'
+				);
+			}
+		} catch ( Exception $e ) {
+			throw ( $e );
+		}
+
+		WC()->session->wirecard_checkout_seamless_redirect_url = array( 'id'  => $order->id,
+		                                                                'url' => $initResponse->getRedirectUrl()
+		);
+
+		return $initResponse->getRedirectUrl();
+	}
+
+	function dispatch_callback() {
+		if ( isset( WC()->session->chosen_payment_method ) ) {
+			$redirectUrl = $this->get_return_url();
+			header( 'Location: ' . $redirectUrl );
+		} else {
+			print $this->confirm();
+		}
+		die();
+	}
+
+	/**
+	 * Validate response from server and edit payment informations
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	function confirm() {
+		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
+			$message = 'order-id missing';
+
+			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		}
+		$order_id = $_REQUEST['wooOrderId'];
+		$order    = new WC_Order( $order_id );
+		if ( ! $order->id ) {
+			$message = "order with id `$order->id` not found";
+
+			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		}
+
+		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
+			$message = "cannot change the order with id `$order->id`";
+
+			return WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
+		}
+
+		// Handle paymentdata for order
+		$str = '';
+		foreach ( $_POST as $k => $v ) {
+			$str .= "$k:$v\n";
+		}
+		$str = trim( $str );
+
+		update_post_meta( $order->id, 'wcs_data', $str );
+
+		$message = null;
+		try {
+			//TODO: Use specific secret
+			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, 'B8AKTPWBRMNBV455FG6M2DANE99WU2' );
+			if ( ! $return->validate() ) {
+				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
+				$order->update_status( 'failed', $message );
+
+				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			}
+
+			update_post_meta( $order->id, 'wcs_payment_state', $return->getPaymentState() );
+
+			//TODO: Handle specific paymentstate
+			switch ( $return->getPaymentState() ) {
+				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
+					update_post_meta( $order->id, 'wcs_gateway_reference_number',
+						$return->getGatewayReferenceNumber() );
+					update_post_meta( $order->id, 'wcs_order_number', $return->getOrderNumber() );
+					$order->payment_complete();
+					break;
+				default:
+					break;
+			}
+		} catch ( Exception $e ) {
+			$order->update_status( 'failed', $e->getMessage() );
+			$message = $e->getMessage();
+		}
+
+		return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+	}
+
+	/**
+	 * Handle return URL
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param null $order
+	 *
+	 * @return mixed|void
+	 */
+	public function get_return_url( $order = null ) {
+		if ( $order ) {
+			$return_url = $order->get_checkout_order_received_url();
+		} else {
+			$return_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
+		}
+
+		if ( is_ssl() || get_option( 'woocommerce_force_ssl_checkout' ) == 'yes' ) {
+			$return_url = str_replace( 'http:', 'https:', $return_url );
+		}
+
+		return apply_filters( 'woocommerce_get_return_url', $return_url, $order );
 	}
 
 	/**
@@ -166,9 +337,4 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		// return false if validation fails
 	}
 
-	/**
-	 * validate response from server and edit payment informations
-	 */
-	function confirm() {
-	}
 }
