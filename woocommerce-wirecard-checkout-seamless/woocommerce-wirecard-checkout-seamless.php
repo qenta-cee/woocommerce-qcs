@@ -1,5 +1,15 @@
 <?php
 /**
+ * Plugin Name: Wirecard Checkout Seamless
+ * Plugin URI: https://github.com/wirecard/woocommerce-wcs
+ * Description: Wirecard Checkout Seamless plugin for WooCommerce
+ * Version: 1.0.0
+ * Author: Wirecard
+ * Author URI: https://www.wirecard.at/
+ * License: GPL2
+ */
+
+/**
  * Shop System Plugins - Terms of Use
  *
  * The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH
@@ -30,51 +40,53 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-if (!defined('ABSPATH')) {
-    // if accessed directly
-    exit;
-}
-
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-    // if woocommerce not available
-    return;
+if ( ! defined( 'ABSPATH' ) ) {
+	// if accessed directly
+	exit;
 }
 
 /**
  *
  */
-define('WOOCOMMERCE_GATEWAY_WCS_BASEDIR', plugin_dir_path(__FILE__));
-define('WOOCOMMERCE_GATEWAY_WCS_URL', plugin_dir_url(__FILE__));
+define( 'WOOCOMMERCE_GATEWAY_WCS_BASEDIR', plugin_dir_path( __FILE__ ) );
+define( 'WOOCOMMERCE_GATEWAY_WCS_URL', plugin_dir_url( __FILE__ ) );
 
 load_plugin_textdomain(
-    'woocommerce-wirecard-checkout-seamless', false, dirname(plugin_basename(__FILE__)) . '/languages'
+	'woocommerce-wirecard-checkout-seamless', false, dirname( plugin_basename( __FILE__ ) ) . '/languages'
 );
 
-add_action('plugins_loaded', 'init_woocommerce_wcs_gateway', 0);
+add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
 
 /**
- * include the Wc_Gateway_WIrecard_Checkout_Seamless.php
+ * Intialize the Wirecard payment gateway
+ *
+ * Intialization only possible if WooCommerce base gateway exists
+ *
+ * @since 1.0.0
  */
-function init_woocommerce_wcs_gateway()
-{
-    if (!class_exists('WC_Payment_Gateway')) {
-        return;
-    }
+function init_woocommerce_wcs_gateway() {
+	if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+		return;
+	}
 
-    require_once(WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'Wc_Gateway_Wirecard_Checkout_Seamless.php');
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-creditcard.php' );
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'vendor/autoload.php' );
 
-
-    add_filter('woocommerce_payment_gateways', 'woocommerce_add_wirecard_checkout_seamless');
+	add_filter( 'woocommerce_payment_gateways', 'add_wirecard_checkout_seamless', 0 );
 }
 
 /**
- * this method allows our plugin to be recognized as a payment gateway
+ * Define possible Wirecard gateways for WooCommerce
+ *
+ * @since 1.0.0
  *
  * @param $methods
+ *
  * @return array
  */
-function woocommerce_add_wirecard_checkout_seamless($methods)
-{
-    $methods[] = 'WC_Gateway_WCS';
-    return $methods;
+function add_wirecard_checkout_seamless( $methods ) {
+	$methods[] = 'WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card';
+
+	return $methods;
 }

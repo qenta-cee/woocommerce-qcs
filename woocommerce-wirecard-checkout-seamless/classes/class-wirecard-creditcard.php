@@ -30,60 +30,28 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
- * Main class for the wcs payment plugin
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
  */
-class Wc_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway
-{
+class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card extends WC_Gateway_Wirecard_Checkout_Seamless {
 
-    public function __construct()
-    {
-        $this->id = 'wirecard_checkout_seamless';
-        $this->icon = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/icon.png';
-        $this->has_fields = true;
-        $this->method_title = __('Wirecard Checkout Seamless', 'woocommerce-wirecard-checkout-seamless');
-        $this->method_description = __(
-            'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source <br>' .
-            'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-            'woocommerce-wirecard-checkout-seamless'
-        );
 
-        $this->init_form_fields();
-        $this->init_settings();
-    }
+	public function __construct() {
+		$this->payment_name       = 'Credit Card';
+		$this->id                 = 'woocommerce_wcs_credit_card';
+		$this->icon               = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/payments/cc.png';
+		$this->method_title       = __( 'Wirecard Checkout Seamless Credit Card',
+			'woocommerce-wirecard-checkout-seamless' );
+		$this->method_description = __(
+			'Wirecard Checkout Seamless Credit Card',
+			'woocommerce-wirecard-checkout-seamless'
+		);
 
-    function init_form_fields()
-    {
-    }
+		parent::__construct();
+	}
 
-    function process_payment($order_id)
-    {
-    }
-
-    /**
-     * displays form for e.g. credit card data
-     */
-    function payment_fields()
-    {
-    }
-
-    /**
-     * validate input data from payment_fields
-     *
-     * @return boolean
-     */
-    function validate_fields()
-    {
-        // call wd_add_notice('text'); if you want to show an error message to user
-
-        // return true if form validation ok
-        // return false if validation fails
-    }
-
-    /**
-     * validate response from server and edit payment informations
-     */
-    function confirm()
-    {
-    }
 }
