@@ -70,7 +70,6 @@ function init_woocommerce_wcs_gateway() {
 	}
 
 	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
-	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-creditcard.php' );
 	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'vendor/autoload.php' );
 
 	add_filter( 'woocommerce_payment_gateways', 'add_wirecard_checkout_seamless', 0 );
@@ -86,7 +85,7 @@ function init_woocommerce_wcs_gateway() {
  * @return array
  */
 function add_wirecard_checkout_seamless( $methods ) {
-	$methods[] = 'WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card';
+	$methods[] = 'WC_Gateway_Wirecard_Checkout_Seamless';
 
 	return $methods;
 }

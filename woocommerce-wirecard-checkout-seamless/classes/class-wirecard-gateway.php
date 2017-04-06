@@ -39,6 +39,12 @@ define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
 class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	public function __construct() {
+
+
+		$this->id = "woocommerce_wcs";
+		$this->method_title = "Wirecard Checkout Seamless";
+
+
 		$this->has_fields = true;
 		$this->init_form_fields();
 		$this->payment_name = '';
@@ -102,8 +108,81 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 		?>
+		<style>
+			nav.wcs-tabs > a, nav.wcs-tabs > a:hover, nav.wcs-tabs > a:active, nav.wcs-tabs > a:focus {
+				background-color: #fff;
+			}
+
+			nav.wcs-tabs > a.nav-tab-active {
+				border-bottom: 1px solid #fff;
+			}
+
+			.tab-content.panel {
+				margin-top:-13px;
+				border-radius: 0 0 3px 3px;
+				border: 1px solid #ccc;
+				border-top: none;
+				background-color: #fff;
+				padding: 20px 20px;
+			}
+
+			.tab-content.panel > .tab-pane {
+				 display:none;
+			 }
+
+			.tab-content.panel > .tab-pane.active {
+				display:block;
+			}
+		</style>
+
+        <script>
+            wpOnload = function () {
+                var tabs = document.querySelectorAll("nav > a[data-target]");
+                var removeClass = function (el, cls) {
+                    var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+                    if (el.className.match(reg)) {
+                        el.className = el.className.replace(reg, ' ');
+                    }
+                };
+                for (var i = 0; i < tabs.length; i++) {
+                    tabs[i].addEventListener('click', function () {
+                        removeClass(document.querySelector("nav > a[data-target].nav-tab-active"),'nav-tab-active');
+                        removeClass(document.querySelector(".tab-content.panel > .tab-pane.active"), 'active');
+                        this.className = this.className + ' nav-tab-active';
+                        var tabPane = document.querySelector(".tab-content.panel > .tab-pane" + this.getAttribute('data-target'));
+                        tabPane.className = tabPane.className + ' active';
+                    });
+                }
+            }
+        </script>
 		<h3><?php echo ( ! empty( $this->method_title ) ) ? $this->method_title : __( 'Settings',
-				'woocommerce-wirecard-checkout-seamless' ); ?></h3>
+																					  'woocommerce-wirecard-checkout-seamless' ); ?></h3>
+
+		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
+			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?=__('Access data', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#options" class="nav-tab "><?=__('General settings', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#creditcardoptions" class="nav-tab "><?=__('Credit card', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#invoiceoptions" class="nav-tab "><?=__('Invoice', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#installmentoptions" class="nav-tab "><?=__('Installment', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#standardpayments" class="nav-tab "><?=__('Standard payments', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#bankingpayments" class="nav-tab "><?=__('Banking payments', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#alternativepayments" class="nav-tab "><?=__('Alternative payments', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?=__('Mobile payments', 'woocommerce-wirecard-checkout-seamless')?></a>
+			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?=__('Voucher payments', 'woocommerce-wirecard-checkout-seamless')?></a>
+		</nav>
+		<div class="tab-content panel">
+			<div class="tab-pane active" id="basicdata"></div>
+			<div class="tab-pane" id="options"></div>
+			<div class="tab-pane" id="creditcardoptions"></div>
+			<div class="tab-pane" id="invoiceoptions"></div>
+			<div class="tab-pane" id="installmentoptions"></div>
+			<div class="tab-pane" id="standardpayments"></div>
+			<div class="tab-pane" id="bankingpayments"></div>
+			<div class="tab-pane" id="alternativepayments"></div>
+			<div class="tab-pane" id="mobilepayments"></div>
+			<div class="tab-pane" id="voucherpayments"></div>
+		</div>
+
 		<?php echo ( ! empty( $this->method_description ) ) ? wpautop( $this->method_description ) : ''; ?>
 		<table class="form-table">
 			<?php $this->generate_settings_html(); // Generate the HTML For the settings form. ?>
