@@ -101,7 +101,12 @@ nav.wcs-tabs > a.nav-tab-active {
 
 .tab-content.panel > .tab-pane.active { display: block; }
 
-div.woocommerce-wirecard-checkout-seamless-settings-header-wrapper {
-    min-width:700px;
+div.woo-wcs-settings-header-wrapper {
+    margin: auto;
+    min-width:200px;
     max-width:1024px;
+}
+
+div.woo-wcs-settings-header-wrapper p:first-of-type {
+    text-transform: uppercase;
 }
