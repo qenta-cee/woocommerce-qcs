@@ -123,3 +123,7 @@
 .woo-wcs-settings-header-wrapper p:first-of-type {
     text-transform: uppercase;
 }
+
+.titledesc {
+    text-align: right;
+}
