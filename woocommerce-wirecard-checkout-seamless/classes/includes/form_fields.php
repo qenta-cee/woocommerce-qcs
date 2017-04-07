@@ -31,12 +31,15 @@
  */
 
 $user_roles = array();
-foreach(get_editable_roles() as $role=>$details){
-	$user_roles[$role] = translate_user_role( $details['name']);
+foreach ( get_editable_roles() as $role => $details ) {
+	$user_roles[ $role ] = translate_user_role( $details['name'] );
 }
 
+$countries_obj = new WC_Countries();
+$countries     = $countries_obj->__get( 'countries' );
+
 $fields = array(
-	'basicdata'         => array(
+	'basicdata'           => array(
 		'woo_wcs_configuration'   => array(
 			'title'       => __( 'Configuration', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'select',
@@ -83,7 +86,7 @@ $fields = array(
 			)
 		)
 	),
-	'options'           => array(
+	'options'             => array(
 		'woo_wcs_createorders'                  => array(
 			'title'       => __( 'Create orders', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __(
@@ -177,7 +180,7 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			                     'woocommerce-wirecard-checkout-seamless' )
 		)
 	),
-	'creditcardoptions' => array(
+	'creditcardoptions'   => array(
 		'woo_wcs_saqacompliance'                         => array(
 			'type'        => 'switch',
 			'title'       => __( 'SAQ A compliance', 'woocommerce-wirecard-checkout-seamless' ),
@@ -189,7 +192,7 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'title'       => __( 'Allowing MoTo for group', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop.',
 			                     'woocommerce-wirecard-checkout-seamless' ),
-			'options' =>  $user_roles
+			'options'     => $user_roles
 		),
 		'woo_wcs_iframecssurl'                           => array(
 			'title'       => __( 'Credit card number placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
@@ -251,5 +254,108 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'description' => __( 'Display input field to enter the credit card issue number in your credit card form during the checkout process. Some credit cards do not have an issue number.',
 			                     'woocommerce-wirecard-checkout-seamless' )
 		)
-	)
+	),
+	'invoiceoptions'      => array(
+		'woo_wcs_invoiceprovider'                   => array(
+			'type'    => 'select',
+			'title'   => __( 'Invoice provider', 'woocommerce-wirecard-checkout-seamless' ),
+			'options' => array( 'wirecard' => 'Wirecard', 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
+		),
+		'woo_wcs_invoice_billing_shipping_equal'    => array(
+			'type'  => 'switch',
+			'title' => __( 'Billing/shipping address musst be identical', 'woocommerce-wirecard-checkout-seamless' )
+		),
+		'woo_wcs_invoice_allowed_billing_countries' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Allowed billing countries', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => $countries,
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_invoice_allowed_shipping_countries' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Allowed shipping countries', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => $countries,
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_invoice_accepted_currencies' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Accepted currencies', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => get_woocommerce_currencies(),
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_invoice_min_age' => array(
+			'title' => __('Minimum age', 'woocommerce-wirecard-checkout-seamless'),
+			'description' => __( 'Only applicable for RatePay', 'woocommerce-wirecard-checkout-seamless'),
+			'custom_attributes' => array('maxlength' => 3 )
+		),
+		'woo_wcs_invoice_min_amount' => array(
+			'title' => __('Minimum amount', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_invoice_max_amount' => array(
+			'title' => __('Maximum amount', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_invoice_min_basket_size' => array(
+			'title' => __('Minimum basket size', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_invoice_max_basket_size' => array(
+			'title' => __('Maximum basket size', 'woocommerce-wirecard-checkout-seamless')
+		)
+	),
+	'installmentoptions'       => array(
+		'woo_wcs_installmentprovider'                   => array(
+			'type'    => 'select',
+			'title'   => __( 'Installment provider', 'woocommerce-wirecard-checkout-seamless' ),
+			'options' => array( 'wirecard' => 'Wirecard', 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
+		),
+		'woo_wcs_installment_billing_shipping_equal'    => array(
+			'type'  => 'switch',
+			'title' => __( 'Billing/shipping address musst be identical', 'woocommerce-wirecard-checkout-seamless' )
+		),
+		'woo_wcs_installment_allowed_billing_countries' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Allowed billing countries', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => $countries,
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_installment_allowed_shipping_countries' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Allowed shipping countries', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => $countries,
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_installment_accepted_currencies' => array(
+			'type'           => 'multiselect',
+			'title'          => __( 'Accepted currencies', 'woocommerce-wirecard-checkout-seamless' ),
+			'options'        => get_woocommerce_currencies(),
+			'multiple'       => true,
+			'select_buttons' => true
+		),
+		'woo_wcs_installment_min_age' => array(
+			'title' => __('Minimum age', 'woocommerce-wirecard-checkout-seamless'),
+			'description' => __( 'Only applicable for RatePay', 'woocommerce-wirecard-checkout-seamless'),
+			'custom_attributes' => array('maxlength' => 3 )
+		),
+		'woo_wcs_installment_min_amount' => array(
+			'title' => __('Minimum amount', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_installment_max_amount' => array(
+			'title' => __('Maximum amount', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_installment_min_basket_size' => array(
+			'title' => __('Minimum basket size', 'woocommerce-wirecard-checkout-seamless')
+		),
+		'woo_wcs_installment_max_basket_size' => array(
+			'title' => __('Maximum basket size', 'woocommerce-wirecard-checkout-seamless')
+		)
+	),
+	'standardpayments'    => array(),
+	'bankingpayments'     => array(),
+	'alternativepayments' => array(),
+	'mobilepayments'      => array(),
+	'voucherpayments'     => array()
 );

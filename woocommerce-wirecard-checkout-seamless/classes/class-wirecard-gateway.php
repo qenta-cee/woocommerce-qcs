@@ -40,11 +40,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	public function __construct() {
 
-
 		$this->id           = "woocommerce_wcs";
 		$this->method_title = "Wirecard Checkout Seamless";
-
-
 		$this->has_fields   = true;
 		$this->payment_name = '';
 		$this->init_form_fields();
@@ -200,13 +197,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			<p><?= __( 'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source',
 			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
 
-			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic
-				payment transactions.',
+			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
 			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
 
-			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business
-				development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made
-				us Austria´s leading payment service provider. Customization, competence, and commitment.',
+			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
 			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
 
 
