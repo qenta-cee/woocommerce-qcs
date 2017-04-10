@@ -459,6 +459,15 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'type' => 'switch'
 		)
 	),
-	'mobilepayments'      => array(),
+	'mobilepayments'      => array(
+		'woo_wcs_paybox_enable' => array(
+			'title' => __('paybox', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_mpass_enable' => array(
+			'title' => __('mpass', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		)
+	),
 	'voucherpayments'     => array()
 );
