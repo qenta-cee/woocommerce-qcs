@@ -469,5 +469,10 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'type' => 'switch'
 		)
 	),
-	'voucherpayments'     => array()
+	'voucherpayments'     => array(
+		'woo_wcs_myvoucher_enable' => array(
+			'title' => __('My Voucher', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		)
+	)
 );
