@@ -353,7 +353,40 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'title' => __('Maximum basket size', 'woocommerce-wirecard-checkout-seamless')
 		)
 	),
-	'standardpayments'    => array(),
+	'standardpayments'    => array(
+		'woo_wcs_creditcard_enable' => array(
+			'title' => __('Credit Card', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_creditcardmoto_enable' => array(
+			'title' => __('Credit Card - Mail Order and Telephone Order', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_maestro_enable' => array(
+			'title' => __('Maestro SecureCode', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_sofort_enable' => array(
+			'title' => __('SOFORT Banking', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_paypal_enable' => array(
+			'title' => __('PayPal', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_sepadd_enable' => array(
+			'title' => __('SEPA Direct Debit', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_invoice_enable' => array(
+			'title' => __('Invoice', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_invoiceb2b_enable' => array(
+			'title' => __('Invoice B2B', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		)
+	),
 	'bankingpayments'     => array(),
 	'alternativepayments' => array(),
 	'mobilepayments'      => array(),
