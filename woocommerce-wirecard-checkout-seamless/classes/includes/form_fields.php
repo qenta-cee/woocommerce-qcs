@@ -387,7 +387,52 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'type' => 'switch'
 		)
 	),
-	'bankingpayments'     => array(),
+	'bankingpayments'     => array(
+		'woo_wcs_eps_enable' => array(
+			'title' => __('eps-Überweisung', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_ideal_enable' => array(
+			'title' => __('iDEAL', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_giropay_enable' => array(
+			'title' => __('giropay', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_tatrapay_enable' => array(
+			'title' => __('TatraPay', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_trustpay_enable' => array(
+			'title' => __('TrustPay', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_bancontactmistercash_enable' => array(
+			'title' => __('Bancontact/Mister Cash', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_poli_enable' => array(
+			'title' => __('POLi', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_przelewy24_enable' => array(
+			'title' => __('Przelewy24', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_ekonto_enable' => array(
+			'title' => __('eKonto', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_trustly_enable' => array(
+			'title' => __('Trustly', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_skrilldirect_enable' => array(
+			'title' => __('Skrill Direct', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+	),
 	'alternativepayments' => array(),
 	'mobilepayments'      => array(),
 	'voucherpayments'     => array()
