@@ -431,9 +431,34 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		'woo_wcs_skrilldirect_enable' => array(
 			'title' => __('Skrill Direct', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
-		),
+		)
 	),
-	'alternativepayments' => array(),
+	'alternativepayments' => array(
+		'woo_wcs_paysafecard_enable' => array(
+			'title' => __('paysafecard', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_quick_enable' => array(
+			'title' => __('@Quick', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_epaybg_enable' => array(
+			'title' => __('ePay.bg', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_installment_enable' => array(
+			'title' => __('Installment', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_monetaru_enable' => array(
+			'title' => __('moneta.ru', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		),
+		'woo_wcs_skrilldigitalwallet_enable' => array(
+			'title' => __('Skrill Digital Wallet', 'woocommerce-wirecard-checkout-seamless'),
+			'type' => 'switch'
+		)
+	),
 	'mobilepayments'      => array(),
 	'voucherpayments'     => array()
 );
