@@ -1,0 +1,129 @@
+/**
+ * Shop System Plugins - Terms of Use
+ *
+ * The plugins offered are provided free of charge by Wirecard Central Eastern Europe GmbH
+ * (abbreviated to Wirecard CEE) and are explicitly not part of the Wirecard CEE range of
+ * products and services.
+ *
+ * They have been tested and approved for full functionality in the standard configuration
+ * (status on delivery) of the corresponding shop system. They are under General Public
+ * License Version 2 (GPLv2) and can be used, developed and passed on to third parties under
+ * the same terms.
+ *
+ * However, Wirecard CEE does not provide any guarantee or accept any liability for any errors
+ * occurring when used in an enhanced, customized shop system configuration.
+ *
+ * Operation in an enhanced, customized configuration is at your own risk and requires a
+ * comprehensive test phase by the user of the plugin.
+ *
+ * Customers use the plugins at their own risk. Wirecard CEE does not guarantee their full
+ * functionality neither does Wirecard CEE assume liability for any disadvantages related to
+ * the use of the plugins. Additionally, Wirecard CEE does not guarantee the full functionality
+ * for customized shop systems or installed plugins of other vendors of plugins within the same
+ * shop system.
+ *
+ * Customers are responsible for testing the plugin's functionality before starting productive
+ * operation.
+ *
+ * By installing the plugin into the shop system the customer agrees to these terms of use.
+ * Please do not use the plugin if you do not agree to these terms of use!
+ */
+
+.wcs-chkbx-switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+}
+
+.wcs-chkbx-switch > input {
+    display: none;
+}
+
+.wcs-chkbx-switch > .wcs-chkbx-switch-slider {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    background-color: #ccc;
+    -webkit-transition: .2s;
+    -moz-transition: .2s;
+    -ms-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.wcs-chkbx-switch > .wcs-chkbx-switch-slider:before {
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #fff;
+    content: "";
+    -webkit-transition: .2s;
+    -moz-transition: .2s;
+    -ms-transition: .2s;
+    -o-transition: .2s;
+    transition: .2s;
+}
+
+.wcs-chkbx-switch > input + .wcs-chkbx-switch-slider {
+    background-color: #ccc;
+}
+
+.wcs-chkbx-switch > input:checked + .wcs-chkbx-switch-slider {
+    background-color: #8fbC3b;
+}
+
+.wcs-chkbx-switch > input:checked + .wcs-chkbx-switch-slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.wcs-tabs > a, .wcs-tabs > a:active, .wcs-tabs > a:focus {
+    background-color: #f8f8f8;
+}
+
+.wcs-tabs > a:hover {
+    background-color: #fff;
+}
+
+.wcs-tabs > a.nav-tab-active {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.tab-content.panel {
+    margin-top: -13px;
+    border-radius: 0 0 3px 3px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: #fff;
+    padding: 20px 20px;
+}
+
+.tab-content.panel > .tab-pane {
+    display: none;
+}
+
+.tab-content.panel > .tab-pane.active {
+    display: block;
+}
+
+.woo-wcs-settings-header-wrapper {
+    margin: auto;
+    min-width: 200px;
+    max-width: 1024px;
+}
+
+.woo-wcs-settings-header-wrapper p:first-of-type {
+    text-transform: uppercase;
+}
+
+.titledesc {
+    text-align: right;
+}

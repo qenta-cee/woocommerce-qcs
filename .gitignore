@@ -1,10 +1,2 @@
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/deployment.xml
-.idea/misc.xml
-.idea/workspace.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/woocommerce-wcs.iml
+.idea/*
 woocommerce-wirecard-checkout-seamless/vendor/*
-.idea/php.xml
