@@ -30,6 +30,9 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
+
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
 define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
 
@@ -37,6 +40,9 @@ define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
  * Class WC_Gateway_Wirecard_Checkout_Seamless
  */
 class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
+
+	protected $_admin;
+	protected $_config;
 
 	public function __construct() {
 
@@ -46,6 +52,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->payment_name = '';
 		$this->init_form_fields();
 		$this->init_settings();
+		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
+		$this->enabled = "yes";
+
+		$this->_admin = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
+		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -90,7 +101,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$post_data = $this->get_post_data();
 
-		foreach ( $this->get_settings_fields() as $group => $fields ) {
+		foreach ( $this->_admin->get_settings_fields() as $group => $fields ) {
 			foreach ( $fields as $key => $field ) {
 				if ( 'title' !== $this->get_field_type( $field ) ) {
 					try {
@@ -105,23 +116,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		return update_option( $this->get_option_key(),
 		                      apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
 		                                     $this->settings ) );
-	}
-
-	/**
-	 * Get all or the corresponding settings fields group
-	 *
-	 * @param string $which
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	function get_settings_fields( $which = null ) {
-		include "includes/form_fields.php";
-		if ( $which !== null ) {
-			return $fields[ $which ];
-		}
-
-		return $fields;
 	}
 
 	/**
@@ -163,7 +157,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					</legend>
 					<label for="<?php echo esc_attr( $field_key ); ?>" class="wcs-chkbx-switch">
 						<input <?php disabled( $data['disabled'], true ); ?>
-							class="<?php echo esc_attr( $data['class'] ); ?>" type="checkbox"
+							class="<?php echo esc_attr( $data['css'] ); ?>" type="checkbox"
 							name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
 							style="<?php echo esc_attr( $data['css'] ); ?>"
 							value="1" <?php checked( $this->get_option( $key ),
@@ -185,89 +179,91 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function admin_options() {
+
+		$this->_admin->print_admin_form_fields($this);
+
+	}
+
+	/**
+	 * Generate frontend payment fields
+	 * INFO: Only for temporary testing
+	 *
+	 * @since 1.0.0
+	 */
+	function payment_fields() {
+		global $woocommerce;
+
+		/**
+		 * TODO: - Implement method specific fields
+		 *       - Remove woocommerce_wcs payment
+		 *       - Implement labels (method title)
+		 * */
 		?>
-		<link rel='stylesheet'
-		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
-		<script src='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/scripts/admin.js' ) ?>'></script>
-
-		<h3><?php echo ( ! empty( $this->method_title ) ) ? $this->method_title : __( 'Settings',
-		                                                                              'woocommerce-wirecard-checkout-seamless' ); ?></h3>
-		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/images/wirecard-logo.png' ) ?>">
-			<p><?= __( 'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-
-		</div>
-		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
-			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
-			                                                                                              'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#options" class="nav-tab "><?= __( 'General settings',
-			                                                                              'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#creditcardoptions" class="nav-tab "><?= __( 'Credit card',
-			                                                                                        'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#invoiceoptions" class="nav-tab "><?= __( 'Invoice',
-			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#installmentoptions" class="nav-tab "><?= __( 'Installment',
-			                                                                                         'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#standardpayments" class="nav-tab "><?= __( 'Standard payments',
-			                                                                                       'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#bankingpayments" class="nav-tab "><?= __( 'Banking payments',
-			                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#alternativepayments"
-			   class="nav-tab "><?= __( 'Alternative payments', 'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?= __( 'Mobile payments',
-			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?= __( 'Voucher payments',
-			                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
-		</nav>
-		<div class="tab-content panel">
-			<div class="tab-pane active" id="basicdata">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'basicdata' ), false ); ?></table>
-			</div>
-			<div class="tab-pane" id="options">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'options' ), false ); ?></table>
-			</div>
-			<div class="tab-pane" id="creditcardoptions">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="invoiceoptions">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="installmentoptions">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="standardpayments">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="bankingpayments">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="alternativepayments">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="mobilepayments">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
-				                                          false ); ?></table>
-			</div>
-			<div class="tab-pane" id="voucherpayments">
-				<table><?= $this->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
-				                                          false ); ?></table>
-			</div>
-		</div>
+		<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
+		<script type="text/javascript">
+			function changeWCSPayment(code){
+				var changer = document.getElementById('wcs_payment_method_changer');
+				changer.value = code;
+			}
+		</script>
 		<?php
+		foreach ($this->get_enabled_payment_types() as $type) {
+			?>
+			</div></li>
+			<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
+			<input
+				id="payment_method_wcs_<?php echo $type->code ?>"
+				type="radio"
+				class="input-radio"
+				value="woocommerce_wcs"
+				name="payment_method"
+				onclick="changeWCSPayment('<?php echo $type->code ?>');"
+				data-order_button_text>
+			<label
+				for="payment_method_wcs_<?php echo $type->code ?>"><?php echo $type->label ?></label>
+		<div class="payment_box payment_method_<?php echo $type->code ?>" style="display:none;">
+			<?php
+		}
+	}
+
+
+	/**
+	 * Array of enabled payment types
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function get_enabled_payment_types()
+	{
+		$types = array();
+		foreach ($this->settings as $k => $v) {
+			if (strpos($k, 'enable') !== false) {
+				if ($v == 1) {
+					$code = str_replace('_enable', '', $k);
+					$code = str_replace('wcs_', '', $code);
+					//TODO: get name via language file
+					$label = $code;
+					$type = new stdClass();
+					$type->code = $code;
+					$type->label = $label;
+					$method_name = $type->code;
+
+					if (method_exists($this, $method_name)) {
+						if (!call_user_func(
+							array(
+								$this,
+								$method_name
+							)
+						)
+						) {
+							continue;
+						}
+					}
+					$types[] = $type;
+				}
+			}
+		}
+		return $types;
 	}
 
 	/**
@@ -282,16 +278,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function process_payment( $order_id ) {
 		global $woocommerce;
 
-		$order = new WC_Order( $order_id );
-		// CCARD for Testing
-		$payment_type = WirecardCEE_QMore_PaymentType::CCARD;
+		$order = wc_get_order( $order_id );
+
+		//TODO: Errorhandling for payment type
+		$payment_type = $order->get_payment_method_title();
+
+		// Payment type for initialization
+		if(isset($_POST['wcs_payment_method'])) {
+			$payment_type = $_POST['wcs_payment_method'];
+		}
 
 		$redirect = $this->initiate_payment( $order, $payment_type );
 
 		if ( ! $redirect ) {
 			return;
 		}
-
 		return array(
 			'result'   => 'success',
 			'redirect' => $redirect
@@ -311,19 +312,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function initiate_payment( $order, $payment_type ) {
 
-		if ( isset( WC()->session->wirecard_checkout_seamless_redirect_url ) && WC()->session->wirecard_checkout_seamless_redirect_url['id'] == $order->id ) {
-			return WC()->session->wirecard_checkout_seamless_redirect_url['url'];
-		}
-
 		try {
-			$client = new WirecardCEE_QMore_FrontendClient(
-				array(
-					'CUSTOMER_ID' => 'D200001',
-					'SHOP_ID'     => 'seamless',
-					'SECRET'      => 'B8AKTPWBRMNBV455FG6M2DANE99WU2',
-					'LANGUAGE'    => 'en'
-				)
-			);
+			$config_array = $this->_config->get_client_config($this);
+			$client = new WirecardCEE_QMore_FrontendClient($config_array);
 
 			$version = WirecardCEE_QMore_FrontendClient::generatePluginVersion(
 				'wordpress_woocommerce',
@@ -477,12 +468,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
-	}
-
-	/**
-	 * displays form for e.g. credit card data
-	 */
-	function payment_fields() {
 	}
 
 	/**

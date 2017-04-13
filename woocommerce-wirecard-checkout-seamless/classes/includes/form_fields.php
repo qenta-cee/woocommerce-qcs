@@ -354,123 +354,123 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		)
 	),
 	'standardpayments'    => array(
-		'woo_wcs_creditcard_enable' => array(
+		'wcs_ccard_enable' => array(
 			'title' => __('Credit Card', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_creditcardmoto_enable' => array(
+		'wcs_ccard-moto_enable' => array(
 			'title' => __('Credit Card - Mail Order and Telephone Order', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_maestro_enable' => array(
+		'wcs_maestro_enable' => array(
 			'title' => __('Maestro SecureCode', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_sofort_enable' => array(
+		'wcs_sofortueberweisung_enable' => array(
 			'title' => __('SOFORT Banking', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_paypal_enable' => array(
+		'wcs_paypal_enable' => array(
 			'title' => __('PayPal', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_sepadd_enable' => array(
+		'wcs_sepa-dd_enable' => array(
 			'title' => __('SEPA Direct Debit', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_invoice_enable' => array(
+		'wcs_invoice_enable' => array(
 			'title' => __('Invoice', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_invoiceb2b_enable' => array(
+		'wcs_invoiceb2b_enable' => array(
 			'title' => __('Invoice B2B', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		)
 	),
 	'bankingpayments'     => array(
-		'woo_wcs_eps_enable' => array(
+		'wcs_eps_enable' => array(
 			'title' => __('eps-Überweisung', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_ideal_enable' => array(
+		'wcs_idl_enable' => array(
 			'title' => __('iDEAL', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_giropay_enable' => array(
+		'wcs_giropay_enable' => array(
 			'title' => __('giropay', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_tatrapay_enable' => array(
+		'wcs_tatrapay_enable' => array(
 			'title' => __('TatraPay', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_trustpay_enable' => array(
+		'wcs_trustpay_enable' => array(
 			'title' => __('TrustPay', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_bancontactmistercash_enable' => array(
+		'wcs_bancontact_mistercash_enable' => array(
 			'title' => __('Bancontact/Mister Cash', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_poli_enable' => array(
+		'wcs_poli_enable' => array(
 			'title' => __('POLi', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_przelewy24_enable' => array(
+		'wcs_przelewy24_enable' => array(
 			'title' => __('Przelewy24', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_ekonto_enable' => array(
+		'wcs_ekonto_enable' => array(
 			'title' => __('eKonto', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_trustly_enable' => array(
+		'wcs_trustly_enable' => array(
 			'title' => __('Trustly', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_skrilldirect_enable' => array(
+		'wcs_skrilldirect_enable' => array(
 			'title' => __('Skrill Direct', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		)
 	),
 	'alternativepayments' => array(
-		'woo_wcs_paysafecard_enable' => array(
+		'wcs_psc_enable' => array(
 			'title' => __('paysafecard', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_quick_enable' => array(
+		'wcs_quick_enable' => array(
 			'title' => __('@Quick', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_epaybg_enable' => array(
+		'wcs_epay_bg_enable' => array(
 			'title' => __('ePay.bg', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_installment_enable' => array(
+		'wcs_installment_enable' => array(
 			'title' => __('Installment', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_monetaru_enable' => array(
+		'wcs_moneta_enable' => array(
 			'title' => __('moneta.ru', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_skrilldigitalwallet_enable' => array(
+		'wcs_skrillwallet_enable' => array(
 			'title' => __('Skrill Digital Wallet', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		)
 	),
 	'mobilepayments'      => array(
-		'woo_wcs_paybox_enable' => array(
+		'wcs_pbx_enable' => array(
 			'title' => __('paybox', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		),
-		'woo_wcs_mpass_enable' => array(
+		'wcs_mpass_enable' => array(
 			'title' => __('mpass', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		)
 	),
 	'voucherpayments'     => array(
-		'woo_wcs_myvoucher_enable' => array(
+		'wcs_voucher_enable' => array(
 			'title' => __('My Voucher', 'woocommerce-wirecard-checkout-seamless'),
 			'type' => 'switch'
 		)
