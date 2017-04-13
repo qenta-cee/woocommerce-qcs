@@ -33,9 +33,6 @@
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
 
-define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
-
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
  */
@@ -55,7 +52,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
 		$this->enabled = "yes";
 
-		$this->_admin = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
+		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
 		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
@@ -114,8 +111,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		return update_option( $this->get_option_key(),
-		                      apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
-		                                     $this->settings ) );
+			apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
+				$this->settings ) );
 	}
 
 	/**
@@ -161,7 +158,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 							name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
 							style="<?php echo esc_attr( $data['css'] ); ?>"
 							value="1" <?php checked( $this->get_option( $key ),
-							                         '1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+							'1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
 						<div class="wcs-chkbx-switch-slider"></div>
 					</label><br/>
 					<?php echo $this->get_description_html( $data ); ?>
@@ -180,7 +177,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 
-		$this->_admin->print_admin_form_fields($this);
+		$this->_admin->print_admin_form_fields( $this );
 
 	}
 
@@ -201,13 +198,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		?>
 		<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
 		<script type="text/javascript">
-			function changeWCSPayment(code){
+			function changeWCSPayment(code) {
 				var changer = document.getElementById('wcs_payment_method_changer');
 				changer.value = code;
 			}
 		</script>
 		<?php
-		foreach ($this->get_enabled_payment_types() as $type) {
+		foreach ( $this->get_enabled_payment_types() as $type ) {
 			?>
 			</div></li>
 			<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
@@ -233,23 +230,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	protected function get_enabled_payment_types()
-	{
+	protected function get_enabled_payment_types() {
 		$types = array();
-		foreach ($this->settings as $k => $v) {
-			if (strpos($k, 'enable') !== false) {
-				if ($v == 1) {
-					$code = str_replace('_enable', '', $k);
-					$code = str_replace('wcs_', '', $code);
+		foreach ( $this->settings as $k => $v ) {
+			if ( strpos( $k, 'enable' ) !== false ) {
+				if ( $v == 1 ) {
+					$code = str_replace( '_enable', '', $k );
+					$code = str_replace( 'wcs_', '', $code );
 					//TODO: get name via language file
-					$label = $code;
-					$type = new stdClass();
-					$type->code = $code;
+					$label       = $code;
+					$type        = new stdClass();
+					$type->code  = $code;
 					$type->label = $label;
 					$method_name = $type->code;
 
-					if (method_exists($this, $method_name)) {
-						if (!call_user_func(
+					if ( method_exists( $this, $method_name ) ) {
+						if ( ! call_user_func(
 							array(
 								$this,
 								$method_name
@@ -263,6 +259,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				}
 			}
 		}
+
 		return $types;
 	}
 
@@ -284,7 +281,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$payment_type = $order->get_payment_method_title();
 
 		// Payment type for initialization
-		if(isset($_POST['wcs_payment_method'])) {
+		if ( isset( $_POST['wcs_payment_method'] ) ) {
 			$payment_type = $_POST['wcs_payment_method'];
 		}
 
@@ -293,6 +290,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( ! $redirect ) {
 			return;
 		}
+
 		return array(
 			'result'   => 'success',
 			'redirect' => $redirect
@@ -313,40 +311,37 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function initiate_payment( $order, $payment_type ) {
 
 		try {
-			$config_array = $this->_config->get_client_config($this);
-			$client = new WirecardCEE_QMore_FrontendClient($config_array);
+			$config_array = $this->_config->get_client_config( $this );
+			$client       = new WirecardCEE_QMore_FrontendClient( $config_array );
 
-			$version = WirecardCEE_QMore_FrontendClient::generatePluginVersion(
-				'wordpress_woocommerce',
-				WC()->version,
-				WOOCOMMERCE_GATEWAY_WCS_NAME,
-				WOOCOMMERCE_GATEWAY_WCS_VERSION
-			);
-
-			$client->setPluginVersion( $version );
-
-			//TODO: Create orderReference
-			$client->setOrderReference( sprintf( 'Configtest #', uniqid() ) );
+			$client->setPluginVersion( $this->_config->get_plugin_version() );
+			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
 			$returnUrl = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
-			                            site_url( '/', is_ssl() ? 'https' : 'http' ) );
+				site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
-			//TODO: Create consumerData
-			$consumerData = new WirecardCEE_Stdlib_ConsumerData();
-			$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] )->setIpAddress( $_SERVER['REMOTE_ADDR'] );
+			$consumerData = $this->_config->get_consumer_data( $order, $this );
+			$auto_deposit = $this->get_option( 'woo_wcs_automateddeposit' );
+			if ( $auto_deposit ) {
+				$auto_deposit = true;
+			} else {
+				$auto_deposit = false;
+			}
 
-			//TODO: Add specific values
-			$client->setAmount( '10' )
-			       ->setCurrency( 'EUR' )
+			//TODO: add service url
+			$client->setAmount( $order->get_total() )
+			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $payment_type )
-			       ->setOrderDescription( 'Configtest #' . uniqid() )
+			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
 			       ->setSuccessUrl( $returnUrl )
 			       ->setPendingUrl( $returnUrl )
 			       ->setCancelUrl( $returnUrl )
 			       ->setFailureUrl( $returnUrl )
 			       ->setConfirmUrl( $returnUrl )
 			       ->setServiceUrl( $returnUrl )
-			       ->setConsumerData( $consumerData );
+			       ->setAutoDeposit( $auto_deposit )
+			       ->setConsumerData( $consumerData )
+			       ->createConsumerMerchantCrmId( $order->billing_email );
 
 			$client->wooOrderId = $order->id;
 			$initResponse       = $client->initiate();
@@ -455,7 +450,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->id, 'wcs_gateway_reference_number',
-					                  $return->getGatewayReferenceNumber() );
+						$return->getGatewayReferenceNumber() );
 					update_post_meta( $order->id, 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;

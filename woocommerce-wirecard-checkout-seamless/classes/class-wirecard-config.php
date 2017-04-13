@@ -30,6 +30,9 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
+
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Config
@@ -42,23 +45,23 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @var array
 	 */
 	protected $_presets = array(
-		'demo' => array(
+		'demo'   => array(
 			'customer_id' => 'D200001',
-			'shop_id' => 'seamless',
-			'secret' => 'B8AKTPWBRMNBV455FG6M2DANE99WU2',
-			'backendpw' => 'jcv45z'
+			'shop_id'     => 'seamless',
+			'secret'      => 'B8AKTPWBRMNBV455FG6M2DANE99WU2',
+			'backendpw'   => 'jcv45z'
 		),
-		'test' => array(
+		'test'   => array(
 			'customer_id' => 'D200411',
-			'shop_id' => 'seamless',
-			'secret' => 'CHCSH7UGHVVX2P7EHDHSY4T2S4CGYK4QBE4M5YUUG2ND5BEZWNRZW5EJYVJQ',
-			'backendpw' => '2g4f9q2m'
+			'shop_id'     => 'seamless',
+			'secret'      => 'CHCSH7UGHVVX2P7EHDHSY4T2S4CGYK4QBE4M5YUUG2ND5BEZWNRZW5EJYVJQ',
+			'backendpw'   => '2g4f9q2m'
 		),
 		'test3d' => array(
 			'customer_id' => 'D200411',
-			'shop_id' => 'seamless3D',
-			'secret' => 'DP4TMTPQQWFJW34647RM798E9A5X7E8ATP462Z4VGZK53YEJ3JWXS98B9P4F',
-			'backendpw' => '2g4f9q2m'
+			'shop_id'     => 'seamless3D',
+			'secret'      => 'DP4TMTPQQWFJW34647RM798E9A5X7E8ATP462Z4VGZK53YEJ3JWXS98B9P4F',
+			'backendpw'   => '2g4f9q2m'
 		)
 	);
 
@@ -71,22 +74,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return array
 	 */
 	function get_client_config( $gateway ) {
-		$config_mode = $gateway->get_option('woo_wcs_configuration');
+		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
 
-		if( array_key_exists($config_mode, $this->_presets) ) {
+		if ( array_key_exists( $config_mode, $this->_presets ) ) {
 			return Array(
-				'CUSTOMER_ID' => $this->_presets[$config_mode]['customer_id'],
-				'SHOP_ID' => $this->_presets[$config_mode]['shop_id'],
-				'SECRET' => $this->_presets[$config_mode]['secret'],
-				'LANGUAGE' => $this->get_language_code(),
+				'CUSTOMER_ID' => $this->_presets[ $config_mode ]['customer_id'],
+				'SHOP_ID'     => $this->_presets[ $config_mode ]['shop_id'],
+				'SECRET'      => $this->_presets[ $config_mode ]['secret'],
+				'LANGUAGE'    => $this->get_language_code(),
 			);
-		}
-		else{
+		} else {
 			return Array(
-				'CUSTOMER_ID' => trim($gateway->get_option('woo_wcs_customerid')),
-				'SHOP_ID' => trim($gateway->get_option('woo_wcs_shopid')),
-				'SECRET' => trim($gateway->get_option('woo_wcs_secret')),
-				'LANGUAGE' => $this->get_language_code(),
+				'CUSTOMER_ID' => trim( $gateway->get_option( 'woo_wcs_customerid' ) ),
+				'SHOP_ID'     => trim( $gateway->get_option( 'woo_wcs_shopid' ) ),
+				'SECRET'      => trim( $gateway->get_option( 'woo_wcs_secret' ) ),
+				'LANGUAGE'    => $this->get_language_code(),
 			);
 		}
 	}
@@ -97,10 +99,124 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return mixed
 	 */
-	function get_language_code()
-	{
+	function get_language_code() {
 		$locale = get_locale();
-		$parts = explode('_', $locale);
+		$parts  = explode( '_', $locale );
+
 		return $parts[0];
+	}
+
+	/**
+	 * Create order description
+	 *
+	 * @param $order
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	function get_order_description( $order ) {
+		//TODO: update orderdescription value
+		return sprintf( 'user_id:%s order_id:%s', $order->user_id, $order->id );
+	}
+
+	/**
+	 * Generate pluginversion
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	function get_plugin_version() {
+		return WirecardCEE_QMore_FrontendClient::generatePluginVersion(
+			'woocommerce',
+			WC()->version,
+			WOOCOMMERCE_GATEWAY_WCS_NAME,
+			WOOCOMMERCE_GATEWAY_WCS_VERSION
+		);
+	}
+
+	/**
+	 * Generate order reference
+	 *
+	 * @param $order
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	function get_order_reference( $order ) {
+		return sprintf( '%010d', $order->id );
+	}
+
+	/**
+	 * Generate consumer data
+	 *
+	 * @param $order
+	 * @param $gateway
+	 *
+	 * @since 1.0.0
+	 * @return WirecardCEE_Stdlib_ConsumerData
+	 */
+	function get_consumer_data( $order, $gateway ) {
+		$consumerData = new WirecardCEE_Stdlib_ConsumerData();
+
+		$consumerData->setIpAddress( $order->get_customer_ip_address() );
+		$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] );
+
+		$user_data = get_userdata( $order->user_id );
+		$consumerData->setEmail( isset( $user_data->user_email ) ? $user_data->user_email : '' );
+
+		//TODO: check for birthday
+		//$consumerData->setBirthDate(Date);
+		//TODO: check for company info
+
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) ) {
+			$billing_address = $this->get_address_data( $order, 'billing' );
+			$consumerData->addAddressInformation( $billing_address );
+		}
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) ) {
+			$shipping_address = $this->get_address_data( $order, 'shipping' );
+			$consumerData->addAddressInformation( $shipping_address );
+		}
+
+		return $consumerData;
+	}
+
+	/**
+	 * Generate address data (shipping or billing)
+	 *
+	 * @param $order
+	 * @param string $type
+	 *
+	 * @since 1.0.0
+	 * @return WirecardCEE_Stdlib_ConsumerData_Address
+	 */
+	function get_address_data( $order, $type = 'billing' ) {
+		switch ( $type ) {
+			case 'shipping':
+				$address = new WirecardCEE_Stdlib_ConsumerData_Address( WirecardCEE_Stdlib_ConsumerData_Address::TYPE_SHIPPING );
+				$address->setFirstname( $order->shipping_first_name )
+				        ->setLastname( $order->shipping_last_name )
+				        ->setAddress1( $order->shipping_address_1 )
+				        ->setAddress2( $order->shipping_address_2 )
+				        ->setCity( $order->shipping_city )
+				        ->setState( $order->shipping_state )
+				        ->setZipCode( $order->shipping_postcode )
+				        ->setCountry( $order->shipping_country );
+				break;
+			case 'billing':
+			default:
+				$address = new WirecardCEE_Stdlib_ConsumerData_Address( WirecardCEE_Stdlib_ConsumerData_Address::TYPE_BILLING );
+				$address->setFirstname( $order->billing_first_name )
+				        ->setLastname( $order->billing_last_name )
+				        ->setAddress1( $order->billing_address_1 )
+				        ->setAddress2( $order->billing_address_2 )
+				        ->setCity( $order->billing_city )
+				        ->setState( $order->billing_state )
+				        ->setZipCode( $order->billing_postcode )
+				        ->setCountry( $order->billing_country )
+				        ->setPhone( $order->billing_phone );
+				break;
+		}
+
+		return $address;
 	}
 }
