@@ -115,8 +115,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_description( $order ) {
-		//TODO: update orderdescription value
-		return sprintf( 'user_id:%s order_id:%s', $order->user_id, $order->id );
+		return sprintf( '%s %s %s', $order->billing_email, $order->billing_first_name, $order->billing_last_name );
 	}
 
 	/**
@@ -218,5 +217,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		}
 
 		return $address;
+	}
+
+	/**
+	 * Generate customer statement
+	 *
+	 * @param $client
+	 * @param $gateway
+	 *
+	 * @since 1.0.0
+	 */
+	function set_customer_statement( $client, $gateway ) {
+		$prefix = $gateway->get_option( 'woo_wcs_shopreferenceinpostingcontext' );
+		if ( ! isset( $prefix ) ) {
+			$prefix = null;
+		}
+		$client->generateCustomerStatement( $prefix, get_bloginfo( 'name' ) );
 	}
 }

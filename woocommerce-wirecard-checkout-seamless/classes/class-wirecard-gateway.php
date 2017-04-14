@@ -317,34 +317,46 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
 			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
-			$returnUrl = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
+			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
 				site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
-			$consumerData = $this->_config->get_consumer_data( $order, $this );
-			$auto_deposit = $this->get_option( 'woo_wcs_automateddeposit' );
-			if ( $auto_deposit ) {
-				$auto_deposit = true;
-			} else {
-				$auto_deposit = false;
+			$consumer_data = $this->_config->get_consumer_data( $order, $this );
+			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
+
+			$service_url = $this->get_option( 'woo_wcs_serviceurl' );
+			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
+				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wcs' ), 'error' );
+
+				return;
 			}
 
-			//TODO: add service url
 			$client->setAmount( $order->get_total() )
 			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $payment_type )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
-			       ->setSuccessUrl( $returnUrl )
-			       ->setPendingUrl( $returnUrl )
-			       ->setCancelUrl( $returnUrl )
-			       ->setFailureUrl( $returnUrl )
-			       ->setConfirmUrl( $returnUrl )
-			       ->setServiceUrl( $returnUrl )
+			       ->setSuccessUrl( $return_url )
+			       ->setPendingUrl( $return_url )
+			       ->setCancelUrl( $return_url )
+			       ->setFailureUrl( $return_url )
+			       ->setConfirmUrl( $return_url )
+			       ->setServiceUrl( $service_url )
 			       ->setAutoDeposit( $auto_deposit )
-			       ->setConsumerData( $consumerData )
+			       ->setConsumerData( $consumer_data )
 			       ->createConsumerMerchantCrmId( $order->billing_email );
 
+			$this->_config->set_customer_statement( $client, $this );
+
+			if ( $this->get_option( 'woo_wcs_notificationemail' ) ) {
+				$client->setConfirmMail( get_bloginfo( 'admin_email' ) );
+			}
+
+			if ( $this->get_option( 'woo_wcs_transactionid' ) == 'gatewayreferencenumber' ) {
+				//TODO: shop-specific order number
+			}
+
 			$client->wooOrderId = $order->id;
-			$initResponse       = $client->initiate();
+
+			$initResponse = $client->initiate();
 
 			if ( $initResponse->hasFailed() ) {
 				wc_add_notice(
