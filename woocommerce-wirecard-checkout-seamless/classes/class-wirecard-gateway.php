@@ -245,13 +245,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$method_name = $type->code;
 
 					if ( method_exists( $this, $method_name ) ) {
-						if ( ! call_user_func(
-							array(
-								$this,
-								$method_name
-							)
-						)
-						) {
+						if ( ! call_user_func( array( $this, $method_name ) ) ) {
 							continue;
 						}
 					}
