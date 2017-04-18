@@ -265,12 +265,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$item_quantity   = $cart_item['quantity'];
 
 			// Calculate amounts per unit
-			$item_unit_net_amount = wc_format_decimal( $item_net_amount / $item_quantity, wc_get_price_decimals() );
-			$item_unit_tax_amount = wc_format_decimal( $item_tax_amount / $item_quantity, wc_get_price_decimals() );
+			$item_unit_net_amount   = $item_net_amount / $item_quantity;
+			$item_unit_tax_amount   = $item_tax_amount / $item_quantity;
+			$item_unit_gross_amount = wc_format_decimal( $item_unit_net_amount + $item_unit_tax_amount,
+				wc_get_price_decimals() );
 
-			$item->setUnitGrossAmount( $item_unit_net_amount + $item_unit_tax_amount )
-			     ->setUnitNetAmount( $item_unit_net_amount )
-			     ->setUnitTaxAmount( $item_unit_tax_amount )
+			$item->setUnitGrossAmount( $item_unit_gross_amount )
+			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
+			     ->setUnitTaxAmount( wc_format_decimal( $item_unit_tax_amount, wc_get_price_decimals() ) )
 			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) )
 			     ->setDescription( substr( strip_tags( $cart_item['data']->get_short_description() ), 0, 127 ) )
 			     ->setName( substr( strip_tags( $cart_item['data']->get_name() ), 0, 127 ) )
