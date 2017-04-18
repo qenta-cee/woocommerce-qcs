@@ -426,14 +426,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 		$order_id = $_REQUEST['wooOrderId'];
 		$order    = new WC_Order( $order_id );
-		if ( ! $order->id ) {
-			$message = "order with id `$order->id` not found";
+		if ( ! $order->get_id() ) {
+			$message = "order with id `$order->get_id()` not found";
 
 			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
-			$message = "cannot change the order with id `$order->id`";
+			$message = "cannot change the order with id `$order->get_id()`";
 
 			return WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
@@ -445,7 +445,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 		$str = trim( $str );
 
-		update_post_meta( $order->id, 'wcs_data', $str );
+		update_post_meta( $order->get_id(), 'wcs_data', $str );
 
 		$message = null;
 		try {
@@ -458,14 +458,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
 
-			update_post_meta( $order->id, 'wcs_payment_state', $return->getPaymentState() );
+			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
 
 			//TODO: Handle specific paymentstate
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
-					update_post_meta( $order->id, 'wcs_gateway_reference_number',
+					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
 					                  $return->getGatewayReferenceNumber() );
-					update_post_meta( $order->id, 'wcs_order_number', $return->getOrderNumber() );
+					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
 				default:
