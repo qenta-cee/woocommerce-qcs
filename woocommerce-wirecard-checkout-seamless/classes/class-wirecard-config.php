@@ -109,13 +109,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Create order description
 	 *
-	 * @param $order
+	 * @param $order WC_Order
 	 *
 	 * @since 1.0.0
 	 * @return string
 	 */
 	function get_order_description( $order ) {
-		return sprintf( '%s %s %s', $order->billing_email, $order->billing_first_name, $order->billing_last_name );
+		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(), $order->get_billing_last_name() );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Generate order reference
 	 *
-	 * @param $order
+	 * @param $order WC_Order
 	 *
 	 * @since 1.0.0
 	 * @return string
@@ -148,7 +148,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Generate consumer data
 	 *
-	 * @param $order
+	 * @param $order WC_Order
 	 * @param $gateway
 	 *
 	 * @since 1.0.0
@@ -160,7 +160,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		$consumerData->setIpAddress( $order->get_customer_ip_address() );
 		$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] );
 
-		$user_data = get_userdata( $order->user_id );
+		$user_data = get_userdata( $order->get_user_id() );
 		$consumerData->setEmail( isset( $user_data->user_email ) ? $user_data->user_email : '' );
 
 		//TODO: check for birthday
