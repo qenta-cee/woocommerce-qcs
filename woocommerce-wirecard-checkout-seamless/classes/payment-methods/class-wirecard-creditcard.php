@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_ccard {
+class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
 	private $payment_type = WirecardCEE_QMore_PaymentType::CCARD;
 	private $settings = array();

@@ -244,7 +244,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$code = str_replace( '_enable', '', $k );
 					$code = str_replace( 'wcs_', '', $code );
 					//TODO: get name via language file
-					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . $code;
+					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( $code ) );
 					$type  = new $class( $this->settings );
 
 					if ( method_exists( $this, $code ) ) {
@@ -312,8 +312,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$client       = new WirecardCEE_QMore_FrontendClient( $config_array );
 
 
-			$return_url    = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
-				site_url( '/', is_ssl() ? 'https' : 'http' ) );
+			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
+			                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 			$consumer_data = $this->_config->get_consumer_data( $order, $this );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
@@ -465,7 +465,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
-						$return->getGatewayReferenceNumber() );
+					                  $return->getGatewayReferenceNumber() );
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
