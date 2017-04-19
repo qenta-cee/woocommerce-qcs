@@ -142,7 +142,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_reference( $order ) {
-		return sprintf( '%010d', $order->id );
+		return sprintf( '%010d', $order->get_id() );
 	}
 
 	/**
@@ -233,5 +233,54 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$prefix = null;
 		}
 		$client->generateCustomerStatement( $prefix, get_bloginfo( 'name' ) );
+	}
+
+	/**
+	 * Generate shopping basket
+	 *
+	 * @since 1.0.0
+	 * @return WirecardCEE_Stdlib_Basket
+	 */
+	function get_shopping_basket() {
+		global $woocommerce;
+
+		$cart = $woocommerce->cart;
+
+		$basket = new WirecardCEE_Stdlib_Basket();
+
+		foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
+			$article_nr = $cart_item['product_id'];
+			if ( $cart_item['data']->get_sku() != '' ) {
+				$article_nr = $cart_item['data']->get_sku();
+			}
+
+			$attachment_ids = $cart_item['data']->get_gallery_image_ids();
+			foreach ( $attachment_ids as $attachment_id ) {
+				$image_url = wp_get_attachment_image_url( $attachment_id );
+			}
+
+			$item            = new WirecardCEE_Stdlib_Basket_Item( $article_nr );
+			$item_net_amount = $cart_item['line_total'];
+			$item_tax_amount = $cart_item['line_tax'];
+			$item_quantity   = $cart_item['quantity'];
+
+			// Calculate amounts per unit
+			$item_unit_net_amount   = $item_net_amount / $item_quantity;
+			$item_unit_tax_amount   = $item_tax_amount / $item_quantity;
+			$item_unit_gross_amount = wc_format_decimal( $item_unit_net_amount + $item_unit_tax_amount,
+				wc_get_price_decimals() );
+
+			$item->setUnitGrossAmount( $item_unit_gross_amount )
+			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
+			     ->setUnitTaxAmount( wc_format_decimal( $item_unit_tax_amount, wc_get_price_decimals() ) )
+			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) )
+			     ->setDescription( substr( strip_tags( $cart_item['data']->get_short_description() ), 0, 127 ) )
+			     ->setName( substr( strip_tags( $cart_item['data']->get_name() ), 0, 127 ) )
+			     ->setImageUrl( isset( $image_url ) ? $image_url : '' );
+
+			$basket->addItem( $item, $item_quantity );
+		}
+
+		return $basket;
 	}
 }

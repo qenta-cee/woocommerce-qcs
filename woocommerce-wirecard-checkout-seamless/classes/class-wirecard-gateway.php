@@ -308,21 +308,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$config_array = $this->_config->get_client_config( $this );
 			$client       = new WirecardCEE_QMore_FrontendClient( $config_array );
 
-			$client->setPluginVersion( $this->_config->get_plugin_version() );
-			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
-
-			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
+			$return_url    = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
 				site_url( '/', is_ssl() ? 'https' : 'http' ) );
-
 			$consumer_data = $this->_config->get_consumer_data( $order, $this );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
+			$service_url   = $this->get_option( 'woo_wcs_serviceurl' );
 
-			$service_url = $this->get_option( 'woo_wcs_serviceurl' );
+			// Check if service url is valid
 			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
 				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wcs' ), 'error' );
 
 				return;
 			}
+
+			$client->setPluginVersion( $this->_config->get_plugin_version() );
+			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
 			$client->setAmount( $order->get_total() )
 			       ->setCurrency( get_woocommerce_currency() )
@@ -348,7 +348,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				//TODO: shop-specific order number
 			}
 
-			$client->wooOrderId = $order->id;
+			if ( $this->get_option( 'woo_wcs_forwardbasketdata' ) ) {
+				$client->setBasket( $this->_config->get_shopping_basket() );
+			}
+
+			$client->wooOrderId = $order->get_id();
 
 			$initResponse = $client->initiate();
 
@@ -363,7 +367,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		WC()->session->wirecard_checkout_seamless_redirect_url = array(
-			'id'  => $order->id,
+			'id'  => $order->get_id(),
 			'url' => $initResponse->getRedirectUrl()
 		);
 
@@ -418,14 +422,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 		$order_id = $_REQUEST['wooOrderId'];
 		$order    = new WC_Order( $order_id );
-		if ( ! $order->id ) {
-			$message = "order with id `$order->id` not found";
+		if ( ! $order->get_id() ) {
+			$message = "order with id `$order->get_id()` not found";
 
 			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
-			$message = "cannot change the order with id `$order->id`";
+			$message = "cannot change the order with id `$order->get_id()`";
 
 			return WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
@@ -437,7 +441,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 		$str = trim( $str );
 
-		update_post_meta( $order->id, 'wcs_data', $str );
+		update_post_meta( $order->get_id(), 'wcs_data', $str );
 
 		$message = null;
 		try {
@@ -450,14 +454,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
 
-			update_post_meta( $order->id, 'wcs_payment_state', $return->getPaymentState() );
+			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
 
 			//TODO: Handle specific paymentstate
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
-					update_post_meta( $order->id, 'wcs_gateway_reference_number',
+					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
 						$return->getGatewayReferenceNumber() );
-					update_post_meta( $order->id, 'wcs_order_number', $return->getOrderNumber() );
+					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
 				default:
