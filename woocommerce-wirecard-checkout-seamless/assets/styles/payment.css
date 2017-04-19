@@ -1,4 +1,3 @@
-<?php
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -30,28 +29,10 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+.methods .wc_payment_method.payment_method_woocommerce_wcs {
+    display: none;
 }
 
-/**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
- */
-class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card extends WC_Gateway_Wirecard_Checkout_Seamless {
-
-
-	public function __construct() {
-		$this->payment_name       = 'Credit Card';
-		$this->id                 = 'woocommerce_wcs_credit_card';
-		$this->icon               = WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/payments/cc.png';
-		$this->method_title       = __( 'Wirecard Checkout Seamless Credit Card',
-			'woocommerce-wirecard-checkout-seamless' );
-		$this->method_description = __(
-			'Wirecard Checkout Seamless Credit Card',
-			'woocommerce-wirecard-checkout-seamless'
-		);
-
-		parent::__construct();
-	}
-
+label[for^=payment_method_wcs_] img {
+    max-height:30px;
 }
