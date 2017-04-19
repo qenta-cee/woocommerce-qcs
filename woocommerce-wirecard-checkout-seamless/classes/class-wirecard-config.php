@@ -281,6 +281,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$basket->addItem( $item, $item_quantity );
 		}
 
+		// Add shipping to the basket
+		if ( isset( $cart->shipping_total ) ) {
+			$item = new WirecardCEE_Stdlib_Basket_Item( 'shipping' );
+			$item->setUnitGrossAmount( wc_format_decimal( $cart->shipping_total + $cart->shipping_tax_total,
+				wc_get_price_decimals() ) )
+			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
+			     ->setUnitTaxAmount( wc_format_decimal( $cart->shipping_tax_total, wc_get_price_decimals() ) )
+			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) )
+			     ->setName( 'Shipping' )
+			     ->setDescription( 'Shipping' );
+			$basket->addItem( $item );
+		}
+
 		return $basket;
 	}
 }
