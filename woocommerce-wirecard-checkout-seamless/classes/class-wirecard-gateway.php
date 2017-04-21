@@ -32,6 +32,7 @@
 
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php');
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -53,7 +54,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->enabled = "yes";
 
 		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
-		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
+		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -188,8 +189,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	function payment_fields() {
-		global $woocommerce;
-
+		$dataStorage = new WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage( $this->settings );
+		$dataStorage->init();
 		/**
 		 * TODO: - Implement method specific fields
 		 *       - Remove woocommerce_wcs payment
@@ -199,8 +200,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
 		<script type="text/javascript">
 			function changeWCSPayment(code) {
-				var changer = document.getElementById('wcs_payment_method_changer'),
-					form_fields = document.getElementsByClassName('payment_box');
+				var changer = document.getElementById('wcs_payment_method_changer');
 				changer.value = code;
 			}
 		</script>
@@ -222,8 +222,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				<?php echo $type->get_label() ?>
 				<img src="<?= $type->get_icon() ?>" alt="Wirecard <?= $type->get_payment_type() ?>">
 			</label>
-		<div class="payment_box payment_method_<?php echo $type->get_payment_type() ?>" style="display:none;">
+		<div
+			class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
+			style="display:none;">
 			<?php
+			echo $type->get_payment_fields();
 		}
 	}
 
@@ -306,7 +309,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function initiate_payment( $order, $payment_type ) {
 
 		try {
-			$config_array = $this->_config->get_client_config( $this );
+			$config_array = $this->_config->get_client_config();
 			$client       = new WirecardCEE_QMore_FrontendClient( $config_array );
 
 

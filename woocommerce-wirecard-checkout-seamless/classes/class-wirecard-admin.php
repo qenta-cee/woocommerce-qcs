@@ -38,7 +38,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	/**
 	 * Handles form output for admin panel
 	 *
-	 * @param $gateway
+	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
 	 *
 	 * @since 1.0.0
 	 */
@@ -87,41 +87,41 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ), false ); ?></table>
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ), false ); ?></table>
 			</div>
 			<div class="tab-pane" id="options">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'options' ), false ); ?></table>
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'options' ), false ); ?></table>
 			</div>
 			<div class="tab-pane" id="creditcardoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="invoiceoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="installmentoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="standardpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="bankingpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="alternativepayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="mobilepayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
 						false ); ?></table>
 			</div>
 			<div class="tab-pane" id="voucherpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
 						false ); ?></table>
 			</div>
 		</div>

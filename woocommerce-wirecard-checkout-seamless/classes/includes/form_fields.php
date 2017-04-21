@@ -204,8 +204,8 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'options'     => $user_roles
 		),
 		'woo_wcs_iframecssurl'                           => array(
-			'title'       => __( 'Credit card number placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
-			'description' => __( 'Placeholder text for the credit card number field.',
+			'title'       => __( 'Iframe CSS-URL', 'woocommerce-wirecard-checkout-seamless' ),
+			'description' => __( 'Entry of a name for the CSS file in order to customize the iframe input fields when using the \'PCI DSS SAQ A Compliance\' feature. File must be placed in the \'view/css\' directory of the plugin.',
 				'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_number_placeholder_text'             => array(

@@ -39,6 +39,7 @@ define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 
+	protected $_settings;
 	/**
 	 * Test/Demo configurations
 	 *
@@ -66,15 +67,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	);
 
 	/**
-	 * Handles configuration modi and returns config array for FrontendClient
+	 * constructor
 	 *
-	 * @param $gateway
+	 * @param $settings
+	 */
+	public function __construct( $settings ) {
+		$this->_settings = $settings;
+	}
+
+	/**
+	 * Handles configuration modes and returns config array for FrontendClient
+	 *
+	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
 	 *
 	 * @since 1.0.0
 	 * @return array
 	 */
-	function get_client_config( $gateway ) {
-		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
+	function get_client_config( ) {
+		$config_mode = $this->_settings['woo_wcs_configuration'];
 
 		if ( array_key_exists( $config_mode, $this->_presets ) ) {
 			return Array(
@@ -85,9 +95,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			);
 		} else {
 			return Array(
-				'CUSTOMER_ID' => trim( $gateway->get_option( 'woo_wcs_customerid' ) ),
-				'SHOP_ID'     => trim( $gateway->get_option( 'woo_wcs_shopid' ) ),
-				'SECRET'      => trim( $gateway->get_option( 'woo_wcs_secret' ) ),
+				'CUSTOMER_ID' => trim( $this->_settings['woo_wcs_customerid'] ),
+				'SHOP_ID'     => trim( $this->_settings['woo_wcs_shopid'] ),
+				'SECRET'      => trim( $this->_settings['woo_wcs_secret'] ),
 				'LANGUAGE'    => $this->get_language_code(),
 			);
 		}
@@ -115,7 +125,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_description( $order ) {
-		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(), $order->get_billing_last_name() );
+		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(),
+		                $order->get_billing_last_name() );
 	}
 
 	/**
@@ -268,7 +279,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$item_unit_net_amount   = $item_net_amount / $item_quantity;
 			$item_unit_tax_amount   = $item_tax_amount / $item_quantity;
 			$item_unit_gross_amount = wc_format_decimal( $item_unit_net_amount + $item_unit_tax_amount,
-				wc_get_price_decimals() );
+			                                             wc_get_price_decimals() );
 
 			$item->setUnitGrossAmount( $item_unit_gross_amount )
 			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
