@@ -64,7 +64,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Sofortueberweisung {
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL . __( 'assets/images/sofort_h32.png', 'woocommerce-wirecard-checkout-seamless' );
+		return WOOCOMMERCE_GATEWAY_WCS_URL . __( 'assets/images/sofort_h32.png',
+		                                         'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
