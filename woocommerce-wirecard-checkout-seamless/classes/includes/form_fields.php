@@ -198,7 +198,7 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		),
 		'woo_wcs_allowmotoforgroup'                      => array(
 			'type'        => 'multiselect',
-			'title'       => __( 'Allowing MoTo for group', 'woocommerce-wirecard-checkout-seamless' ),
+			'title'       => __( 'Allowing MoTo for roles', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop.',
 				'woocommerce-wirecard-checkout-seamless' ),
 			'options'     => $user_roles
