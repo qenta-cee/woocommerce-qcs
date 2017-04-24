@@ -75,8 +75,8 @@ function init_woocommerce_wcs_gateway() {
 	spl_autoload_register(
 		function ( $class_name ) {
 			if ( strpos( $class_name, "Wirecard_Checkout_Seamless" ) ) {
-				$method = explode( "_", strtolower( $class_name ) );
-				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . end( $method ) . ".php" );
+				$method = str_replace("WC_Gateway_Wirecard_Checkout_Seamless_", "", $class_name );
+				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . $method . ".php" );
 			}
 		} );
 

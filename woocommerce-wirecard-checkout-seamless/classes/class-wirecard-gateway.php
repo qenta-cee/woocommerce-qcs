@@ -32,7 +32,7 @@
 
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php');
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php' );
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -219,8 +219,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				onclick="changeWCSPayment('<?php echo $type->get_payment_type() ?>');"
 				data-order_button_text>
 			<label for="payment_method_wcs_<?php echo $type->get_payment_type() ?>">
-				<?php echo $type->get_label() ?>
-				<img src="<?= $type->get_icon() ?>" alt="Wirecard <?= $type->get_payment_type() ?>">
+				<?php echo $type->get_label();
+				if ( is_array( $type->get_icon() ) ) {
+					foreach ( $type->get_icon() as $icon ) {
+						echo "<img src='{$icon}' alt='Wirecard {$type->get_payment_type()}'>";
+					}
+				} else {
+					echo "<img src='{$type->get_icon()}' alt='Wirecard {$type->get_payment_type()}'>";
+				} ?>
 			</label>
 		<div
 			class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
@@ -242,11 +248,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		foreach ( $this->settings as $k => $v ) {
 			if ( strpos( $k, 'enable' ) !== false ) {
 				if ( $v == 1 ) {
-					$code = str_replace( '_enable', '', $k );
-					$code = str_replace( 'wcs_', '', $code );
-					//TODO: get name via language file
-					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( $code ) );
+					$code  = str_replace( '_enable', '', $k );
+					$code  = str_replace( 'wcs_', '', $code );
+					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+					                                                                                      $code ) ) );
 					$type  = new $class( $this->settings );
+
+					if ( method_exists( $type, 'get_risk' ) ) {
+						$riskvalue = $type->get_risk();
+						if ( ! $riskvalue ) {
+							continue;
+						}
+					}
 
 					if ( method_exists( $this, $code ) ) {
 						if ( ! call_user_func( array( $this, $code ) ) ) {
