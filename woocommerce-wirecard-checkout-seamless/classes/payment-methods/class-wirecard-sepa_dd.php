@@ -97,11 +97,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Sepa_dd {
 		$html .= "</p>";
 
 		// bic field
-		$html .= "<p class='form-row'>";
-		$html .= "<label>" . __( 'BIC:',
-		                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
-		$html .= "<input name='bankBic' autocomplete='off' class='input-text' type='text'/>";
-		$html .= "</p>";
+		if ( $this->_settings['woo_wcs_sepa_display_bic_field'] ) {
+			$html .= "<p class='form-row'>";
+			$html .= "<label>" . __( 'BIC:',
+			                         'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+			$html .= "<input name='bankBic' autocomplete='off' class='input-text' type='text'/>";
+			$html .= "</p>";
+		}
 
 		// iban field
 		$html .= "<p class='form-row'>";
