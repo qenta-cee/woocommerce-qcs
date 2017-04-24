@@ -232,7 +232,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
 			style="display:none;">
 			<?php
-			echo $type->get_payment_fields();
+			echo $type->has_payment_fields() ? $type->get_payment_fields() : null;
 		}
 	}
 
