@@ -186,7 +186,15 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		'woo_wcs_payolutionmid'                 => array(
 			'title'       => __( 'payolution mID', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Your payolution merchant ID, non-base64-encoded.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
+		)
+	),
+	'sepaoptions'         => array(
+		'woo_wcs_sepa_display_bic_field' => array(
+			'type'        => 'switch',
+			'title'       => __( 'Display BIC field', 'woocommerce-wirecard-checkout-seamless' ),
+			'description' => __( 'Display input field to enter the BIC. Note that this field is not mandatory for your consumer even if it is enabled.',
+			                     'woocommerce-wirecard-checkout-seamless' )
 		)
 	),
 	'creditcardoptions'   => array(
@@ -194,29 +202,29 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'type'        => 'switch',
 			'title'       => __( 'SAQ A compliance', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Selecting \'NO\', the stringent SAQ A-EP is applicable. Selecting \'YES\', Wirecard Checkout Seamless is integrated with the \'PCI DSS SAQ A Compliance\' feature and SAQ A is applicable.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_allowmotoforgroup'                      => array(
 			'type'        => 'multiselect',
 			'title'       => __( 'Allowing MoTo for roles', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop.',
-				'woocommerce-wirecard-checkout-seamless' ),
+			                     'woocommerce-wirecard-checkout-seamless' ),
 			'options'     => $user_roles
 		),
 		'woo_wcs_iframecssurl'                           => array(
 			'title'       => __( 'Iframe CSS-URL', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Entry of a name for the CSS file in order to customize the iframe input fields when using the \'PCI DSS SAQ A Compliance\' feature. File must be placed in the \'view/css\' directory of the plugin.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_number_placeholder_text'             => array(
 			'title'       => __( 'Credit card number placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Placeholder text for the credit card number field.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_holder_placeholder_text'             => array(
 			'title'       => __( 'Card holder placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Placeholder text for the card holder field.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_cvc_placeholder_text'                => array(
 			'title'       => __( 'CVC placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
@@ -225,43 +233,43 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		'woo_wcs_cc_issue_number_placeholder_text'       => array(
 			'title'       => __( 'Issue number placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Placeholder text for the issue number field.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_issue_date_placeholder_text' => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display issue date placeholder text', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display placeholder text for the issue date field. Only applicable if the \'PCI DSS SAQ A Compliance\' feature is enabled.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_exp_date_field'              => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display expiration date field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the expiration date in your credit card form during the checkout process.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_cardholder_field'            => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display card holder field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the card holder name in your credit card form during the checkout process.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_cvc_field'                   => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display CVC field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the CVC in your credit card form during the checkout process.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_issue_date_field'            => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display issue date field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the credit card issue date in your credit card form during the checkout process. Some credit cards do not have an issue date.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_issue_number_field'          => array(
 			'type'        => 'switch',
 			'title'       => __( 'Display issue number field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the credit card issue number in your credit card form during the checkout process. Some credit cards do not have an issue number.',
-				'woocommerce-wirecard-checkout-seamless' )
+			                     'woocommerce-wirecard-checkout-seamless' )
 		)
 	),
 	'invoiceoptions'      => array(
@@ -272,7 +280,8 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		),
 		'woo_wcs_invoice_billing_shipping_equal'     => array(
 			'type'  => 'switch',
-			'title' => __( 'Billing/shipping address musst be identical', 'woocommerce-wirecard-checkout-seamless' )
+			'title' => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' ),
+			'description' => __( 'Only applicable for payolution.', 'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_invoice_allowed_billing_countries'  => array(
 			'type'           => 'multiselect',
