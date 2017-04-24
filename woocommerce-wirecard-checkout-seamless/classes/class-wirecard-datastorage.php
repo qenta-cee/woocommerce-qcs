@@ -58,12 +58,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
 			$data_storage_init->setJavascriptScriptVersion( 'pci3' );
-			if ( Tools::strlen( trim( $this->_settings['iframe_css_url'] ) ) ) {
-				$data_storage_init->setIframeCssUrl(
-					$this->link->getIframeCssUrl( $this->_settings['iframe_css_url'] )
-				);
+			if ( strlen( trim( $this->_settings['iframe_css_url'] ) ) ) {
+				$data_storage_init->setIframeCssUrl( $this->_settings['iframe_css_url'] );
 			}
 
+			/*
 			$data_storage_init->setCreditCardPanPlaceholder(
 				__($this->module->getConfigValue('creditcardoptions', 'pan_placeholder'))
 			);
@@ -94,7 +93,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 			);
 			$data_storage_init->setCreditCardShowIssueNumberField(
 				$this->module->getConfigValue('creditcardoptions', 'displayissuenumber')
-			);
+			);*/
 		}
 	}
 }
