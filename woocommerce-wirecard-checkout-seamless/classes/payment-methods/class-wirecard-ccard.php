@@ -39,23 +39,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
-	private $payment_type = WirecardCEE_QMore_PaymentType::CCARD;
-	private $_settings = array();
+	protected $_settings = array();
 
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 	}
 
-	public function get_payment_type() {
-		return $this->payment_type;
-	}
-
+	/**
+	 * Return translated label for payment method
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|void
+	 */
 	public function get_label() {
 		return __( 'Credit Card', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
+	/**
+	 * Return full url to the icon
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL."assets/images/cc_h32.png";
+		return WOOCOMMERCE_GATEWAY_WCS_URL . "assets/images/cc_h32.png";
 	}
 
 	/**
@@ -77,6 +86,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
 			return $html;
 		} else {
+			$payment_type = str_replace( "-", "_", $this->get_payment_type() );
+			$html .= '
+			<script>
+				function parse' . $payment_type . 'date(value,issexp){
+					var month_field = document.getElementById("' . $payment_type . '-" + issexp + "-month"),
+					year_field = document.getElementById("' . $payment_type . '-" + issexp + "-year");
+					if( value.indexOf("/") > -1 ){
+						month_field.value = value.split( "/" )[0].trim();
+						year_field.value = value.split("/")[1].trim();
+					}
+				}
+			</script>';
 			if ( $this->_settings['woo_wcs_cc_display_cardholder_field'] ) {
 				$html .= "<p class='form-row form-row-wide'>";
 				$html .= "<label>" . __( 'Card holder:', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
@@ -86,25 +107,75 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
 			// card number field
 			$html .= "<p class='form-row'>";
-			$html .= "<label>" . __( 'Credit card number:', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
-			$html .= "<input name='cardnumber' autocomplete='off' class='input-text' type='text' placeholder='{$this->_settings['woo_wcs_cc_number_placeholder_text']}'>";
+			$html .= "<label>" . __( 'Credit card number:',
+			                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
+			$html .= "<input name='cardnumber' autocomplete='off' class='input-text wc-credit-card-form-card-number' type='text' placeholder='{$this->_settings['woo_wcs_cc_number_placeholder_text']}'>";
 			$html .= "</p>";
 
 			// expiration date input group
-			$html .= '<p class="form-row form-row-first">
+			$html .= '
+			<p class="form-row form-row-first">
 				<label>' . __( 'Expiration date', 'woocommerce-wirecard-checkout-seamless' ) . ' <span class="required">*</span></label>
-				<input class="input-text wc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="MM / YYYY" name="expirationDate" />
-			</p>
-			<p class="form-row form-row-last">
-				<label>' . __( 'Card verification code', 'woocommerce-wirecard-checkout-seamless' ) . ' <span class="required">*</span></label>
-				<input class="input-text wc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="'.$this->_settings["woo_wcs_cc_cvc_placeholder_text"].'" name="" />
+				<input 
+					class="input-text wc-credit-card-form-card-expiry"
+					type="text" 
+					autocomplete="off" 
+					placeholder="MM / YYYY"
+					onchange="parse' . $payment_type . 'date(this.value,\'exp\')"
+					onkeyup="parse' . $payment_type . 'date(this.value,\'exp\')"/>
+				<input type="hidden" id="' . $payment_type . '-exp-month" name="expirationMonth">
+				<input type="hidden" id="' . $payment_type . '-exp-year" name="expirationYear">
 			</p>';
-			$html .= "<div class=clear'></div>";
+
+			// display cvc field if enabled
+			if ( $this->_settings['woo_wcs_cc_display_cvc_field'] ) {
+				$html .= '<p class="form-row form-row-last">';
+				$html .= '<label>' . __( 'Card verification code',
+				                         'woocommerce-wirecard-checkout-seamless' );
+				// cvc is not required for credit card mail order / telephone order
+				if ( $this->get_payment_type() != WirecardCEE_QMore_PaymentType::CCARD_MOTO ) {
+					$html .= ' <span class="required">*</span>';
+				}
+				$html .= '</label>';
+				$html .= '<input class="input-text wc-credit-card-form-card-cvc" type="text" autocomplete="off" placeholder="' . $this->_settings["woo_wcs_cc_cvc_placeholder_text"] . '" name="" />';
+				$html .= '</p>';
+			}
+			$html .= "<div class='clear'></div>";
+
+			// expiration date input group
+			if ( $this->_settings['woo_wcs_cc_display_issue_date_field'] ) {
+				$html .= '
+					<p class="form-row form-row-first">
+						<label>' . __( 'Issue date', 'woocommerce-wirecard-checkout-seamless' ) . '</label>
+						<input 
+							class="input-text wc-credit-card-form-card-expiry"
+							type="text" 
+							autocomplete="off" 
+							placeholder="MM / YYYY" 
+							onchange="parse' . $payment_type . 'date(this.value,\'issue\')"
+							onkeyup="parse' . $payment_type . 'date(this.value,\'issue\')"/>
+						<input type="hidden" id="' . $payment_type . '-issue-month" name="issueMonth">
+						<input type="hidden" id="' . $payment_type . '-issue-year" name="issueYear">
+					</p>';
+			}
+
+			if ( $this->_settings['woo_wcs_cc_display_issue_number_field'] ) {
+				$html .= "<p class='form-row form-row-last'>";
+				$html .= "<label>" . __( 'Issue number:', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+				$html .= "<input name='issueNumber' autocomplete='off' class='input-text wc-credit-card-form-card-cvc' type='text' placeholder='{$this->_settings['woo_wcs_cc_issue_number_placeholder_text']}'>";
+				$html .= "</p>";
+			}
+			$html .= '<div class="clear"></div>';
 
 
 			$html .= "</fieldset>";
+
 			return $html;
 		}
+	}
+
+	public function get_payment_type() {
+		return WirecardCEE_QMore_PaymentType::CCARD;
 	}
 
 }
