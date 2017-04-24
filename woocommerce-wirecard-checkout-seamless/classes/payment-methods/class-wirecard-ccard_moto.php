@@ -61,4 +61,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard_Moto extends WC_Gateway_Wireca
 		return WirecardCEE_QMore_PaymentType::CCARD_MOTO;
 	}
 
+	/**
+	 * can any of user roles see this payment method? let's see here
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return boolean
+	 */
+	public function get_risk() {
+		// check if current user has permission to see this
+		$user_roles             = wp_get_current_user()->roles;
+		$enabled_roles_for_moto = $this->_settings['woo_wcs_allowmotoforgroup'];
+
+		return count( array_intersect( $user_roles, $enabled_roles_for_moto ) ) == 0 ? false : true;
+	}
+
 }
