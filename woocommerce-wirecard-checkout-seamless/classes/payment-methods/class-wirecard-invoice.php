@@ -95,20 +95,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 		                         'woocommerce-wirecard-checkout-seamless' ) . "</label>";
 		$html .= "<select name='dob_day' class=''>";
 
-		for ( $day = 1; $day < 32; $day ++ ) {
+		for ( $day = 31; $day > 0; $day -- ) {
 			$html .= "<option value='$day'> $day </option>";
 		}
 
 		$html .= "</select>";
 
 		$html .= "<select name='dob_month' class=''>";
-		for ( $month = 1; $month < 13; $month ++ ) {
+		for ( $month = 12; $month > 0; $month -- ) {
 			$html .= "<option value='$month'> $month </option>";
 		}
 		$html .= "</select>";
 
 		$html .= "<select name='dob_year' class=''>";
-		for ( $year = 1920; $year < date( "Y" ); $year ++ ) {
+		for ( $year = date( "Y" ); $year > 1920; $year -- ) {
 			$html .= "<option value='$year'> $year </option>";
 		}
 		$html .= "</select>";
