@@ -376,10 +376,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$initResponse = $client->initiate();
 
 			if ( $initResponse->hasFailed() ) {
-				wc_add_notice(
-					__( "Response failed! Error: {$initResponse->getError()->getMessage()}", 'woocommerce-wcs' ),
-					'error'
-				);
+				foreach ( $initResponse->getErrors() as $error ) {
+					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}", 'woocommerce-wcs' ),
+					               'error' );
+				}
 			}
 		} catch ( Exception $e ) {
 			throw ( $e );
@@ -506,7 +506,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		                                                                                              $args['wcs_payment_method'] ) ) );
 		$payment_class = new $payment_class( $this->settings );
 
-		if ( $payment_class->has_payment_fields() ) {
+		if ( method_exists( $payment_class, 'validate_payment_fields' ) ) {
 			$validation = $payment_class->validate_payment_fields( $args );
 			if ( $validation === true ) {
 				return true;
