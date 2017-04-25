@@ -94,6 +94,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	}
 
 	/**
+	 * Get client secret from config or optionvalue
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $gateway
+	 *
+	 * @return string
+	 */
+	function get_client_secret( $gateway ) {
+		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
+		if ( array_key_exists( $config_mode, $this->_presets ) ) {
+			return $this->_presets[ $config_mode ]['secret'];
+		} else {
+			return trim( $gateway->get_option( 'woo_wcs_secret' ) );
+		}
+	}
+
+	/**
 	 * Extract language code from locale settings
 	 *
 	 * @since 1.0.0

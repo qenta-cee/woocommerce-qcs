@@ -385,11 +385,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			throw ( $e );
 		}
 
-		WC()->session->wirecard_checkout_seamless_redirect_url = array(
-			'id'  => $order->get_id(),
-			'url' => $initResponse->getRedirectUrl()
-		);
-
 		return $initResponse->getRedirectUrl();
 	}
 
@@ -443,12 +438,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
-		update_post_meta( $order->get_id(), 'wcs_data', $this->creat_payment_data() );
+		//save updated payment data in extra field
+		if ( get_post_meta( $order->get_id(), 'wcs_data', true ) ) {
+			add_post_meta( $order->get_id(), 'wcs_updated_data', $this->create_payment_data(), false );
+		} else {
+			add_post_meta( $order->get_id(), 'wcs_data', $this->create_payment_data(), false );
+		}
 
 		$message = null;
 		try {
-			//TODO: Use specific secret for configarray
-			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, $this->get_option( 'woo_wcs_secret' ) );
+			$return = WirecardCEE_QMore_ReturnFactory::getInstance(
+				$_POST,
+				$this->_config->get_client_secret( $this )
+			);
 			if ( ! $return->validate() ) {
 				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
 				$order->update_status( 'failed', $message );
@@ -456,7 +458,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
 
-			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
+			//save new payment state in updated field
+			if ( get_post_meta( $order->get_id(), 'wcs_payment_state', true ) ) {
+				add_post_meta( $order->get_id(), 'wcs_updated_payment_state', $return->getPaymentState(), false );
+			} else {
+				add_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState(), false );
+			}
 
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
