@@ -172,8 +172,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Installment {
 
 	private function is_available_payolution() {
 
-		return true;
-
 		$cart = new WC_Cart();
 		$cart->get_cart_from_session();
 
