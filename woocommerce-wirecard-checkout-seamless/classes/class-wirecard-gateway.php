@@ -500,10 +500,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return boolean
 	 */
 	function validate_fields() {
-		// call wd_add_notice('text'); if you want to show an error message to user
+		$args = $this->get_post_data();
 
-		// return true if form validation ok
-		// return false if validation fails
+		$payment_class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+		                                                                                              $args['wcs_payment_method'] ) ) );
+		$payment_class = new $payment_class( $this->settings );
+
+		if ( $payment_class->has_payment_fields() ) {
+			$validation = $payment_class->validate_payment_fields( $args );
+			if ( $validation === true ) {
+				return true;
+			} else {
+				wc_add_notice( $validation, 'error' );
+
+				return;
+			}
+		}
+
+		return true;
 	}
 
 }
