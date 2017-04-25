@@ -192,20 +192,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 		$payment_type = str_replace( "-", "_", $data['wcs_payment_method'] );
 
 		if ( empty( $data[ $payment_type . 'cardnumber' ] ) ) {
-			$errors[] = "&bull; " . __( 'Credit card number can not be empty.',
+			$errors[] = "&bull; " . __( 'Credit card number must not be empty.',
 			                           'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		if ( empty( $data[ $payment_type . 'expirationMonth' ] ) ) {
-			$errors[] = "&bull; " . __( 'Expiration date can not be empty', 'woocommerce-wirecard-checkout-seamless' );
+			$errors[] = "&bull; " . __( 'Expiration date must not be empty.', 'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		if ( strlen( $data[ $payment_type . 'expirationYear' ] ) != 4 && ! empty( $data[ $payment_type . 'expirationMonth' ] ) ) {
-			$errors[] = "&bull; " . __( 'Expiration date is incorrect', 'woocommerce-wirecard-checkout-seamless' );
+			$errors[] = "&bull; " . __( 'Expiration date is incorrect.', 'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		if ( $data['wcs_payment_method'] != WirecardCEE_QMore_PaymentType::CCARD_MOTO && empty( $data[ $payment_type . 'cvc' ] ) ) {
-			$errors[] = "&bull; " . __( 'Card verification code can not be empty',
+			$errors[] = "&bull; " . __( 'Card verification code must not be empty',
 			                           'woocommerce-wirecard-checkout-seamless' );
 		}
 
