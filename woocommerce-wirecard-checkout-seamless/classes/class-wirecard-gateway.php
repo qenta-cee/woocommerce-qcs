@@ -77,6 +77,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				'return_request'
 			)
 		);
+		add_action(
+			'woocommerce_thankyou_' . $this->id,
+			array(
+				$this,
+				'order_received_text'
+			)
+		);
 	}
 
 	/**
@@ -420,8 +427,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
+
 		$order_id = $_REQUEST['wooOrderId'];
 		$order    = new WC_Order( $order_id );
+
 		if ( ! $order->get_id() ) {
 			$message = "order with id `$order->get_id()` not found";
 
@@ -434,14 +443,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
-		// Handle paymentdata for order
-		$str = '';
-		foreach ( $_POST as $k => $v ) {
-			$str .= "$k:$v\n";
-		}
-		$str = trim( $str );
-
-		update_post_meta( $order->get_id(), 'wcs_data', $str );
+		update_post_meta( $order->get_id(), 'wcs_data', $this->creat_payment_data() );
 
 		$message = null;
 		try {
@@ -494,6 +496,23 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Create payment data for orderoverview
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	function create_payment_data() {
+		$data = '';
+		foreach ( $_POST as $key => $value ) {
+			$data .= "$key:$value\n";
+		}
+		$data = trim( $data );
+
+		return $data;
+	}
+
+	/**
 	 * Redirect to specific return URL
 	 *
 	 * @since 1.0.0
@@ -529,6 +548,26 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 		}
 		header( 'Location: ' . $redirectUrl );
+	}
+
+	/**
+	 * Handles extra text for pending payment
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order_id
+	 */
+	function order_received_text( $order_id ) {
+		$order = new WC_Order( $order_id );
+		if ( $order->get_status() == 'on-hold' ) {
+			printf(
+				'<p>%s</p>',
+				__(
+					'Your order will be processed as soon as we receive the payment confirmation from your bank.',
+					'woocommerce-wcs'
+				)
+			);
+		}
 	}
 
 	/**
