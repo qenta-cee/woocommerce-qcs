@@ -51,10 +51,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
-		$this->enabled = "yes";
 
 		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
 		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
+
+		// if any of the payment types are enabled, set this to "yes", otherwise "no"
+		$this->enabled = count( $this->get_enabled_payment_types() ) > 0 ? "yes" : "no";
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -66,7 +68,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			'woocommerce_api_wc_gateway_wirecard_checkout_seamless',
 			array(
 				$this,
-				'dispatch_callback'
+				'confirm_request'
+			)
+		);
+		add_action(
+			'woocommerce_api_wc_gateway_wirecard_checkout_seamless_return',
+			array(
+				$this,
+				'return_request'
+			)
+		);
+		add_action(
+			'woocommerce_thankyou_' . $this->id,
+			array(
+				$this,
+				'order_received_text'
 			)
 		);
 	}
@@ -85,6 +101,43 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( ! empty( $result->option_value ) ) {
 			array_merge( $this->settings, unserialize( $result->option_value ) );
 		}
+	}
+
+	/**
+	 * Array of enabled payment types
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function get_enabled_payment_types() {
+		$types = array();
+		foreach ( $this->settings as $k => $v ) {
+			if ( strpos( $k, 'enable' ) !== false ) {
+				if ( $v == 1 ) {
+					$code  = str_replace( '_enable', '', $k );
+					$code  = str_replace( 'wcs_', '', $code );
+					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+					                                                                                      $code ) ) );
+					$type  = new $class( $this->settings );
+
+					if ( method_exists( $type, 'get_risk' ) ) {
+						$riskvalue = $type->get_risk();
+						if ( ! $riskvalue ) {
+							continue;
+						}
+					}
+
+					if ( method_exists( $this, $code ) ) {
+						if ( ! call_user_func( array( $this, $code ) ) ) {
+							continue;
+						}
+					}
+					$types[] = $type;
+				}
+			}
+		}
+
+		return $types;
 	}
 
 	/**
@@ -236,44 +289,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 	}
 
-
-	/**
-	 * Array of enabled payment types
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	protected function get_enabled_payment_types() {
-		$types = array();
-		foreach ( $this->settings as $k => $v ) {
-			if ( strpos( $k, 'enable' ) !== false ) {
-				if ( $v == 1 ) {
-					$code  = str_replace( '_enable', '', $k );
-					$code  = str_replace( 'wcs_', '', $code );
-					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
-					                                                                                      $code ) ) );
-					$type  = new $class( $this->settings );
-
-					if ( method_exists( $type, 'get_risk' ) ) {
-						$riskvalue = $type->get_risk();
-						if ( ! $riskvalue ) {
-							continue;
-						}
-					}
-
-					if ( method_exists( $this, $code ) ) {
-						if ( ! call_user_func( array( $this, $code ) ) ) {
-							continue;
-						}
-					}
-					$types[] = $type;
-				}
-			}
-		}
-
-		return $types;
-	}
-
 	/**
 	 * Handles payment and processes the order
 	 *
@@ -347,10 +362,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $payment_type )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
-			       ->setSuccessUrl( $return_url )
-			       ->setPendingUrl( $return_url )
-			       ->setCancelUrl( $return_url )
-			       ->setFailureUrl( $return_url )
+			       ->setSuccessUrl( $this->create_return_url( $order, 'SUCCESS' ) )
+			       ->setPendingUrl( $this->create_return_url( $order, 'PENDING' ) )
+			       ->setCancelUrl( $this->create_return_url( $order, 'CANCEL' ) )
+			       ->setFailureUrl( $this->create_return_url( $order, 'FAILURE' ) )
 			       ->setConfirmUrl( $return_url )
 			       ->setServiceUrl( $service_url )
 			       ->setAutoDeposit( $auto_deposit )
@@ -377,7 +392,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			if ( $initResponse->hasFailed() ) {
 				foreach ( $initResponse->getErrors() as $error ) {
-					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}", 'woocommerce-wirecard-checkout-seamless' ),
+					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
+					                   'woocommerce-wirecard-checkout-seamless' ),
 					               'error' );
 				}
 			}
@@ -385,45 +401,28 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			throw ( $e );
 		}
 
-		WC()->session->wirecard_checkout_seamless_redirect_url = array(
-			'id'  => $order->get_id(),
-			'url' => $initResponse->getRedirectUrl()
-		);
-
 		return $initResponse->getRedirectUrl();
 	}
 
-	function dispatch_callback() {
-		if ( isset( WC()->session->chosen_payment_method ) ) {
-			$redirectUrl = $this->get_return_url();
-			header( 'Location: ' . $redirectUrl );
-		} else {
-			print $this->confirm();
-		}
-		die();
-	}
-
 	/**
-	 * Handle return URL
+	 * Create return url for different paymentstates
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param null $order
+	 * @param $order
+	 * @param $payment_state
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
-	public function get_return_url( $order = null ) {
-		if ( $order ) {
-			$return_url = $order->get_checkout_order_received_url();
-		} else {
-			$return_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
-		}
+	function create_return_url( $order, $payment_state ) {
+		$return_url = add_query_arg( array(
+			                             'wc-api'       => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
+			                             'order-id'     => $order->get_id(),
+			                             'paymentState' => $payment_state
+		                             ),
+		                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
-		if ( is_ssl() || get_option( 'woocommerce_force_ssl_checkout' ) == 'yes' ) {
-			$return_url = str_replace( 'http:', 'https:', $return_url );
-		}
-
-		return apply_filters( 'woocommerce_get_return_url', $return_url, $order );
+		return $return_url;
 	}
 
 	/**
@@ -433,49 +432,55 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function confirm() {
+	function confirm_request() {
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
 			$message = 'order-id missing';
 
-			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
+
 		$order_id = $_REQUEST['wooOrderId'];
 		$order    = new WC_Order( $order_id );
+
 		if ( ! $order->get_id() ) {
 			$message = "order with id `$order->get_id()` not found";
 
-			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
 			$message = "cannot change the order with id `$order->get_id()`";
 
-			return WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
-		// Handle paymentdata for order
-		$str = '';
-		foreach ( $_POST as $k => $v ) {
-			$str .= "$k:$v\n";
+		//save updated payment data in extra field
+		if ( get_post_meta( $order->get_id(), 'wcs_data', true ) ) {
+			add_post_meta( $order->get_id(), 'wcs_updated_data', $this->create_payment_data(), false );
+		} else {
+			add_post_meta( $order->get_id(), 'wcs_data', $this->create_payment_data(), false );
 		}
-		$str = trim( $str );
-
-		update_post_meta( $order->get_id(), 'wcs_data', $str );
 
 		$message = null;
 		try {
-			//TODO: Use specific secret
-			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, 'B8AKTPWBRMNBV455FG6M2DANE99WU2' );
+			$return = WirecardCEE_QMore_ReturnFactory::getInstance(
+				$_POST,
+				$this->_config->get_client_secret( $this )
+			);
 			if ( ! $return->validate() ) {
 				$message = __( 'Validation error: invalid response', 'woocommerce-wirecard-checkout-seamless' );
 				$order->update_status( 'failed', $message );
 
-				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
 
-			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
+			//save new payment state in updated field
+			if ( get_post_meta( $order->get_id(), 'wcs_payment_state', true ) ) {
+				add_post_meta( $order->get_id(), 'wcs_updated_payment_state', $return->getPaymentState(), false );
+			} else {
+				add_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState(), false );
+			}
 
-			//TODO: Handle specific paymentstate
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
@@ -483,6 +488,25 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
+				case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
+					$order->update_status(
+						'on-hold',
+						__( 'Awaiting payment notification from 3rd party.', 'woocommerce-wcs' )
+					);
+					break;
+
+				case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
+					$order->update_status( 'cancelled', __( 'Payment cancelled.', 'woocommerce-wcs' ) );
+					break;
+
+				case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
+					$order->update_status(
+						'failed',
+						$return->getErrors()
+						       ->getConsumerMessage()
+					);
+					break;
+
 				default:
 					break;
 			}
@@ -491,7 +515,82 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$message = $e->getMessage();
 		}
 
-		return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+	}
+
+	/**
+	 * Create payment data for orderoverview
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	function create_payment_data() {
+		$data = '';
+		foreach ( $_POST as $key => $value ) {
+			$data .= "$key:$value\n";
+		}
+		$data = trim( $data );
+
+		return $data;
+	}
+
+	/**
+	 * Redirect to specific return URL
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed
+	 */
+	function return_request() {
+		$redirectUrl = $this->get_return_url();
+		if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
+			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wcs' ), 'error' );
+
+			header( 'Location: ' . $redirectUrl );
+		}
+		$order_id = $_REQUEST['order-id'];
+		$order    = new WC_Order( $order_id );
+
+		switch ( $_REQUEST['paymentState'] ) {
+			case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
+			case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
+				$redirectUrl = $this->get_return_url( $order );
+				break;
+
+			case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
+				wc_add_notice( __( 'Payment has been cancelled.', 'woocommerce-wcs' ), 'error' );
+				$redirectUrl = $order->get_cancel_endpoint();
+				break;
+
+			case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
+				wc_add_notice( __( 'Payment has failed.', 'woocommerce-wcs' ), 'error' );
+				$redirectUrl = $order->get_cancel_endpoint();
+
+			default:
+				break;
+		}
+		header( 'Location: ' . $redirectUrl );
+	}
+
+	/**
+	 * Handles extra text for pending payment
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order_id
+	 */
+	function order_received_text( $order_id ) {
+		$order = new WC_Order( $order_id );
+		if ( $order->get_status() == 'on-hold' ) {
+			printf(
+				'<p>%s</p>',
+				__(
+					'Your order will be processed as soon as we receive the payment confirmation from your bank.',
+					'woocommerce-wcs'
+				)
+			);
+		}
 	}
 
 	/**

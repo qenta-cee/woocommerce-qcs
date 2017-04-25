@@ -104,6 +104,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	}
 
 	/**
+	 * Get client secret from config or optionvalue
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $gateway
+	 *
+	 * @return string
+	 */
+	function get_client_secret( $gateway ) {
+		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
+		if ( array_key_exists( $config_mode, $this->_presets ) ) {
+			return $this->_presets[ $config_mode ]['secret'];
+		} else {
+			return trim( $gateway->get_option( 'woo_wcs_secret' ) );
+		}
+	}
+
+	/**
 	 * Extract language code from locale settings
 	 *
 	 * @since 1.0.0
@@ -153,7 +171,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_reference( $order ) {
-		return sprintf( '%010d', $order->get_id() );
+		return sprintf( '%010s', substr($order->get_id(), -10) );
 	}
 
 	/**
@@ -290,6 +308,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			     ->setImageUrl( isset( $image_url ) ? $image_url : '' );
 
 			$basket->addItem( $item, $item_quantity );
+		}
+
+		// Add shipping to the basket
+		if ( isset( $cart->shipping_total ) && $cart->shipping_total > 0) {
+			$item = new WirecardCEE_Stdlib_Basket_Item( 'shipping' );
+			$item->setUnitGrossAmount( wc_format_decimal( $cart->shipping_total + $cart->shipping_tax_total,
+				wc_get_price_decimals() ) )
+			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
+			     ->setUnitTaxAmount( wc_format_decimal( $cart->shipping_tax_total, wc_get_price_decimals() ) )
+			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) )
+			     ->setName( 'Shipping' )
+			     ->setDescription( 'Shipping' );
+			$basket->addItem( $item );
 		}
 
 		return $basket;
