@@ -161,7 +161,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_reference( $order ) {
-		return sprintf( '%010d', $order->get_id() );
+		return sprintf( '%010s', substr($order->get_id(), -10) );
 	}
 
 	/**
