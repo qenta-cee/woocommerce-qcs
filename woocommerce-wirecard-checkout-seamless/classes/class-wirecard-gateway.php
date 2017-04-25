@@ -335,7 +335,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			// Check if service url is valid
 			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
-				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wcs' ), 'error' );
+				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wirecard-checkout-seamless' ), 'error' );
 
 				return;
 			}
@@ -377,7 +377,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			if ( $initResponse->hasFailed() ) {
 				foreach ( $initResponse->getErrors() as $error ) {
-					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}", 'woocommerce-wcs' ),
+					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}", 'woocommerce-wirecard-checkout-seamless' ),
 					               'error' );
 				}
 			}
@@ -467,7 +467,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			//TODO: Use specific secret
 			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, 'B8AKTPWBRMNBV455FG6M2DANE99WU2' );
 			if ( ! $return->validate() ) {
-				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
+				$message = __( 'Validation error: invalid response', 'woocommerce-wirecard-checkout-seamless' );
 				$order->update_status( 'failed', $message );
 
 				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
