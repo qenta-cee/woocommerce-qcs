@@ -301,7 +301,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		}
 
 		// Add shipping to the basket
-		if ( isset( $cart->shipping_total ) && $cart->shipping_total < 0) {
+		if ( isset( $cart->shipping_total ) && $cart->shipping_total > 0) {
 			$item = new WirecardCEE_Stdlib_Basket_Item( 'shipping' );
 			$item->setUnitGrossAmount( wc_format_decimal( $cart->shipping_total + $cart->shipping_tax_total,
 				wc_get_price_decimals() ) )
