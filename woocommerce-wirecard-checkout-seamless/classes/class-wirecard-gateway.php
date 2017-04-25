@@ -456,7 +456,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
 
-			//TODO: Handle specific paymentstate
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
@@ -464,6 +463,25 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
+				case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
+					$order->update_status(
+						'on-hold',
+						__( 'Awaiting payment notification from 3rd party.', 'woocommerce-wcs' )
+					);
+					break;
+
+				case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
+					$order->update_status( 'cancelled', __( 'Payment cancelled.', 'woocommerce-wcs' ) );
+					break;
+
+				case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
+					$order->update_status(
+						'failed',
+						$return->getErrors()
+						       ->getConsumerMessage()
+					);
+					break;
+
 				default:
 					break;
 			}
@@ -476,10 +494,40 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * TODO: Add basic return_request functionality
+	 * Redirect to specific return URL
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed
 	 */
 	function return_request() {
 		$redirectUrl = $this->get_return_url();
+		if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
+			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wcs' ), 'error' );
+
+			header( 'Location: ' . $redirectUrl );
+		}
+		$order_id = $_REQUEST['order-id'];
+		$order    = new WC_Order( $order_id );
+
+		switch ( $_REQUEST['paymentState'] ) {
+			case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
+			case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
+				$redirectUrl = $this->get_return_url( $order );
+				break;
+
+			case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
+				wc_add_notice( __( 'Payment has been cancelled.', 'woocommerce-wcs' ), 'error' );
+				$redirectUrl = $order->get_cancel_endpoint();
+				break;
+
+			case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
+				wc_add_notice( __( 'Payment has failed.', 'woocommerce-wcs' ), 'error' );
+				$redirectUrl = $order->get_cancel_endpoint();
+
+			default:
+				break;
+		}
 		header( 'Location: ' . $redirectUrl );
 	}
 
