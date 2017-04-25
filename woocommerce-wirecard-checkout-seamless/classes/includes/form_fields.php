@@ -304,11 +304,6 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'multiple'       => true,
 			'select_buttons' => true
 		),
-		'woo_wcs_invoice_min_age'                    => array(
-			'title'             => __( 'Minimum age', 'woocommerce-wirecard-checkout-seamless' ),
-			'description'       => __( 'Only applicable for RatePay', 'woocommerce-wirecard-checkout-seamless' ),
-			'custom_attributes' => array( 'maxlength' => 3 )
-		),
 		'woo_wcs_invoice_min_amount'                 => array(
 			'title' => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' )
 		),
@@ -352,11 +347,6 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'options'        => get_woocommerce_currencies(),
 			'multiple'       => true,
 			'select_buttons' => true
-		),
-		'woo_wcs_installment_min_age'                    => array(
-			'title'             => __( 'Minimum age', 'woocommerce-wirecard-checkout-seamless' ),
-			'description'       => __( 'Only applicable for RatePay', 'woocommerce-wirecard-checkout-seamless' ),
-			'custom_attributes' => array( 'maxlength' => 3 )
 		),
 		'woo_wcs_installment_min_amount'                 => array(
 			'title' => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' )
