@@ -67,7 +67,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			'woocommerce_api_wc_gateway_wirecard_checkout_seamless',
 			array(
 				$this,
-				'dispatch_callback'
+				'confirm_request'
+			)
+		);
+		add_action(
+			'woocommerce_api_wc_gateway_wirecard_checkout_seamless_return',
+			array(
+				$this,
+				'return_request'
 			)
 		);
 	}
@@ -113,8 +120,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		return update_option( $this->get_option_key(),
-		                      apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
-		                                     $this->settings ) );
+			apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
+				$this->settings ) );
 	}
 
 	/**
@@ -160,7 +167,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 							name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
 							style="<?php echo esc_attr( $data['css'] ); ?>"
 							value="1" <?php checked( $this->get_option( $key ),
-							                         '1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+							'1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
 						<div class="wcs-chkbx-switch-slider"></div>
 					</label><br/>
 					<?php echo $this->get_description_html( $data ); ?>
@@ -313,7 +320,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
-			                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
+				site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 			$consumer_data = $this->_config->get_consumer_data( $order, $this );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
@@ -333,10 +340,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $payment_type )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
-			       ->setSuccessUrl( $return_url )
-			       ->setPendingUrl( $return_url )
-			       ->setCancelUrl( $return_url )
-			       ->setFailureUrl( $return_url )
+			       ->setSuccessUrl( $this->create_return_url( $order, 'SUCCESS' ) )
+			       ->setPendingUrl( $this->create_return_url( $order, 'PENDING' ) )
+			       ->setCancelUrl( $this->create_return_url( $order, 'CANCEL' ) )
+			       ->setFailureUrl( $this->create_return_url( $order, 'FAILURE' ) )
 			       ->setConfirmUrl( $return_url )
 			       ->setServiceUrl( $service_url )
 			       ->setAutoDeposit( $auto_deposit )
@@ -379,14 +386,25 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		return $initResponse->getRedirectUrl();
 	}
 
-	function dispatch_callback() {
-		if ( isset( WC()->session->chosen_payment_method ) ) {
-			$redirectUrl = $this->get_return_url();
-			header( 'Location: ' . $redirectUrl );
-		} else {
-			print $this->confirm();
-		}
-		die();
+	/**
+	 * Create return url for different paymentstates
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $order
+	 * @param $payment_state
+	 *
+	 * @return mixed
+	 */
+	function create_return_url( $order, $payment_state ) {
+		$return_url = add_query_arg( array(
+			'wc-api'       => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
+			'order-id'     => $order->get_id(),
+			'paymentState' => $payment_state
+		),
+			site_url( '/', is_ssl() ? 'https' : 'http' ) );
+
+		return $return_url;
 	}
 
 	/**
@@ -396,24 +414,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function confirm() {
+	function confirm_request() {
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
 			$message = 'order-id missing';
 
-			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 		$order_id = $_REQUEST['wooOrderId'];
 		$order    = new WC_Order( $order_id );
 		if ( ! $order->get_id() ) {
 			$message = "order with id `$order->get_id()` not found";
 
-			return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
 			$message = "cannot change the order with id `$order->get_id()`";
 
-			return WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
+			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		// Handle paymentdata for order
@@ -427,13 +445,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$message = null;
 		try {
-			//TODO: Use specific secret
-			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, 'B8AKTPWBRMNBV455FG6M2DANE99WU2' );
+			//TODO: Use specific secret for configarray
+			$return = WirecardCEE_QMore_ReturnFactory::getInstance( $_POST, $this->get_option( 'woo_wcs_secret' ) );
 			if ( ! $return->validate() ) {
 				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
 				$order->update_status( 'failed', $message );
 
-				return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
 
 			update_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState() );
@@ -442,7 +460,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
-					                  $return->getGatewayReferenceNumber() );
+						$return->getGatewayReferenceNumber() );
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
@@ -454,7 +472,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$message = $e->getMessage();
 		}
 
-		return WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+	}
+
+	/**
+	 * TODO: Add basic return_request functionality
+	 */
+	function return_request() {
+		$redirectUrl = $this->get_return_url();
+		header( 'Location: ' . $redirectUrl );
 	}
 
 	/**

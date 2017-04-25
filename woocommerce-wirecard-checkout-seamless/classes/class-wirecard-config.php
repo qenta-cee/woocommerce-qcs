@@ -115,7 +115,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_description( $order ) {
-		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(), $order->get_billing_last_name() );
+		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(),
+			$order->get_billing_last_name() );
 	}
 
 	/**
