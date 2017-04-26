@@ -35,56 +35,97 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Sepa_dd
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_Paypal {
+class WC_Gateway_Wirecard_Checkout_Seamless_Sepa_dd {
 
-	private $payment_type = WirecardCEE_QMore_PaymentType::PAYPAL;
-	private $settings = array();
+	protected $_settings = array();
 
 	public function __construct( $settings ) {
-		$this->settings = $settings;
+		$this->_settings = $settings;
 	}
 
 	/**
-	 * return the translated payment method label
+	 * Return translated label for payment method
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string|void
 	 */
 	public function get_label() {
-		return __( 'PayPal', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'SEPA Direct Debit', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
-	 * return the full url to the payment method icon
+	 * Return full url to the icon
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL."assets/images/paypal_h32.png";
+		return WOOCOMMERCE_GATEWAY_WCS_URL . "assets/images/SEPA_h32.png";
 	}
 
 	/**
-	 * returns false because the payment method has no input fields
+	 * returns true because the payment method has input fields
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
 	public function has_payment_fields() {
-		return false;
+		return true;
 	}
 
-	public function get_payment_type() {
-		return $this->payment_type;
-	}
-
+	/**
+	 * show fields for the sepa payment method
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	public function get_payment_fields() {
-		return false;
+		$html = "<fieldset class='wc-credit-card-form wc-payment-form'>";
+		$html .= '';
+
+		// account owner field
+		$html .= "<p class='form-row'>";
+		$html .= "<label>" . __( 'Account owner:',
+		                         'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+		$html .= "<input name='accountOwner' autocomplete='off' class='input-text' type='text'/>";
+		$html .= "</p>";
+
+		// bic field
+		if ( $this->_settings['woo_wcs_sepa_display_bic_field'] ) {
+			$html .= "<p class='form-row'>";
+			$html .= "<label>" . __( 'BIC:',
+			                         'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+			$html .= "<input name='bankBic' autocomplete='off' class='input-text' type='text'/>";
+			$html .= "</p>";
+		}
+
+		// iban field
+		$html .= "<p class='form-row'>";
+		$html .= "<label>" . __( 'IBAN:',
+		                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
+		$html .= "<input name='bankAccountIban' autocomplete='off' class='input-text' type='text'/>";
+		$html .= "</p>";
+
+		$html .= "</fieldset>";
+
+		return $html;
+	}
+
+	/**
+	 * return the payment type sepa direct debit
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_payment_type() {
+		return WirecardCEE_QMore_PaymentType::SEPADD;
 	}
 
 }

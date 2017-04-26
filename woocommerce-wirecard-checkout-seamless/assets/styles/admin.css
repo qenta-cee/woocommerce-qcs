@@ -53,6 +53,7 @@
     -ms-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
+    border-radius:4px;
 }
 
 .wcs-chkbx-switch > .wcs-chkbx-switch-slider:before {
@@ -68,6 +69,7 @@
     -ms-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
+    border-radius: 50%;
 }
 
 .wcs-chkbx-switch > input + .wcs-chkbx-switch-slider {
@@ -126,4 +128,8 @@
 
 .titledesc {
     text-align: right;
+}
+
+.panel .tab-pane table th, .panel .tab-pane table td {
+    padding:0;
 }

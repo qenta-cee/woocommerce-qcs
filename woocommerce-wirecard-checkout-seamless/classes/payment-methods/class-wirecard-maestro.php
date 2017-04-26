@@ -35,56 +35,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Maestro
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_Paypal {
+class WC_Gateway_Wirecard_Checkout_Seamless_Maestro extends WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
-	private $payment_type = WirecardCEE_QMore_PaymentType::PAYPAL;
-	private $settings = array();
-
-	public function __construct( $settings ) {
-		$this->settings = $settings;
-	}
-
-	/**
-	 * return the translated payment method label
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string|void
-	 */
 	public function get_label() {
-		return __( 'PayPal', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'Maestro SecureCode', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
-	 * return the full url to the payment method icon
+	 * override the payment type to maestro
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
-	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL."assets/images/paypal_h32.png";
+	public function get_payment_type() {
+		return WirecardCEE_QMore_PaymentType::MAESTRO;
 	}
 
 	/**
-	 * returns false because the payment method has no input fields
+	 * override the icons to show icons of maestro and mastercard secure code
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool
+	 * @return array
 	 */
-	public function has_payment_fields() {
-		return false;
-	}
-
-	public function get_payment_type() {
-		return $this->payment_type;
-	}
-
-	public function get_payment_fields() {
-		return false;
+	public function get_icon() {
+		return array(
+			WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Maestro_h32.png',
+			WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Secure_code_h32.png'
+		);
 	}
 
 }

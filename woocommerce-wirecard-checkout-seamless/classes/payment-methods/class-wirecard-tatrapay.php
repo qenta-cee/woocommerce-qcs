@@ -35,52 +35,52 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Tatrapay
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
+class WC_Gateway_Wirecard_Checkout_Seamless_Tatrapay{
 
-	private $payment_type = WirecardCEE_QMore_PaymentType::CCARD;
-	private $settings = array();
+	protected $_settings = array();
 
 	public function __construct( $settings ) {
-		$this->settings = $settings;
+		$this->_settings = $settings;
 	}
+
+	/**
+	 * Return translated label for payment method
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|void
+	 */
+	public function get_label() {
+		return __( 'TatraPay', 'woocommerce-wirecard-checkout-seamless' );
+	}
+
+	/**
+	 * Return full url to the icon
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_icon() {
+		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/TatraPay_h32.png';
+	}
+
+	/**
+	 * returns true because the payment method has input fields
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public function has_payment_fields() {
+		return false;
+	}
+
 
 	public function get_payment_type() {
-		return $this->payment_type;
-	}
-
-	public function get_label() {
-		return __( 'Credit Card', 'woocommerce-wirecard-checkout-seamless' );
-	}
-
-	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL."assets/images/ccard.png";
-	}
-
-	public function get_payment_fields() {
-
-		$html = "<input type='radio' name='woocommerce_wirecard_wcs_payment_type' value='" . $this->payment_type . "'>";
-		$html .= "<label for='woocommerce_wirecard_wcs_payment_type_'>" . __( 'PaymentType ' . $this->payment_type,
-		                                                                      'woocommerce-wirecard-checkout-seamless' ) . "</label>";
-		if ( $this->settings['woo_wcs_saqacompliance'] ) {
-			$html .= "<div id='woocommerce_wcs_iframe_ccard'></div>";
-
-			return $html;
-		} else {
-			if ( $this->settings['woo_wcs_cc_display_cardholder_field'] ) {
-				$html .= "<p class='form-row'>";
-				$html .= "<label>" . __( 'Card holder:', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
-				$html .= "<input name='cardholder' autocomplete='off' class='input-text' type='text' placeholder='{$this->settings['woo_wcs_cc_holder_placeholder_text']}'>";
-				$html .= "</p>";
-			}
-			$html .= "<p class='form-row'>";
-			$html .= "<label>" . __( 'Credit card number:', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
-			$html .= "<input name='cardnumber' autocomplete='off' class='input-text' type='text' placeholder='{$this->settings['woo_wcs_cc_number_placeholder_text']}'>";
-			$html .= "</p>";
-
-			return $html;
-		}
+		return WirecardCEE_QMore_PaymentType::TATRAPAY;
 	}
 
 }

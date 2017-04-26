@@ -32,8 +32,7 @@
 
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-creditcard.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-paypal.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php' );
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -52,12 +51,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->payment_name = '';
 		$this->init_form_fields();
 		$this->init_settings();
-		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
-		$this->enabled = "yes";
-		$this->_logger  = new WC_Logger();
 
+		$this->_logger = new WC_Logger();
 		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
-		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
+		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
+
+		// if any of the payment types are enabled, set this to "yes", otherwise "no"
+		$this->enabled = count( $this->get_enabled_payment_types( false ) ) > 0 ? "yes" : "no";
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -102,6 +102,46 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( ! empty( $result->option_value ) ) {
 			array_merge( $this->settings, unserialize( $result->option_value ) );
 		}
+	}
+
+	/**
+	 * Array of enabled payment types
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function get_enabled_payment_types( $load_class = true ) {
+		$types = array();
+		foreach ( $this->settings as $k => $v ) {
+			if ( strpos( $k, 'enable' ) !== false ) {
+				if ( $v == 1 ) {
+					$code  = str_replace( '_enable', '', $k );
+					$code  = str_replace( 'wcs_', '', $code );
+
+					if( $load_class ) {
+						$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+						                                                                                      $code ) ) );
+						$type  = new $class( $this->settings );
+
+						if ( method_exists( $type, 'get_risk' ) ) {
+							$riskvalue = $type->get_risk();
+							if ( ! $riskvalue ) {
+								continue;
+							}
+						}
+					}
+
+					if ( method_exists( $this, $code ) ) {
+						if ( ! call_user_func( array( $this, $code ) ) ) {
+							continue;
+						}
+					}
+					$types[] = $type;
+				}
+			}
+		}
+
+		return $types;
 	}
 
 	/**
@@ -206,19 +246,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	function payment_fields() {
-		global $woocommerce;
+		$dataStorage = new WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage( $this->settings );
+		$dataStorage->init();
 
-		/**
-		 * TODO: - Implement method specific fields
-		 *       - Remove woocommerce_wcs payment
-		 *       - Implement labels (method title)
-		 * */
 		?>
 		<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
 		<script type="text/javascript">
 			function changeWCSPayment(code) {
-				var changer = document.getElementById('wcs_payment_method_changer'),
-					form_fields = document.getElementsByClassName('payment_box');
+				var changer = document.getElementById('wcs_payment_method_changer');
 				changer.value = code;
 			}
 		</script>
@@ -237,43 +272,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				onclick="changeWCSPayment('<?php echo $type->get_payment_type() ?>');"
 				data-order_button_text>
 			<label for="payment_method_wcs_<?php echo $type->get_payment_type() ?>">
-				<?php echo $type->get_label() ?>
-				<img src="<?= $type->get_icon() ?>" alt="Wirecard <?= $type->get_payment_type() ?>">
-			</label>
-		<div class="payment_box payment_method_<?php echo $type->get_payment_type() ?>" style="display:none;">
-			<?php
-		}
-	}
-
-
-	/**
-	 * Array of enabled payment types
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	protected function get_enabled_payment_types() {
-		$types = array();
-		foreach ( $this->settings as $k => $v ) {
-			if ( strpos( $k, 'enable' ) !== false ) {
-				if ( $v == 1 ) {
-					$code = str_replace( '_enable', '', $k );
-					$code = str_replace( 'wcs_', '', $code );
-					//TODO: get name via language file
-					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( $code ) );
-					$type  = new $class( $this->settings );
-
-					if ( method_exists( $this, $code ) ) {
-						if ( ! call_user_func( array( $this, $code ) ) ) {
-							continue;
-						}
+				<?php echo $type->get_label();
+				if ( is_array( $type->get_icon() ) ) {
+					foreach ( $type->get_icon() as $icon ) {
+						echo "<img src='{$icon}' alt='Wirecard {$type->get_payment_type()}'>";
 					}
-					$types[] = $type;
-				}
-			}
+				} else {
+					echo "<img src='{$type->get_icon()}' alt='Wirecard {$type->get_payment_type()}'>";
+				} ?>
+			</label>
+		<div
+			class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
+			style="display:none;">
+			<?php
+			echo $type->has_payment_fields() ? $type->get_payment_fields() : null;
 		}
-
-		return $types;
 	}
 
 	/**
@@ -324,7 +337,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function initiate_payment( $order, $payment_type ) {
 
 		try {
-			$config_array = $this->_config->get_client_config( $this );
+			$config_array = $this->_config->get_client_config();
 			$client       = new WirecardCEE_QMore_FrontendClient( $config_array );
 
 
@@ -337,7 +350,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			// Check if service url is valid
 			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
-				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wcs' ), 'error' );
+				wc_add_notice( __( "Service URL is invalid", 'woocommerce-wirecard-checkout-seamless' ), 'error' );
 
 				return;
 			}
@@ -378,11 +391,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$initResponse = $client->initiate();
 
 			if ( $initResponse->hasFailed() ) {
-				$this->_logger->error( __METHOD__ . ': Initialization response failed!' );
-				wc_add_notice(
-					__( "Response failed! Error: {$initResponse->getError()->getMessage()}", 'woocommerce-wcs' ),
-					'error'
-				);
+
+				foreach ( $initResponse->getErrors() as $error ) {
+					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
+					                   'woocommerce-wirecard-checkout-seamless' ),
+					               'error' );
+				}
 			}
 		} catch ( Exception $e ) {
 			$this->_logger->error( __METHOD__ . ': ' . $e->getMessage() );
@@ -459,8 +473,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				$this->_config->get_client_secret( $this )
 			);
 			if ( ! $return->validate() ) {
-				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
+
+				$message = __( 'Validation error: invalid response', 'woocommerce-wirecard-checkout-seamless' );
 				$this->_logger->error( __METHOD__ . ':' . $message );
+
 				$order->update_status( 'failed', $message );
 
 				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
@@ -564,7 +580,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
 				wc_add_notice( __( 'Payment has failed.', 'woocommerce-wcs' ), 'error' );
 				$redirectUrl = $order->get_cancel_endpoint();
-
+				break;
 			default:
 				break;
 		}
@@ -597,10 +613,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return boolean
 	 */
 	function validate_fields() {
-		// call wd_add_notice('text'); if you want to show an error message to user
+		$args = $this->get_post_data();
 
-		// return true if form validation ok
-		// return false if validation fails
+		$payment_class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+		                                                                                              $args['wcs_payment_method'] ) ) );
+		$payment_class = new $payment_class( $this->settings );
+
+		if ( method_exists( $payment_class, 'validate_payment_fields' ) ) {
+			$validation = $payment_class->validate_payment_fields( $args );
+			if ( $validation === true ) {
+				return true;
+			} else {
+				wc_add_notice( $validation, 'error' );
+
+				return;
+			}
+		}
+
+		return true;
 	}
 
 }

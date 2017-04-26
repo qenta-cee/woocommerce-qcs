@@ -35,56 +35,97 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Credit_Card
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Pbx
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_Paypal {
+class WC_Gateway_Wirecard_Checkout_Seamless_Pbx {
 
-	private $payment_type = WirecardCEE_QMore_PaymentType::PAYPAL;
-	private $settings = array();
+	protected $_settings = array();
 
 	public function __construct( $settings ) {
-		$this->settings = $settings;
+		$this->_settings = $settings;
 	}
 
 	/**
-	 * return the translated payment method label
+	 * Return translated label for payment method
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string|void
 	 */
 	public function get_label() {
-		return __( 'PayPal', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'paybox', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
-	 * return the full url to the payment method icon
+	 * Return full url to the icon
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL."assets/images/paypal_h32.png";
+		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/paybox_h32.png';
 	}
 
 	/**
-	 * returns false because the payment method has no input fields
+	 * returns true because the payment method has input fields
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
 	public function has_payment_fields() {
-		return false;
+		return true;
 	}
+
+	/**
+	 * returns the payment fields in the frontend
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_payment_fields() {
+		$html = '<fieldset  class="wc-credit-card-form wc-payment-form">';
+
+		// dropdown for financial institution
+		$html .= "<p class='form-row'>";
+		$html .= "<label>" . __( 'paybox number:',
+		                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
+		$html .= "<input type='tel' name='payerPayboxNumber' autocomplete='off' />";
+
+		$html .= "</p>";
+
+		$html .= '</fieldset>';
+
+		return $html;
+
+	}
+
 
 	public function get_payment_type() {
-		return $this->payment_type;
+		return WirecardCEE_QMore_PaymentType::PBX;
 	}
 
-	public function get_payment_fields() {
-		return false;
+	/**
+	 * return true or error message if there are errors in the validation
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $data - post data received
+	 *
+	 * @return boolean|string
+	 */
+	public function validate_payment_fields( $data ) {
+
+		$errors = [ ];
+
+		if ( empty( $data['payerPayboxNumber'] ) ) {
+			$errors[] = "&bull; " . __( 'Paybox number must not be empty.',
+			                            'woocommerce-wirecard-checkout-seamless' );
+		}
+
+		return count( $errors ) == 0 ? true : join( "<br>", $errors );
 	}
 
 }
