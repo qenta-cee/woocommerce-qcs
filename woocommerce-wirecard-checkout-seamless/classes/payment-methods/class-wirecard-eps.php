@@ -53,7 +53,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 	 * @return string|void
 	 */
 	public function get_label() {
-		return __( 'SOFORT Banking', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'eps-Überweisung', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
