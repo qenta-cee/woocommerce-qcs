@@ -446,10 +446,6 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 			'title' => __( 'paysafecard', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
 		),
-		'wcs_quick_enable'        => array(
-			'title' => __( '@Quick', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
-		),
 		'wcs_epay_bg_enable'      => array(
 			'title' => __( 'ePay.bg', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'

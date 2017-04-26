@@ -57,7 +57,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
 
 		// if any of the payment types are enabled, set this to "yes", otherwise "no"
-		$this->enabled = count( $this->get_enabled_payment_types() ) > 0 ? "yes" : "no";
+		$this->enabled = count( $this->get_enabled_payment_types( false ) ) > 0 ? "yes" : "no";
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -110,21 +110,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	protected function get_enabled_payment_types() {
+	protected function get_enabled_payment_types( $load_class = true ) {
 		$types = array();
 		foreach ( $this->settings as $k => $v ) {
 			if ( strpos( $k, 'enable' ) !== false ) {
 				if ( $v == 1 ) {
 					$code  = str_replace( '_enable', '', $k );
 					$code  = str_replace( 'wcs_', '', $code );
-					$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
-					                                                                                      $code ) ) );
-					$type  = new $class( $this->settings );
 
-					if ( method_exists( $type, 'get_risk' ) ) {
-						$riskvalue = $type->get_risk();
-						if ( ! $riskvalue ) {
-							continue;
+					if( $load_class ) {
+						$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
+						                                                                                      $code ) ) );
+						$type  = new $class( $this->settings );
+
+						if ( method_exists( $type, 'get_risk' ) ) {
+							$riskvalue = $type->get_risk();
+							if ( ! $riskvalue ) {
+								continue;
+							}
 						}
 					}
 
