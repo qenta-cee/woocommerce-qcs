@@ -43,6 +43,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	protected $_admin;
 	protected $_config;
 	protected $_logger;
+	protected $_transaction;
 
 	public function __construct() {
 
@@ -54,10 +55,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->init_settings();
 		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
 		$this->enabled = "yes";
-		$this->_logger  = new WC_Logger();
+		$this->_logger = new WC_Logger();
 
-		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
-		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
+		$this->_admin       = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
+		$this->_config      = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
+		$this->_transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -342,6 +344,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				return;
 			}
 
+			$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
+			                                               get_woocommerce_currency(), $payment_type );
+
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
 			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
@@ -383,9 +388,17 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					__( "Response failed! Error: {$initResponse->getError()->getMessage()}", 'woocommerce-wcs' ),
 					'error'
 				);
+				$this->_transaction->update( array( 'payment_state' => 'INITIATED', 'message' => 'error' ),
+				                             array( 'id_order' => $order->get_id() ) );
+			} else {
+
+				$this->_transaction->update( array( 'payment_state' => 'INITIATED', 'message' => 'ok' ),
+				                             array( 'id_order' => $order->get_id() ) );
 			}
 		} catch ( Exception $e ) {
 			$this->_logger->error( __METHOD__ . ': ' . $e->getMessage() );
+			$this->_transaction->update( array( 'payment_state' => 'INITIATED', 'message' => 'error' ),
+			                             array( 'id_order' => $order->get_id() ) );
 			throw ( $e );
 		}
 
