@@ -83,7 +83,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	function get_client_config( ) {
+	function get_client_config() {
 		$config_mode = $this->_settings['woo_wcs_configuration'];
 
 		if ( array_key_exists( $config_mode, $this->_presets ) ) {
@@ -101,6 +101,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 				'LANGUAGE'    => $this->get_language_code(),
 			);
 		}
+	}
+
+	/**
+	 * Extract language code from locale settings
+	 *
+	 * @since 1.0.0
+	 * @return mixed
+	 */
+	function get_language_code() {
+		$locale = get_locale();
+		$parts  = explode( '_', $locale );
+
+		return $parts[0];
 	}
 
 	/**
@@ -122,16 +135,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	}
 
 	/**
-	 * Extract language code from locale settings
+	 * Get client backend password from config or optionvalue
 	 *
 	 * @since 1.0.0
-	 * @return mixed
 	 */
-	function get_language_code() {
-		$locale = get_locale();
-		$parts  = explode( '_', $locale );
 
-		return $parts[0];
+	function get_backend_password() {
+		$config_mode = $this->_settings['woo_wcs_configuration'];
+
+		if ( array_key_exists( $config_mode, $this->_presets ) ) {
+			return $this->_presets[ $config_mode ]['backendpw'];
+		} else {
+			return $this->_settings['woo_wcs_backendpassword'];
+		}
 	}
 
 	/**
@@ -171,7 +187,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	function get_order_reference( $order ) {
-		return sprintf( '%010s', substr($order->get_id(), -10) );
+		return sprintf( '%010s', substr( $order->get_id(), - 10 ) );
 	}
 
 	/**
@@ -311,10 +327,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		}
 
 		// Add shipping to the basket
-		if ( isset( $cart->shipping_total ) && $cart->shipping_total > 0) {
+		if ( isset( $cart->shipping_total ) && $cart->shipping_total > 0 ) {
 			$item = new WirecardCEE_Stdlib_Basket_Item( 'shipping' );
 			$item->setUnitGrossAmount( wc_format_decimal( $cart->shipping_total + $cart->shipping_tax_total,
-				wc_get_price_decimals() ) )
+			                                              wc_get_price_decimals() ) )
 			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
 			     ->setUnitTaxAmount( wc_format_decimal( $cart->shipping_tax_total, wc_get_price_decimals() ) )
 			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) )
