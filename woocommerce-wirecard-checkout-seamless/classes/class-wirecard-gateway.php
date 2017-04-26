@@ -42,6 +42,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	protected $_admin;
 	protected $_config;
+	protected $_logger;
 
 	public function __construct() {
 
@@ -53,6 +54,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->init_settings();
 		//TODO: remove woocommerce_wcs from payment method, for testing it is enabled
 		$this->enabled = "yes";
+		$this->_logger  = new WC_Logger();
 
 		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
 		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config();
@@ -127,8 +129,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		return update_option( $this->get_option_key(),
-			apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
-				$this->settings ) );
+		                      apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id,
+		                                     $this->settings ) );
 	}
 
 	/**
@@ -174,7 +176,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 							name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
 							style="<?php echo esc_attr( $data['css'] ); ?>"
 							value="1" <?php checked( $this->get_option( $key ),
-							'1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+							                         '1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
 						<div class="wcs-chkbx-switch-slider"></div>
 					</label><br/>
 					<?php echo $this->get_description_html( $data ); ?>
@@ -327,7 +329,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
-				site_url( '/', is_ssl() ? 'https' : 'http' ) );
+			                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 			$consumer_data = $this->_config->get_consumer_data( $order, $this );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
@@ -376,12 +378,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$initResponse = $client->initiate();
 
 			if ( $initResponse->hasFailed() ) {
+				$this->_logger->error( __METHOD__ . ': Initialization response failed!' );
 				wc_add_notice(
 					__( "Response failed! Error: {$initResponse->getError()->getMessage()}", 'woocommerce-wcs' ),
 					'error'
 				);
 			}
 		} catch ( Exception $e ) {
+			$this->_logger->error( __METHOD__ . ': ' . $e->getMessage() );
 			throw ( $e );
 		}
 
@@ -400,11 +404,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function create_return_url( $order, $payment_state ) {
 		$return_url = add_query_arg( array(
-			'wc-api'       => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
-			'order-id'     => $order->get_id(),
-			'paymentState' => $payment_state
-		),
-			site_url( '/', is_ssl() ? 'https' : 'http' ) );
+			                             'wc-api'       => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
+			                             'order-id'     => $order->get_id(),
+			                             'paymentState' => $payment_state
+		                             ),
+		                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 		return $return_url;
 	}
@@ -419,6 +423,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function confirm_request() {
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
 			$message = 'order-id missing';
+			$this->_logger->error( __METHOD__ . ':' . $message );
 
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
@@ -428,12 +433,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		if ( ! $order->get_id() ) {
 			$message = "order with id `$order->get_id()` not found";
+			$this->_logger->error( __METHOD__ . ':' . $message );
 
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
 			$message = "cannot change the order with id `$order->get_id()`";
+			$this->_logger->error( __METHOD__ . ':' . $message );
 
 			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
 		}
@@ -453,10 +460,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			);
 			if ( ! $return->validate() ) {
 				$message = __( 'Validation error: invalid response', 'woocommerce-wcs' );
+				$this->_logger->error( __METHOD__ . ':' . $message );
 				$order->update_status( 'failed', $message );
 
 				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 			}
+
+			$this->_logger->notice( __METHOD__ . ':' . print_r( $return, true ) );
 
 			//save new payment state in updated field
 			if ( get_post_meta( $order->get_id(), 'wcs_payment_state', true ) ) {
@@ -468,7 +478,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			switch ( $return->getPaymentState() ) {
 				case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
-						$return->getGatewayReferenceNumber() );
+					                  $return->getGatewayReferenceNumber() );
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
 					$order->payment_complete();
 					break;
@@ -497,6 +507,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		} catch ( Exception $e ) {
 			$order->update_status( 'failed', $e->getMessage() );
 			$message = $e->getMessage();
+			$this->_logger->error( __METHOD__ . ':' . $message );
 		}
 
 		print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
@@ -528,8 +539,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function return_request() {
 		$redirectUrl = $this->get_return_url();
+
+		$this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
 		if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
 			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wcs' ), 'error' );
+			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
 
 			header( 'Location: ' . $redirectUrl );
 		}
