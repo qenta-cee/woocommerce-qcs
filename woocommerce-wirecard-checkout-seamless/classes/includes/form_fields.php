@@ -467,10 +467,6 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		'wcs_pbx_enable'   => array(
 			'title' => __( 'paybox', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
-		),
-		'wcs_mpass_enable' => array(
-			'title' => __( 'mpass', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
 		)
 	),
 	'voucherpayments'     => array(
