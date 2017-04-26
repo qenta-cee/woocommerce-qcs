@@ -35,9 +35,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Eps
+ * Class WC_Gateway_Wirecard_Checkout_Seamless_Idl
  */
-class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
+class WC_Gateway_Wirecard_Checkout_Seamless_Idl {
 
 	protected $_settings = array();
 
@@ -53,7 +53,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 	 * @return string|void
 	 */
 	public function get_label() {
-		return __( 'SOFORT Banking', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'iDeal', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/eps-Ueberweisung_h32.png';
+		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/iDEAL_h32.png';
 	}
 
 	/**
@@ -86,15 +86,16 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 	 * @return string
 	 */
 	public function get_payment_fields() {
+
 		$html = '<fieldset  class="wc-credit-card-form wc-payment-form">';
 
 		// dropdown for financial institution
 		$html .= "<p class='form-row'>";
 		$html .= "<label>" . __( 'Financial institution:',
 		                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
-		$html .= "<select name='woo_wcs_eps_financialInstitution' autocomplete='off'>";
+		$html .= "<select name='woo_wcs_idl_financialInstitution' autocomplete='off'>";
 		$html .= "<option value=''>" . __( 'Choose your bank', 'woocommerce-wirecard-checkout-seamless' ) . "</option>";
-		foreach ( WirecardCEE_Stdlib_PaymentTypeAbstract::getFinancialInstitutions( WirecardCEE_Stdlib_PaymentTypeAbstract::EPS ) as $key => $value ) {
+		foreach ( WirecardCEE_Stdlib_PaymentTypeAbstract::getFinancialInstitutions( WirecardCEE_Stdlib_PaymentTypeAbstract::IDL ) as $key => $value ) {
 			$html .= "<option value='$key'>$value</option>";
 		}
 
@@ -109,7 +110,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 
 
 	public function get_payment_type() {
-		return WirecardCEE_QMore_PaymentType::EPS;
+		return WirecardCEE_QMore_PaymentType::IDL;
 	}
 
 	/**
@@ -125,7 +126,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 
 		$errors = [ ];
 
-		if ( empty( $data['woo_wcs_eps_financialInstitution'] ) ) {
+		if ( empty( $data['woo_wcs_idl_financialInstitution'] ) ) {
 			$errors[] = "&bull; " . __( 'Financial institution must not be empty.',
 			                            'woocommerce-wirecard-checkout-seamless' );
 		}
