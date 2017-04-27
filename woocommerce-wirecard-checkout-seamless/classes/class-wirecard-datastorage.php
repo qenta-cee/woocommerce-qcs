@@ -34,10 +34,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 
 	protected $_settings;
 	protected $_config;
+	protected $_logger;
 
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 
+		$this->_logger = new WC_Logger();
 		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $settings );
 	}
 
@@ -45,15 +47,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 	 * initialize data storage
 	 */
 	public function init() {
-		global $woocommerce;
 
-		$cart = $woocommerce->cart;
+		$cart = new WC_Cart();
+		$cart->get_cart_from_session();
 
 		$data_storage_init = new WirecardCEE_QMore_DataStorageClient(
 			$this->_config->get_client_config()
 		);
 
-		$data_storage_init->setReturnUrl( 'aaa' );
+		$data_storage_return_url = add_query_arg( 'wc-api', 'wc_gateway_wcs_datastorage_return',
+		                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
+
+		$data_storage_init->setReturnUrl( $data_storage_return_url );
 		$data_storage_init->setOrderIdent( key( $cart->cart_contents ) );
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
@@ -62,38 +67,43 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 				$data_storage_init->setIframeCssUrl( $this->_settings['iframe_css_url'] );
 			}
 
-			/*
+			// set placeholders
 			$data_storage_init->setCreditCardPanPlaceholder(
-				__($this->module->getConfigValue('creditcardoptions', 'pan_placeholder'))
-			);
-			$data_storage_init->setCreditCardShowExpirationDatePlaceholder(
-				$this->module->getConfigValue('creditcardoptions', 'displayexpirationdate_placeholder')
+				__( $this->_settings['woo_wcs_cc_number_placeholder_text'] )
 			);
 			$data_storage_init->setCreditCardCardholderNamePlaceholder(
-				__($this->module->getConfigValue('creditcardoptions', 'cardholder_placeholder'))
+				__( $this->_settings['woo_wcs_cc_holder_placeholder_text'] )
 			);
 			$data_storage_init->setCreditCardCvcPlaceholder(
-				__($this->module->getConfigValue('creditcardoptions', 'cvc_placeholder'))
-			);
-			$data_storage_init->setCreditCardShowIssueDatePlaceholder(
-				$this->module->getConfigValue('creditcardoptions', 'displayissuedate_placeholder')
+				__( $this->_settings['woo_wcs_cc_cvc_placeholder_text'] )
 			);
 			$data_storage_init->setCreditCardCardIssueNumberPlaceholder(
-				__($this->module->getConfigValue('creditcardoptions', 'issuenumber_placeholder'))
+				__( $this->_settings['woo_wcs_cc_issue_number_placeholder_text'] )
 			);
 
+			// set visibility of fields
+			$data_storage_init->setCreditCardShowExpirationDatePlaceholder(
+				$this->_settings['woo_wcs_cc_display_exp_date_field']
+			);
+			$data_storage_init->setCreditCardShowIssueDatePlaceholder(
+				$this->_settings['woo_wcs_cc_display_issue_date_placeholder_text']
+			);
 			$data_storage_init->setCreditCardShowCardholderNameField(
-				$this->module->getConfigValue('creditcardoptions', 'displaycardholder')
+				$this->_settings['woo_wcs_cc_display_cardholder_field']
 			);
 			$data_storage_init->setCreditCardShowCvcField(
-				$this->module->getConfigValue('creditcardoptions', 'displaycvc')
+				$this->_settings['woo_wcs_cc_display_cvc_field']
 			);
 			$data_storage_init->setCreditCardShowIssueDateField(
-				$this->module->getConfigValue('creditcardoptions', 'displayissuedate')
+				$this->_settings['woo_wcs_cc_display_issue_date_field']
 			);
 			$data_storage_init->setCreditCardShowIssueNumberField(
-				$this->module->getConfigValue('creditcardoptions', 'displayissuenumber')
-			);*/
+				$this->_settings['woo_wcs_cc_display_issue_number_field']
+			);
 		}
+
+		$this->_logger->info( __METHOD__ . ':' . print_r( $data_storage_init->getRequestData(), true ) );
+
+		return $data_storage_init->initiate();
 	}
 }

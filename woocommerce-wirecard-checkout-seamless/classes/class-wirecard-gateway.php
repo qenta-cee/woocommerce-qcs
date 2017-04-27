@@ -86,6 +86,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				'order_received_text'
 			)
 		);
+
+		add_action(
+			'woocommerce_api_wc_gateway_wcs_datastorage_return',
+			array(
+				$this,
+				'datastorage_return'
+			)
+		);
 	}
 
 	/**
@@ -115,10 +123,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		foreach ( $this->settings as $k => $v ) {
 			if ( strpos( $k, 'enable' ) !== false ) {
 				if ( $v == 1 ) {
-					$code  = str_replace( '_enable', '', $k );
-					$code  = str_replace( 'wcs_', '', $code );
+					$code = str_replace( '_enable', '', $k );
+					$code = str_replace( 'wcs_', '', $code );
 
-					if( $load_class ) {
+					if ( $load_class ) {
 						$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
 						                                                                                      $code ) ) );
 						$type  = new $class( $this->settings );
@@ -247,45 +255,57 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function payment_fields() {
 		$dataStorage = new WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage( $this->settings );
-		$dataStorage->init();
 
-		?>
-		<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
-		<script type="text/javascript">
-			function changeWCSPayment(code) {
-				var changer = document.getElementById('wcs_payment_method_changer');
-				changer.value = code;
+		try {
+			$response = $dataStorage->init();
+
+			if ( ! $response->hasFailed() ) {
+				$this->_logger->info( __METHOD__ . ': storageid :' . $response->getStorageId() );
+				$this->_logger->info( __METHOD__ . ': jsurl :' . $response->getJavascriptUrl() );
 			}
-		</script>
-		<link rel="stylesheet" type="text/css" href="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/styles/payment.css">
-		<?php
-		foreach ( $this->get_enabled_payment_types() as $type ) {
+
 			?>
-			</div></li>
-			<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
-			<input
-				id="payment_method_wcs_<?php echo $type->get_payment_type() ?>"
-				type="radio"
-				class="input-radio"
-				value="woocommerce_wcs"
-				name="payment_method"
-				onclick="changeWCSPayment('<?php echo $type->get_payment_type() ?>');"
-				data-order_button_text>
-			<label for="payment_method_wcs_<?php echo $type->get_payment_type() ?>">
-				<?php echo $type->get_label();
-				if ( is_array( $type->get_icon() ) ) {
-					foreach ( $type->get_icon() as $icon ) {
-						echo "<img src='{$icon}' alt='Wirecard {$type->get_payment_type()}'>";
-					}
-				} else {
-					echo "<img src='{$type->get_icon()}' alt='Wirecard {$type->get_payment_type()}'>";
-				} ?>
-			</label>
-		<div
-			class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
-			style="display:none;">
+			<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
+			<script type="text/javascript">
+				function changeWCSPayment(code) {
+					var changer = document.getElementById('wcs_payment_method_changer');
+					changer.value = code;
+				}
+			</script>
+			<script type="text/javascript" src="<?= $response->getJavascriptUrl() ?>"></script>
+			<link rel="stylesheet" type="text/css" href="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/styles/payment.css">
 			<?php
-			echo $type->has_payment_fields() ? $type->get_payment_fields() : null;
+			foreach ( $this->get_enabled_payment_types() as $type ) {
+				?>
+				</div></li>
+				<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
+				<input
+					id="payment_method_wcs_<?php echo $type->get_payment_type() ?>"
+					type="radio"
+					class="input-radio"
+					value="woocommerce_wcs"
+					name="payment_method"
+					onclick="changeWCSPayment('<?php echo $type->get_payment_type() ?>');"
+					data-order_button_text>
+				<label for="payment_method_wcs_<?php echo $type->get_payment_type() ?>">
+					<?php echo $type->get_label();
+					if ( is_array( $type->get_icon() ) ) {
+						foreach ( $type->get_icon() as $icon ) {
+							echo "<img src='{$icon}' alt='Wirecard {$type->get_payment_type()}'>";
+						}
+					} else {
+						echo "<img src='{$type->get_icon()}' alt='Wirecard {$type->get_payment_type()}'>";
+					} ?>
+				</label>
+			<div
+				class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
+				style="display:none;">
+				<?php
+				echo $type->has_payment_fields() ? $type->get_payment_fields() : null;
+			}
+
+		} catch ( Exception $e ) {
+			$this->_logger->emergency( __METHOD__ . ":" . print_r( $e, true ) );
 		}
 	}
 
@@ -631,6 +651,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		return true;
+	}
+
+	function datastorage_return() {
+		die( require_once 'includes/datastorage_fallback.php' );
 	}
 
 }
