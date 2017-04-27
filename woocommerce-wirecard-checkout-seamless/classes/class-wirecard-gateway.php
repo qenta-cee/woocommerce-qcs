@@ -201,9 +201,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function get_transaction_table($start,$stop) {
+	function get_transaction_table( $start, $stop ) {
 		ob_start();
-		$this->_transaction->get_rows($start,$stop);
+		$this->_transaction->get_rows( $start, $stop );
+
 		return ob_get_clean();
 	}
 
@@ -214,6 +215,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 
+		if ( isset( $_GET['transaction_table'] ) ) {
+			unset( $_GET['transaction_table'] );
+			$this->_admin->print_transaction_table( $this );
+		}
 		$this->_admin->print_admin_form_fields( $this );
 
 	}
