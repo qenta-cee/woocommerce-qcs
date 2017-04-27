@@ -55,11 +55,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 			$this->_config->get_client_config()
 		);
 
-		$data_storage_return_url = add_query_arg( 'wc-api', 'wc_gateway_wcs_datastorage_return',
-		                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
+		$data_storage_return_url = add_query_arg(
+			'wc-api',
+			'wc_gateway_wcs_datastorage_return',
+			site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 		$data_storage_init->setReturnUrl( $data_storage_return_url );
-		$data_storage_init->setOrderIdent( key( $cart->cart_contents ) );
+		$data_storage_init->setOrderIdent( md5( implode( "", ( array_keys( $cart->cart_contents ) ) ) ) );
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
 			$data_storage_init->setJavascriptScriptVersion( 'pci3' );
