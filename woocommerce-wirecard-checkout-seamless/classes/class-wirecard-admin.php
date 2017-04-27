@@ -45,7 +45,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	function print_admin_form_fields( $gateway ){
 		?>
 		<div class="woo-wcs-backend-links">
-			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=0">
+			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
 				<?= __('Transaction Overview', 'woocommerce-wirecard-checkout-seamless') ?>
 			</a>
 
@@ -192,12 +192,32 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<div class="tab-pane active" id="transaction-table">
 				<table><?php $more = $transaction->get_rows( $start , 20 + $start ); ?></table>
 				<?php
-				if($more == 20){
+				if ( $start > 20 ){
+					?>
+					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start-20); ?>">
+						<?= __( 'Back', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+					<?php
+				}
+				if( $start + 20 < $more ){
 					?>
 					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
-						<?= __( 'More transactions', 'woocommerce-wirecard-checkout-seamless' ) ?>
+						<?= __( 'Next', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
-				<?php
+
+					<input type="number" name="transaction_start" onchange="setStartValue(this.value)" min="0" max="<?php echo $more;?>"/>
+
+					<script language="javascript" type="text/javascript">
+						var start = 1;
+						function setStartValue(data){
+							start = "?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=" + data;
+							document.getElementById("wcs-transaction-start").setAttribute("href", start);
+						}
+					</script>
+					<a class="button-primary woocommerce-save-button" id="wcs-transaction-start" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+						<?= __( 'Get transactions starting at ', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+					<?php
 				}
 				?>
 			</div>

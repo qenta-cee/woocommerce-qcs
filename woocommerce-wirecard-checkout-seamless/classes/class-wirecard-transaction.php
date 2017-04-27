@@ -137,8 +137,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 * @param int $start
 	 * @param int $stop
 	 */
-	function get_rows( $start = 0, $stop = 20 ) {
+	function get_rows( $start = 1, $stop = 21 ) {
 		global $wpdb;
+		$start--;
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
 		                         $stop );
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
