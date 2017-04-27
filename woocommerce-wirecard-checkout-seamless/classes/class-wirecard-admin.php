@@ -84,6 +84,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 					'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?= __( 'Voucher payments',
 					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#transaction-overview" class="nav-tab nav-tab-active">
+				<?= __('Transactions', 'woocommerce-wirecard-checkout-seamless') ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
@@ -123,6 +125,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<div class="tab-pane" id="voucherpayments">
 				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
 						false ); ?></table>
+			</div>
+			<div class="tab-pane" id="transaction-overview">
+				<table><?= $gateway->get_transaction_table( 0, 20 ); ?></table>
 			</div>
 		</div>
 		<?php

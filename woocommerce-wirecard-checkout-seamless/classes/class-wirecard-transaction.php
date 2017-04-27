@@ -36,13 +36,56 @@
 class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
 	protected $_table_name;
+	protected $_fields_list;
 
 	public function __construct() {
 		global $wpdb;
 
 		$this->_table_name = $wpdb->base_prefix . 'wirecard_checkout_seamless_tx';
+
+		//field lables for transaction overview
+		$this->_fields_list = array(
+			'id_tx'    => array(
+				'title' => __( "ID", 'woocommerce-wcs' )
+			),
+			'message'  => array(
+				'title' => __( "Status", 'woocommerce-wcs' )
+			),
+			'amount'   => array(
+				'title' => __( "Amount", 'woocommerce-wcs' )
+			),
+			'currency' => array(
+				'title' => __( "Currency", 'woocommerce-wcs' )
+			),
+
+			'id_order'          => array(
+				'title' => __( "Order number", 'woocommerce-wcs' )
+			),
+			'gateway_reference' => array(
+				'title' => __( "Gateway reference number", 'woocommerce-wcs' )
+			),
+			'payment_method'    => array(
+				'title' => __( "Payment method", 'woocommerce-wcs' )
+			),
+			'payment_state'     => array(
+				'title' => __( "State", 'woocommerce-wcs' )
+			),
+
+		);
 	}
 
+	/**
+	 * Create basic transaction entry
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $id_order
+	 * @param $amount
+	 * @param $currency
+	 * @param $payment_method
+	 *
+	 * @return mixed
+	 */
 	function create( $id_order, $amount, $currency, $payment_method ) {
 		global $wpdb;
 
@@ -54,13 +97,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 				'currency'       => $currency,
 				'payment_method' => $payment_method,
 				'payment_state'  => 'CREATED',
-				'created'        => 'NOW()'
+				'created'        => current_time( 'mysql', true )
 			)
 		);
 
 		return $wpdb->insert_id;
 	}
 
+	/**
+	 * Update transaction table with $data array
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $data
+	 * @param $identifier
+	 */
 	function update( $data, $identifier ) {
 		global $wpdb;
 
@@ -76,5 +127,42 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
 	function get( $id_tx ) {
 		//return transaction entry row
+	}
+
+	/**
+	 * Get transaction html table for overview beginning from $start to $stop
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $start
+	 * @param int $stop
+	 */
+	function get_rows( $start = 0, $stop = 20 ) {
+		global $wpdb;
+		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
+		                         $stop );
+		$rows  = $wpdb->get_results( $query, ARRAY_A );
+
+		?>
+		<tr><?php
+		foreach ( $this->_fields_list as $field_key => $field_value ) {
+			?>
+			<th><?php echo $field_value['title']; ?></th><?php
+		}
+		?></tr><?php
+
+		foreach ( $rows as $row ) {
+			?>
+			<tr><?php
+			foreach ( $this->_fields_list as $field_key => $field_value ) {
+				?>
+				<td>
+				<?php if ( key_exists( $field_key, $row ) ) {
+					echo $row[ $field_key ];
+				}
+				?></td><?php
+			}
+			?></tr><?php
+		}
 	}
 }

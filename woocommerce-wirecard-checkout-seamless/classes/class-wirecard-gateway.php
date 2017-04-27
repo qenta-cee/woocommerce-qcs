@@ -32,6 +32,7 @@
 
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-transaction.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-creditcard.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-paypal.php' );
 
@@ -187,6 +188,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		</tr>
 		<?php
 
+		return ob_get_clean();
+	}
+
+	/**
+	 * Prints out the transaction table
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $start
+	 * @param $stop
+	 *
+	 * @return string
+	 */
+	function get_transaction_table($start,$stop) {
+		ob_start();
+		$this->_transaction->get_rows($start,$stop);
 		return ob_get_clean();
 	}
 
