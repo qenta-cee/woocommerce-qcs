@@ -46,11 +46,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		?>
 		<div class="woo-wcs-backend-links">
 			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=0">
-				<?= __('Transaction Overview', 'woocommercer-wirecard-checkout-seamless') ?>
+				<?= __('Transaction Overview', 'woocommerce-wirecard-checkout-seamless') ?>
 			</a>
 
 			<a class="button-primary woocommerce-save-button" href="javascript:void(0);">
-				<?= __( 'Contact support', 'woocommercer_wirecard_checkout_seamless' ) ?>
+				<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
 			</a>
 		</div>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
@@ -74,8 +74,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 					'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?= __( 'Voucher payments',
 					'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#transaction-overview" class="nav-tab nav-tab-active">
-				<?= __('Transactions', 'woocommerce-wirecard-checkout-seamless') ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
@@ -115,9 +113,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<div class="tab-pane" id="voucherpayments">
 				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
 						false ); ?></table>
-			</div>
-			<div class="tab-pane" id="transaction-overview">
-				<table><?= $gateway->get_transaction_table( 0, 20 ); ?></table>
 			</div>
 		</div>
 		<?php
