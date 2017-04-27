@@ -192,32 +192,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Prints out the transaction table
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param $start
-	 * @param $stop
-	 *
-	 * @return string
-	 */
-	function get_transaction_table( $start, $stop ) {
-		ob_start();
-		$this->_transaction->get_rows( $start, $stop );
-
-		return ob_get_clean();
-	}
-
-	/**
 	 * Admin Panel Options.
 	 *
 	 * @since 1.0.0
 	 */
 	public function admin_options() {
-
-		if ( isset( $_GET['transaction_table'] ) ) {
-			unset( $_GET['transaction_table'] );
-			$this->_admin->print_transaction_table( $this );
+		$this->_admin->include_backend_header( $this );
+		if ( isset( $_GET['transaction_start'] ) ) {
+			$this->_admin->print_transaction_table( $this->_transaction, $_GET['transaction_start']);
+			unset( $_GET['transaction_start'] );
 		} else {
 			$this->_admin->print_admin_form_fields( $this );
 		}

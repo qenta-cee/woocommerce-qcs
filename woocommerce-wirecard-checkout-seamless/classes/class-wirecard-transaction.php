@@ -142,7 +142,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
 		                         $stop );
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
-
+		$row_count = count($rows);
 		?>
 		<tr><?php
 		foreach ( $this->_fields_list as $field_key => $field_value ) {
@@ -164,5 +164,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 			}
 			?></tr><?php
 		}
+		return $row_count;
 	}
 }

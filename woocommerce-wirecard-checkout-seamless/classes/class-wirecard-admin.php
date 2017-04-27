@@ -42,29 +42,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	function print_admin_form_fields($gateway){
+	function print_admin_form_fields( $gateway ){
 		?>
-		<link rel='stylesheet'
-		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
-		<script src='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/scripts/admin.js' ) ?>'></script>
-
-		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? $gateway->method_title : __( 'Settings',
-				'woocommerce-wirecard-checkout-seamless' ); ?></h3>
-		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/images/wirecard-logo.png' ) ?>">
-			<p><?= __( 'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source',
-					'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-					'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
-					'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-
-		</div>
 		<div class="woo-wcs-backend-links">
-			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_table=true">
+			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=0">
 				<?= __('Transaction Overview', 'woocommercer-wirecard-checkout-seamless') ?>
 			</a>
 
@@ -160,13 +141,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	}
 
 	/**
-	 * Handles transaction output in admin panel
+	 * Prints basic Checkout Seamless header for admin
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param $gateway
 	 */
-	function print_transaction_table($gateway) {
+	function include_backend_header( $gateway ){
 		?>
 		<link rel='stylesheet'
 		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
@@ -185,11 +166,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
 			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
 
-
 		</div>
+		<?php
+	}
+
+	/**
+	 * Handles transaction output in admin panel
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $gateway
+	 */
+	function print_transaction_table( $transaction, $start ) {
+		?>
 		<div class="woo-wcs-backend-links">
 			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
-				<?= __( 'Back to Settings', 'woocommercer-wirecard-checkout-seamless' ) ?>
+				<?= __( 'Back to Settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
 			</a>
 		</div>
 
@@ -203,7 +195,16 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="transaction-table">
-				<table><?= $gateway->get_transaction_table( 0, 20 ); ?></table>
+				<table><?php $more = $transaction->get_rows( $start , 20 + $start ); ?></table>
+				<?php
+				if($more == 20){
+					?>
+					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
+						<?= __( 'More transactions', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+				<?php
+				}
+				?>
 			</div>
 			<div class="tab-pane" id="backend-operations">
 				<div>No content yet</div>
