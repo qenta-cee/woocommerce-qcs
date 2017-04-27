@@ -128,4 +128,25 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Sepa_dd {
 		return WirecardCEE_QMore_PaymentType::SEPADD;
 	}
 
+	/**
+	 * return true or error message if there are errors in the validation
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $data - post data received
+	 *
+	 * @return boolean|string
+	 */
+	public function validate_payment_fields( $data ) {
+
+		$errors = [ ];
+
+		if ( empty( $data['bankAccountIban'] ) ) {
+			$errors[] = "&bull; " . __( 'Paybox number must not be empty.',
+					'woocommerce-wirecard-checkout-seamless' );
+		}
+
+		return count( $errors ) == 0 ? true : join( "<br>", $errors );
+	}
+
 }
