@@ -218,8 +218,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( isset( $_GET['transaction_table'] ) ) {
 			unset( $_GET['transaction_table'] );
 			$this->_admin->print_transaction_table( $this );
+		} else {
+			$this->_admin->print_admin_form_fields( $this );
 		}
-		$this->_admin->print_admin_form_fields( $this );
 
 	}
 

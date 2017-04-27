@@ -64,9 +64,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 		</div>
 		<div class="woo-wcs-backend-links">
-			<button><a href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_table=true"><?= __('Transaction Overview', 'woocommercer-wirecard-checkout-seamless') ?></a></button>
+			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_table=true">
+				<?= __('Transaction Overview', 'woocommercer-wirecard-checkout-seamless') ?>
+			</a>
 
-			<button><a href="javascript:void(0);"><?= __( 'Contact support', 'woocommercer_wirecard_checkout_seamless' ) ?></a></button>
+			<a class="button-primary woocommerce-save-button" href="javascript:void(0);">
+				<?= __( 'Contact support', 'woocommercer_wirecard_checkout_seamless' ) ?>
+			</a>
 		</div>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
@@ -184,7 +188,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 		</div>
 		<div class="woo-wcs-backend-links">
-			<button><a href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">Back to Settings</a></button>
+			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+				<?= __( 'Back to Settings', 'woocommercer-wirecard-checkout-seamless' ) ?>
+			</a>
 		</div>
 
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
