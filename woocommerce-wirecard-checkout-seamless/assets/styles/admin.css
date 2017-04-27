@@ -127,3 +127,13 @@
 .titledesc {
     text-align: right;
 }
+
+.tab-content.panel th{
+    padding: 5px;
+}
+
+
+.tab-content.panel td{
+    padding: 5px;
+    border-bottom: 1px solid #fafafa;
+}
