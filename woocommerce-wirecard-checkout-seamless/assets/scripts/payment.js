@@ -35,6 +35,8 @@ jQuery(function ($) {
         ccard_moto = '#payment_method_wcs_CCARD-MOTO',
         maestro = '#payment_method_wcs_MAESTRO',
         sepa_dd = '#payment_method_wcs_SEPA-DD',
+        paybox = '#payment_method_wcs_PBX',
+        giropay = '#payment_method_wcs_GIROPAY',
         form = "form.woocommerce-checkout"
 
     $(document).ready(function () {
@@ -80,6 +82,12 @@ jQuery(function ($) {
         }
         else if ($(sepa_dd).length > 0 && $(sepa_dd).is(':checked')) {
             wirecard_wcs.store_sepadd();
+        }
+        else if($(paybox).length > 0 && $(paybox).is(':checked')) {
+            wirecard_wcs.store_paybox();
+        }
+        else if($(giropay).length > 0 && $(giropay).is(':checked')) {
+            wirecard_wcs.store_giropay();
         }
 
 
@@ -188,6 +196,22 @@ jQuery(function ($) {
                 bankBic: this.get_data('bankBic')
             };
             this.data_storage.storeSepaDdInformation(payment_information, wirecard_wcs.callback);
+        },
+        store_paybox: function () {
+            var payment_information = {
+                payerPayboxNumber: this.get_data('payerPayboxNumber').replace(/\s/g, '')
+            };
+            this.data_storage.storePayboxInformation(payment_information, wirecard_wcs.callback);
+        },
+        store_giropay: function () {
+            var payment_information = {
+                bankAccount: this.get_data('woo_wcs_giropay_accountnumber').replace(/\s/g, ''),
+                bankNumber: this.get_data('woo_wcs_giropay_banknumber').replace(/\s/g, '')
+            };
+            if (this.get_data('woo_wcs_giropay_accountowner'))
+                payment_information.accountOwner = this.get_data('woo_wcs_giropay_accountowner');
+
+            this.data_storage.storeGiropayInformation(payment_information, wirecard_wcs.callback);
         }
     }
 
