@@ -42,26 +42,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	function print_admin_form_fields( $gateway ) {
+
+	function print_admin_form_fields( $gateway ){
 		?>
-		<link rel='stylesheet'
-		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
-		<script src='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/scripts/admin.js' ) ?>'></script>
-
-		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? $gateway->method_title : __( 'Settings',
-		                                                                                    'woocommerce-wirecard-checkout-seamless' ); ?></h3>
 		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/images/wirecard-logo.png' ) ?>">
-			<p><?= __( 'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
+			<div class="woo-wcs-backend-links">
+				<a class="button-primary"
+				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+					<?= __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
+				</a>
 
-			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
-			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
-
-
+				<a class="button-primary" href="javascript:void(0);">
+					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
+				</a>
+			</div>
 		</div>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
@@ -161,6 +155,102 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * Prints basic Checkout Seamless header for admin
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $gateway
+	 */
+	function include_backend_header( $gateway ){
+		?>
+		<link rel='stylesheet'
+		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
+		<script src='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/scripts/admin.js' ) ?>'></script>
+		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? $gateway->method_title : __( 'Settings',
+		                                                                                    'woocommerce-wirecard-checkout-seamless' ); ?></h3>
+
+		<div class="woo-wcs-settings-header-wrapper">
+			<img src="<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/images/wirecard-logo.png' ) ?>">
+			<p><?= __( 'Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source',
+			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
+
+			<p><?= __( 'Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
+			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
+
+			<p><?= __( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
+			           'woocommerce-wirecard-checkout-seamless' ) ?></p>
+
+		</div>
+		<?php
+	}
+
+	/**
+	 * Handles transaction output in admin panel
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $gateway
+	 */
+	function print_transaction_table( $transaction, $start ) {
+		?>
+		<div class="woo-wcs-backend-links">
+			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+				<?= __( 'Back to Settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
+			</a>
+		</div>
+
+		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
+			<a href="javascript:void(0);" data-target="#transaction-table" class="nav-tab nav-tab-active"><?= __( 'Transaction Overview',
+			                                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#backend-operations" class="nav-tab "><?= __( 'Backend Operations',
+			                                                                                         'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#fund-transfer" class="nav-tab "><?= __( 'Fund Transfer',
+			                                                                                    'woocommerce-wirecard-checkout-seamless' ) ?></a>
+		</nav>
+		<div class="tab-content panel">
+			<div class="tab-pane active" id="transaction-table">
+				<table><?php $more = $transaction->get_rows( $start , 20 + $start ); ?></table>
+				<?php
+				if ( $start > 20 ){
+					?>
+					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start-20); ?>">
+						<?= __( 'Back', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+					<?php
+				}
+				if( $start + 20 < $more ){
+					?>
+					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
+						<?= __( 'Next', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+
+					<input type="number" name="transaction_start" onchange="setStartValue(this.value)" min="0" max="<?php echo $more;?>"/>
+
+					<script language="javascript" type="text/javascript">
+						var start = 1;
+						function setStartValue(data){
+							start = "?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=" + data;
+							document.getElementById("wcs-transaction-start").setAttribute("href", start);
+						}
+					</script>
+					<a class="button-primary woocommerce-save-button" id="wcs-transaction-start" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+						<?= __( 'Get transactions starting at ', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</a>
+					<?php
+				}
+				?>
+			</div>
+			<div class="tab-pane" id="backend-operations">
+				<div>No content yet</div>
+			</div>
+			<div class="tab-pane" id="fund-transfer">
+				<div>No content yet</div>
+			</div>
+		</div>
+		<?php
 	}
 
 }
