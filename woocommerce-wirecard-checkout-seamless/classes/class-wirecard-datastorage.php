@@ -53,7 +53,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 			$this->_config->get_client_config()
 		);
 
-		$data_storage_init->setReturnUrl( 'aaa' );
+		//@TODO: Implement ReturnUrl
+		$data_storage_init->setReturnUrl( 'dummy test url' );
 		$data_storage_init->setOrderIdent( key( $cart->cart_contents ) );
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
