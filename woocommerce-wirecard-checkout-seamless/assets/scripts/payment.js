@@ -50,7 +50,9 @@ jQuery(function ($) {
         if ($('input[name=woo_wcs_ok]', this).length > 0)
             return true;
 
-        wirecard_wcs.prepare_data($(this).find('input:checked').parent().find('fieldset').serializeArray());
+        var serialized_array = $(this).find('input:checked').parent().find('fieldset').serializeArray();
+
+        wirecard_wcs.prepare_data(serialized_array);
 
         if ($(ccard).length > 0 && $(ccard).is(':checked')) {
             wirecard_wcs.store_card('CCARD');
@@ -61,7 +63,7 @@ jQuery(function ($) {
             return false;
         }
         else if ($(ccard_moto).length > 0 && $(ccard_moto).is(':checked')) {
-            wirecard_wcs.store_card(false, 'CCARD_MOTO');
+            wirecard_wcs.store_card('CCARD_MOTO');
 
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -69,7 +71,7 @@ jQuery(function ($) {
             return false;
         }
         else if ($(maestro).length > 0 && $(maestro).is(':checked')) {
-            wirecard_wcs.store_card(false, 'MAESTRO');
+            wirecard_wcs.store_card('MAESTRO');
 
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -135,8 +137,7 @@ jQuery(function ($) {
         store_card: function (type) {
             var has_iframe = false;
 
-            if ((type == 'CCARD'
-                        ? $(ccard)
+            if ((type == 'CCARD' ? $(ccard)
                         : ((type == 'CCARD_MOTO')
                             ? $(ccard_moto)
                             : $(maestro)
