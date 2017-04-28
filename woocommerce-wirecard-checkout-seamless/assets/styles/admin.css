@@ -130,6 +130,12 @@
     text-align: right;
 }
 
-.panel .tab-pane table th, .panel .tab-pane table td {
-    padding:0;
+
+.tab-content.panel th, .tab-content.panel td{
+    padding: 5px;
+}
+
+
+#transaction-table tr:hover td {
+    background-color: rgba(250,250,250,0.7);
 }

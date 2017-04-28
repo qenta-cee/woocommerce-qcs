@@ -50,6 +50,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WOOCOMMERCE_GATEWAY_WCS_BASEDIR', plugin_dir_path( __FILE__ ) );
 define( 'WOOCOMMERCE_GATEWAY_WCS_URL', plugin_dir_url( __FILE__ ) );
 
+register_activation_hook( __FILE__, 'woocommerce_install_wirecard_checkout_seamless' );
+
+//register_uninstall_hook( __FILE__, 'woocommerce_uninstall_wirecard_checkout_seamless' );
+
 load_plugin_textdomain(
 	'woocommerce-wirecard-checkout-seamless', false, dirname( plugin_basename( __FILE__ ) ) . '/languages'
 );
@@ -95,4 +99,38 @@ function add_wirecard_checkout_seamless( $methods ) {
 	$methods[] = 'WC_Gateway_Wirecard_Checkout_Seamless';
 
 	return $methods;
+}
+
+function woocommerce_install_wirecard_checkout_seamless() {
+	global $wpdb;
+
+	$table_name = $wpdb->base_prefix . 'wirecard_checkout_seamless_tx';
+
+	$collate = '';
+	if ( $wpdb->has_cap( 'collation' ) ) {
+		$collate = $wpdb->get_charset_collate();
+	}
+
+	$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+		id_tx int(10) unsigned NOT NULL auto_increment,
+		id_order int(10) NULL ,
+		id_cart int(10) unsigned NOT NULL,
+		carthash varchar(255),
+		order_reference varchar(128) default NULL,
+		payment_name varchar(32) default NULL ,
+		payment_method varchar(32) NOT NULL ,
+		payment_state varchar(32) NOT NULL ,
+		gateway_reference varchar(32) default NULL ,
+		amount float NOT NULL ,
+		currency varchar(3) NOT NULL ,
+		message varchar(255) default NULL ,
+		request TEXT default NULL ,
+		created DATETIME NOT NULL default '0000-00-00 00:00:00' ,
+		modified DATETIME default NULL,
+ 		PRIMARY KEY (id_tx)
+	)$collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+
 }

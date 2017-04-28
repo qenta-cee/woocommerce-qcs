@@ -33,6 +33,7 @@
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-transaction.php' );
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -42,6 +43,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	protected $_admin;
 	protected $_config;
 	protected $_logger;
+	protected $_transaction;
 
 	public function __construct() {
 
@@ -52,12 +54,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		$this->_logger = new WC_Logger();
-		$this->_admin  = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
-		$this->_config = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
+		$this->_logger      = new WC_Logger();
+		$this->_admin       = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
+		$this->_config      = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
+		$this->_transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction();
 
 		// if any of the payment types are enabled, set this to "yes", otherwise "no"
 		$this->enabled = count( $this->get_enabled_payment_types( false ) ) > 0 ? "yes" : "no";
+
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 			$this,
@@ -242,8 +246,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function admin_options() {
-
-		$this->_admin->print_admin_form_fields( $this );
+		$this->_admin->include_backend_header( $this );
+		if ( ! isset( $_GET['transaction_start'] ) ) {
+			$this->_admin->print_admin_form_fields( $this );
+		} else {
+			$this->_admin->print_transaction_table( $this->_transaction, $_GET['transaction_start'] );
+			unset( $_GET['transaction_start'] );
+		}
 
 	}
 
@@ -371,8 +380,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				return;
 			}
 
+
 			$cart = new WC_Cart();
 			$cart->get_cart_from_session();
+
+			$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
+				get_woocommerce_currency(), $payment_type );
 
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
 			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
@@ -407,19 +420,48 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				$client->setBasket( $this->_config->get_shopping_basket() );
 			}
 
-			$client->wooOrderId = $order->get_id();
+			$client->wooOrderId    = $order->get_id();
+			$client->transactionId = $transaction_id;
 
 			$initResponse = $client->initiate();
 
 			if ( $initResponse->hasFailed() ) {
+
+
+				$errors = array();
 				foreach ( $initResponse->getErrors() as $error ) {
+					$errors[] = $error->getConsumerMessage();
 					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
 						'woocommerce-wirecard-checkout-seamless' ),
 						'error' );
 				}
+
+
+				$this->_transaction->update( array(
+					'payment_state' => 'INITIATED',
+					'message'       => 'error',
+					'modified'      => current_time( 'mysql', true )
+				),
+					array( 'id_tx' => $transaction_id ) );
+			} else {
+
+				$this->_transaction->update( array(
+					'payment_state'   => 'INITIATED',
+					'message'         => 'ok',
+					'order_reference' => $this->_config->get_order_reference( $order ),
+					'modified'        => current_time( 'mysql', true )
+				),
+					array( 'id_tx' => $transaction_id ) );
+
 			}
 		} catch ( Exception $e ) {
 			$this->_logger->error( __METHOD__ . ': ' . $e->getMessage() );
+			$this->_transaction->update( array(
+				'payment_state' => 'INITIATED',
+				'message'       => 'error',
+				'modified'      => current_time( 'mysql', true )
+			),
+				array( 'id_tx' => $transaction_id ) );
 			throw ( $e );
 		}
 
@@ -462,8 +504,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
 		}
 
-		$order_id = $_REQUEST['wooOrderId'];
-		$order    = new WC_Order( $order_id );
+		$order_id       = $_REQUEST['wooOrderId'];
+		$transaction_id = $_REQUEST['transactionId'];
+		$order          = new WC_Order( $order_id );
 
 		if ( ! $order->get_id() ) {
 			$message = "order with id `$order->get_id()` not found";
@@ -516,6 +559,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
 						$return->getGatewayReferenceNumber() );
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
+					$this->_transaction->update( array(
+						'payment_state'     => $return->getPaymentState(),
+						'message'           => 'ok',
+						'gateway_reference' => $return->getGatewayReferenceNumber(),
+						'modified'          => current_time( 'mysql', true )
+					),
+						array( 'id_tx' => $transaction_id ) );
 					$order->payment_complete();
 					break;
 				case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
@@ -523,10 +573,23 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 						'on-hold',
 						__( 'Awaiting payment notification from 3rd party.', 'woocommerce-wcs' )
 					);
+					$this->_transaction->update( array(
+						'payment_state' => $return->getPaymentState(),
+						'message'       => 'ok',
+						'modified'      => current_time( 'mysql', true )
+					),
+						array( 'id_tx' => $transaction_id ) );
 					break;
 
 				case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
 					$order->update_status( 'cancelled', __( 'Payment cancelled.', 'woocommerce-wcs' ) );
+					$this->_transaction->update( array(
+						'payment_state'     => $return->getPaymentState(),
+						'message'           => 'ok',
+						'gateway_reference' => $return->getGatewayReferenceNumber(),
+						'modified'          => current_time( 'mysql', true )
+					),
+						array( 'id_tx' => $transaction_id ) );
 					break;
 
 				case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
@@ -535,6 +598,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 						$return->getErrors()
 						       ->getConsumerMessage()
 					);
+					$this->_transaction->update( array(
+						'payment_state'     => $return->getPaymentState(),
+						'message'           => 'error',
+						'gateway_reference' => $return->getGatewayReferenceNumber(),
+						'modified'          => current_time( 'mysql', true )
+					),
+						array( 'id_tx' => $transaction_id ) );
 					break;
 
 				default:
@@ -544,6 +614,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$order->update_status( 'failed', $e->getMessage() );
 			$message = $e->getMessage();
 			$this->_logger->error( __METHOD__ . ':' . $message );
+			$this->_transaction->update( array(
+				'payment_state'     => $return->getPaymentState(),
+				'message'           => 'error',
+				'gateway_reference' => $return->getGatewayReferenceNumber(),
+				'modified'          => current_time( 'mysql', true )
+			),
+				array( 'id_tx' => $transaction_id ) );
 		}
 
 		print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
