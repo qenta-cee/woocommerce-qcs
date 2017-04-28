@@ -44,14 +44,17 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 */
 	function print_admin_form_fields( $gateway ){
 		?>
-		<div class="woo-wcs-backend-links">
-			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
-				<?= __('Transaction Overview', 'woocommerce-wirecard-checkout-seamless') ?>
-			</a>
+		<div class="woo-wcs-settings-header-wrapper">
+			<div class="woo-wcs-backend-links">
+				<a class="button-primary woocommerce-save-button"
+				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+					<?= __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
+				</a>
 
-			<a class="button-primary woocommerce-save-button" href="javascript:void(0);">
-				<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
-			</a>
+				<a class="button-primary woocommerce-save-button" href="javascript:void(0);">
+					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
+				</a>
+			</div>
 		</div>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
