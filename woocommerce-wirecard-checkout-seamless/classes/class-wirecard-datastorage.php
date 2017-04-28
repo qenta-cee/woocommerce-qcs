@@ -55,6 +55,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 			$this->_config->get_client_config()
 		);
 
+
 		$data_storage_return_url = add_query_arg(
 			'wc-api',
 			'wc_gateway_wcs_datastorage_return',
