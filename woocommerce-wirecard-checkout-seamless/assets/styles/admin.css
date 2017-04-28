@@ -53,6 +53,7 @@
     -ms-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
+    border-radius:4px;
 }
 
 .wcs-chkbx-switch > .wcs-chkbx-switch-slider:before {
@@ -68,6 +69,7 @@
     -ms-transition: .2s;
     -o-transition: .2s;
     transition: .2s;
+    border-radius: 50%;
 }
 
 .wcs-chkbx-switch > input + .wcs-chkbx-switch-slider {
@@ -128,12 +130,12 @@
     text-align: right;
 }
 
-.tab-content.panel th{
+
+.tab-content.panel th, .tab-content.panel td{
     padding: 5px;
 }
 
 
-.tab-content.panel td{
-    padding: 5px;
-    border-bottom: 1px solid #fafafa;
+#transaction-table tr:hover td {
+    background-color: rgba(250,250,250,0.7);
 }

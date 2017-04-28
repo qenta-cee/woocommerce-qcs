@@ -38,84 +38,103 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	/**
 	 * Handles form output for admin panel
 	 *
-	 * @param $gateway
+	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
 	 *
 	 * @since 1.0.0
 	 */
+
 	function print_admin_form_fields( $gateway ){
 		?>
 		<div class="woo-wcs-settings-header-wrapper">
 			<div class="woo-wcs-backend-links">
-				<a class="button-primary woocommerce-save-button"
+				<a class="button-primary"
 				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
 					<?= __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 
-				<a class="button-primary woocommerce-save-button" href="javascript:void(0);">
+				<a class="button-primary" href="javascript:void(0);">
 					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
 				</a>
 			</div>
 		</div>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                              'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#options" class="nav-tab "><?= __( 'General settings',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                              'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#creditcardoptions" class="nav-tab "><?= __( 'Credit card',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                        'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#sepaoptions" class="nav-tab "><?= __( 'Sepa',
+			                                                                                  'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#invoiceoptions" class="nav-tab "><?= __( 'Invoice',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#installmentoptions" class="nav-tab "><?= __( 'Installment',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                         'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#standardpayments" class="nav-tab "><?= __( 'Standard payments',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                       'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#bankingpayments" class="nav-tab "><?= __( 'Banking payments',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#alternativepayments"
 			   class="nav-tab "><?= __( 'Alternative payments', 'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?= __( 'Mobile payments',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?= __( 'Voucher payments',
-					'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ), false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="options">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'options' ), false ); ?></table>
+				<table class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'options' ),
+				                                                                false ); ?></table>
 			</div>
 			<div class="tab-pane" id="creditcardoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
+				                                                             false ); ?></table>
+			</div>
+			<div class="tab-pane" id="sepaoptions">
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'sepaoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="invoiceoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="installmentoptions">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="standardpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="bankingpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="alternativepayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="mobilepayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="voucherpayments">
-				<table><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
-						false ); ?></table>
+				<table
+					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
+				                                                             false ); ?></table>
 			</div>
 		</div>
 		<?php
