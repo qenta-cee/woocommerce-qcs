@@ -130,6 +130,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$code = str_replace( '_enable', '', $k );
 					$code = str_replace( 'wcs_', '', $code );
 
+					$type = new stdClass();
 					if ( $load_class ) {
 						$class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
 								$code ) ) );
