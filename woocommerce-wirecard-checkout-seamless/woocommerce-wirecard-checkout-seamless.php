@@ -39,7 +39,6 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	// if accessed directly
 	exit;
@@ -79,7 +78,7 @@ function init_woocommerce_wcs_gateway() {
 	spl_autoload_register(
 		function ( $class_name ) {
 			if ( strpos( $class_name, "Wirecard_Checkout_Seamless" ) ) {
-				$method = str_replace("WC_Gateway_Wirecard_Checkout_Seamless_", "", $class_name );
+				$method = str_replace( "WC_Gateway_Wirecard_Checkout_Seamless_", "", $class_name );
 				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . $method . ".php" );
 			}
 		} );

@@ -78,8 +78,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			   class="nav-tab "><?= __( 'Alternative payments', 'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?= __( 'Mobile payments',
 			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#voucherpayments" class="nav-tab "><?= __( 'Voucher payments',
-			                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
@@ -129,11 +127,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<div class="tab-pane" id="mobilepayments">
 				<table
 					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
-				                                                             false ); ?></table>
-			</div>
-			<div class="tab-pane" id="voucherpayments">
-				<table
-					class="form-table"><?= $gateway->generate_settings_html( $this->get_settings_fields( 'voucherpayments' ),
 				                                                             false ); ?></table>
 			</div>
 		</div>

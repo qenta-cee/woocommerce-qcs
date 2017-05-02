@@ -78,15 +78,26 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 		return true;
 	}
 
-	public function get_payment_fields() {
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $storage_id
+	 *
+	 * @return string
+	 */
+	public function get_payment_fields( $storage_id ) {
 		wp_enqueue_script( 'wc-credit-card-form' );
+		$payment_type = str_replace( "-", "_", $this->get_payment_type() );
+
 		$html = "<fieldset class='wc-credit-card-form wc-payment-form'>";
+		$html .= "<input type='hidden' name='storageId' value='$storage_id'>";
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
-			$html .= "<div id='woocommerce_wcs_iframe_ccard'></div>";
+			$html .= "<div id='woocommerce_wcs_iframe_" . strtolower( $payment_type ) . "'></div>";
 
 			return $html;
 		} else {
-			$payment_type = str_replace( "-", "_", $this->get_payment_type() );
 			$html .= '
 			<script>
 				function parse' . $payment_type . 'date(value,issexp){
@@ -108,7 +119,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 			// card number field
 			$html .= "<p class='form-row'>";
 			$html .= "<label>" . __( 'Credit card number:',
-			                         'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
+					'woocommerce-wirecard-checkout-seamless' ) . " <span class='required'>*</span></label>";
 			$html .= "<input name='{$payment_type}cardnumber' autocomplete='off' class='input-text wc-credit-card-form-card-number' type='text' placeholder='{$this->_settings['woo_wcs_cc_number_placeholder_text']}'>";
 			$html .= "</p>";
 
@@ -131,7 +142,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 			if ( $this->_settings['woo_wcs_cc_display_cvc_field'] ) {
 				$html .= '<p class="form-row form-row-last">';
 				$html .= '<label>' . __( 'Card verification code',
-				                         'woocommerce-wirecard-checkout-seamless' );
+						'woocommerce-wirecard-checkout-seamless' );
 				// cvc is not required for credit card mail order / telephone order
 				if ( $this->get_payment_type() != WirecardCEE_QMore_PaymentType::CCARD_MOTO ) {
 					$html .= ' <span class="required">*</span>';
@@ -186,27 +197,16 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 	 * @return boolean|string
 	 */
 	public function validate_payment_fields( $data ) {
-
+		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
+			return true;
+		}
 		$errors = [ ];
 
 		$payment_type = str_replace( "-", "_", $data['wcs_payment_method'] );
 
-		if ( empty( $data[ $payment_type . 'cardnumber' ] ) ) {
-			$errors[] = "&bull; " . __( 'Credit card number must not be empty.',
-			                           'woocommerce-wirecard-checkout-seamless' );
-		}
-
-		if ( empty( $data[ $payment_type . 'expirationMonth' ] ) ) {
-			$errors[] = "&bull; " . __( 'Expiration date must not be empty.', 'woocommerce-wirecard-checkout-seamless' );
-		}
-
-		if ( strlen( $data[ $payment_type . 'expirationYear' ] ) != 4 && ! empty( $data[ $payment_type . 'expirationMonth' ] ) ) {
-			$errors[] = "&bull; " . __( 'Expiration date is incorrect.', 'woocommerce-wirecard-checkout-seamless' );
-		}
-
-		if ( $data['wcs_payment_method'] != WirecardCEE_QMore_PaymentType::CCARD_MOTO && empty( $data[ $payment_type . 'cvc' ] ) ) {
-			$errors[] = "&bull; " . __( 'Card verification code must not be empty',
-			                           'woocommerce-wirecard-checkout-seamless' );
+		if ( $this->_settings['woo_wcs_cc_display_cvc_field'] && $data['wcs_payment_method'] != WirecardCEE_QMore_PaymentType::CCARD_MOTO && empty( $data[ $payment_type . 'cvc' ] ) ) {
+			$errors[] = __( 'Card verification code is missing',
+					'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		return count( $errors ) == 0 ? true : join( "<br>", $errors );
