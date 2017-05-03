@@ -73,7 +73,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 			'payment_state'     => array(
 				'title' => __( "State", 'woocommerce-wirecard-checkout-seamless' )
 			),
-			'actions'        => array(
+			'actions'           => array(
 				'title' => __( "", 'woocommerce-wirecard-checkout-seamless' )
 			)
 
@@ -132,7 +132,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	}
 
 	function get( $id_tx ) {
-		//return transaction entry row
+		global $wpdb;
+
+		return $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_tx = $id_tx" );
 	}
 
 	/**
