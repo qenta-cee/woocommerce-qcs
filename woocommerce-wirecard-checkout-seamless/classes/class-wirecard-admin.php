@@ -48,7 +48,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		<div class="woo-wcs-settings-header-wrapper">
 			<div class="woo-wcs-backend-links">
 				<a class="button-primary"
-				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+				   href="?page=wirecard_transactions_page&transaction_start=1">
 					<?= __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 
