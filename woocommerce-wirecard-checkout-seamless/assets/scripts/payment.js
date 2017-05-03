@@ -59,41 +59,45 @@ jQuery(function ($) {
         if ($(ccard).length > 0 && $(ccard).is(':checked')) {
             wirecard_wcs.store_card('CCARD');
 
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            return false;
+            wirecard_wcs.event_stop(event);
         }
         else if ($(ccard_moto).length > 0 && $(ccard_moto).is(':checked')) {
             wirecard_wcs.store_card('CCARD_MOTO');
 
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            return false;
+            wirecard_wcs.event_stop(event);
         }
         else if ($(maestro).length > 0 && $(maestro).is(':checked')) {
             wirecard_wcs.store_card('MAESTRO');
 
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            return false;
+            wirecard_wcs.event_stop(event);
         }
         else if ($(sepa_dd).length > 0 && $(sepa_dd).is(':checked')) {
             wirecard_wcs.store_sepadd();
+
+            wirecard_wcs.event_stop(event);
         }
         else if($(paybox).length > 0 && $(paybox).is(':checked')) {
             wirecard_wcs.store_paybox();
+
+            wirecard_wcs.event_stop(event);
         }
         else if($(giropay).length > 0 && $(giropay).is(':checked')) {
             wirecard_wcs.store_giropay();
+            wirecard_wcs.event_stop(event);
         }
 
 
     });
 
+
+
     var wirecard_wcs = {
+        event_stop : function(event){
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            return false;
+        },
         data: {},
         data_storage: new WirecardCEE_DataStorage(),
         prepare_data: function (serializedArray) {
