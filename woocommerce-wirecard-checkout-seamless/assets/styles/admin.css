@@ -86,6 +86,10 @@
     transform: translateX(26px);
 }
 
+.wcs-tabs {
+    margin: 1.5em 0 1em;
+}
+
 .wcs-tabs > a, .wcs-tabs > a:active, .wcs-tabs > a:focus {
     background-color: #f8f8f8;
 }
