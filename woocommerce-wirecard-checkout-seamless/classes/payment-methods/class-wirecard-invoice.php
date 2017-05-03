@@ -92,7 +92,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 		// account owner field
 		$html .= "<p class='form-row'>";
 		$html .= "<label>" . __( 'Date of Birth:',
-		                         'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+				'woocommerce-wirecard-checkout-seamless' ) . "</label>";
 		$html .= "<select name='dob_day' class=''>";
 
 		for ( $day = 31; $day > 0; $day -- ) {
@@ -123,14 +123,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 
 			if ( strlen( $this->_settings['woo_wcs_payolutionmid'] ) > 5 ) {
 				$consent_link = sprintf( '<a href="https://payment.payolution.com/payolution-payment/infoport/dataprivacyconsent?mId=%s" target="_blank">%s</a>',
-				                         $payolution_mid,
-				                         __( 'consent', 'woocommerce-wirecard-checkout-seamless' ) );
+					$payolution_mid,
+					__( 'consent', 'woocommerce-wirecard-checkout-seamless' ) );
 			}
 
 			$html .= "<p class='form-row'>";
 
 			$html .= "<label><input type='checkbox' name='consent'>" . __( 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My ' . $consent_link . ' can be revoked at any time with effect for the future.',
-			                                                               'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+					'woocommerce-wirecard-checkout-seamless' ) . "</label>";
 
 			$html .= "</p>";
 		}
@@ -171,6 +171,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 	}
 
 	private function is_available_payolution() {
+		global $woocommerce;
+
 		$cart = new WC_Cart();
 		$cart->get_cart_from_session();
 
@@ -221,73 +223,49 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 
 		}
 
-		$customer = new WC_Customer( get_current_user_id() );
+		$customer = $woocommerce->customer;
+		$fields   = array(
+			'first_name',
+			'last_name',
+			'address_1',
+			'address_2',
+			'city',
+			'country',
+			'postcode',
+			'state'
+		);
+		foreach ( $fields as $f ) {
+			$m1 = "get_billing_$f";
+			$m2 = "get_shipping_$f";
 
-		// this shipping address can be empty
-		$shipping_address             = new stdClass();
-		$shipping_address->first_name = $customer->get_shipping_first_name();
-		$shipping_address->last_name  = $customer->get_shipping_last_name();
-		$shipping_address->company    = $customer->get_shipping_company();
-		$shipping_address->address_1  = $customer->get_shipping_address_1();
-		$shipping_address->address_2  = $customer->get_shipping_address_2();
-		$shipping_address->city       = $customer->get_shipping_city();
-		$shipping_address->postcode   = $customer->get_shipping_postcode();
-		$shipping_address->country    = $customer->get_shipping_country();
+			$f1 = call_user_func(
+				array(
+					$customer,
+					$m1
+				)
+			);
 
-		// this is the first address to be filled, it can't be empty
-		$billing_address             = new stdClass();
-		$billing_address->first_name = $customer->get_billing_first_name();
-		$billing_address->last_name  = $customer->get_billing_last_name();
-		$billing_address->company    = $customer->get_billing_company();
-		$billing_address->address_1  = $customer->get_billing_address_1();
-		$billing_address->address_2  = $customer->get_billing_address_2();
-		$billing_address->city       = $customer->get_billing_city();
-		$billing_address->postcode   = $customer->get_billing_postcode();
-		$billing_address->country    = $customer->get_billing_country();
-
-		if ( $this->address_empty( $shipping_address ) ) {
-			$shipping_address = $billing_address;
-		}
-
-		// check if addresses are equal
-		if ( $this->_settings['woo_wcs_invoice_billing_shipping_equal'] ) {
-			foreach ( $billing_address as $key => $value ) {
-				if ( $billing_address->$key != $shipping_address->$key ) {
-					return false;
-				}
+			$f2 = call_user_func(
+				array(
+					$customer,
+					$m2
+				)
+			);
+			if ( $f1 != $f2 && ! empty( $f2 ) ) {
+				return false;
 			}
 		}
 
 		// check if shipping country is allowed
-		if ( ! in_array( $shipping_address->country,
-		                 $this->_settings['woo_wcs_invoice_allowed_shipping_countries'] )
+		if ( ! in_array( $customer->get_shipping_country,
+				$this->_settings['woo_wcs_invoice_allowed_shipping_countries'] ) && ! empty( $customer->get_shipping_country )
 		) {
 			return false;
 		}
 
 		// check if billing country is allowed
-		if ( ! in_array( $shipping_address->country, $this->_settings['woo_wcs_invoice_allowed_billing_countries'] ) ) {
+		if ( ! in_array( $customer->get_billing_country, $this->_settings['woo_wcs_invoice_allowed_billing_countries'] ) && ! empty( $customer->get_billing_country ) ) {
 			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * check if the fields in address are empty
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param $address
-	 *
-	 * @return boolean
-	 */
-	private function address_empty( $address ) {
-
-		foreach ( $address as $key => $value ) {
-			if ( ! empty( $value ) ) {
-				return false;
-			}
 		}
 
 		return true;
@@ -332,9 +310,29 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 
 		if ( $age < 18 ) {
 			$errors[] = "&bull; " . __( 'You have to be 18 years or older to use this payment.',
-			                            'woocommerce-wirecard-checkout-seamless' );
+					'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		return count( $errors ) == 0 ? true : join( "<br>", $errors );
+	}
+
+	/**
+	 * check if the fields in address are empty
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $address
+	 *
+	 * @return boolean
+	 */
+	private function address_empty( $address ) {
+
+		foreach ( $address as $key => $value ) {
+			if ( ! empty( $value ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
