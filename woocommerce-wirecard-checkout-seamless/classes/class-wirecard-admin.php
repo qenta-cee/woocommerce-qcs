@@ -35,6 +35,17 @@
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
+	protected $_settings;
+
+	/**
+	 * constructor
+	 *
+	 * @param $settings
+	 */
+	public function __construct( $settings ) {
+		$this->_settings = $settings;
+	}
+
 	/**
 	 * Handles form output for admin panel
 	 *
@@ -52,7 +63,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 					<?= __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 
-				<a class="button-primary" href="javascript:void(0);">
+				<a class="button-primary" href="?page=wirecard_support_request">
 					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
 				</a>
 			</div>
@@ -190,7 +201,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	function print_transaction_table( $transaction, $start ) {
 		?>
 		<div class="woo-wcs-backend-links">
-			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+			<a class="button-primary" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
 				<?= __( 'Back to Settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
 			</a>
 		</div>
@@ -209,14 +220,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				<?php
 				if ( $start > 20 ){
 					?>
-					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start-20); ?>">
+					<a class="button-primary" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start-20); ?>">
 						<?= __( 'Back', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 					<?php
 				}
 				if( $start + 20 < $more ){
 					?>
-					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
+					<a class="button-primary" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
 						<?= __( 'Next', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 
@@ -229,7 +240,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 							document.getElementById("wcs-transaction-start").setAttribute("href", start);
 						}
 					</script>
-					<a class="button-primary woocommerce-save-button" id="wcs-transaction-start" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+					<a class="button-primary" id="wcs-transaction-start" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
 						<?= __( 'Get transactions starting at ', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 					<?php
@@ -246,4 +257,103 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		<?php
 	}
 
+	/**
+	 * Handles support requests
+	 *
+	 * @since 1.0.0
+	 */
+	function print_support_form() {
+		?>
+		<div class="woo-wcs-backend-links">
+			<a class="button-primary" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+				<?= __( 'Back to Settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
+			</a>
+		</div>
+
+		<h2><?= __( 'Support Request', 'woocommerce-wirecard-checkout-seamless' ) ?></h2>
+		<br/>
+		<?php
+		if( isset($_POST['send-request'])){
+			$this->create_support_request();
+			echo '<br/>';
+		}
+		?>
+		<form action="?page=wirecard_support_request" method="post" name="support-request-form">
+			<table>
+				<tr>
+					<td><label for="support-mail"><?= __( 'To:', 'woocommerce-wirecard-checkout-seamless' ) ?></label></td>
+					<td><select name="support-mail">
+							<option value="support.at@wirecard.com"><?= __( 'Support Team Wirecard CEE, Austria',
+							                                                'woocommerce-wirecard-checkout-seamless' ) ?></option>
+							<option value="support@wirecard.com"><?= __( 'Support Team Wirecard AG, Germany',
+							                                             'woocommerce-wirecard-checkout-seamless' ) ?></option>
+							<option value="support.sg@wirecard.com"><?= __( 'Support Team Wirecard Singapore',
+							                                                'woocommerce-wirecard-checkout-seamless' ) ?></option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><label for="customer-mail"><?= __( 'Your e-mail address:',
+					                                       'woocommerce-wirecard-checkout-seamless' ) ?></label></td>
+					<td><input type="email" name="customer-mail"/></td>
+				</tr>
+				<tr>
+					<td><label for="support-message"><?= __( 'Your message:',
+					                                         'woocommerce-wirecard-checkout-seamless' ) ?></label></td>
+					<td><textarea rows="5" cols="70" name="support-message"></textarea></td>
+				</tr>
+			</table>
+			<br/>
+			<input type="submit" class="button-primary" name="send-request"
+			       value="<?= __( 'Send your request', 'woocommerce-wirecard-checkout-seamless' ) ?>"/>
+		</form>
+		<?php
+	}
+
+	/**
+	 * Create support request with config data
+	 *
+	 * @since 1.0.0
+	 */
+	function create_support_request() {
+		global $wp_version;
+		$postdata = $_POST;
+
+		$message = "WordPress: " . $wp_version . "\n";
+		$message .= "WooCommerce: " . WC()->version . "\n";
+		$message .= "PHP: " . phpversion() . "\n";
+		$message .= "Pluginname: " . WOOCOMMERCE_GATEWAY_WCS_NAME . "\n";
+		$message .= "Pluginversion: " . WOOCOMMERCE_GATEWAY_WCS_VERSION . "\n";
+		$message .= "-----------------------------------------\n";
+		$message .= "Message: \n" . strip_tags( $postdata['support-message'] ) . "\n";
+		$message .= "-----------------------------------------\n";
+
+		foreach ( $this->get_settings_fields() as $group => $fields ) {
+			foreach ( $fields as $key => $field ) {
+				$message .= $field['title'] . ": ";
+				$message .= $this->_settings[ $key ] . "\n";
+			}
+		}
+
+		$send_to = $postdata['support-mail'];
+		$from    = $postdata['customer-mail'];
+		$headers = 'From: <' . $from . '>';
+		$subject = 'WooCommerce Support Request';
+
+		$send   = wp_mail( $send_to, $subject, $message, $headers );
+		?>
+
+		<div class="updated inline">
+			<p><strong>
+					<?php if ( $send ) {
+						echo __( 'Your request has been sent', 'woocommerce-wirecard-checkout-seamless' );
+					} else {
+						echo __( 'Your request could not be sent', 'woocommerce-wirecard-checkout-seamless' );
+					}
+					?>
+				</strong>
+			</p>
+		</div>
+		<?php
+	}
 }

@@ -55,12 +55,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->init_settings();
 
 		$this->_logger      = new WC_Logger();
-		$this->_admin       = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
+		$this->_admin       = new WC_Gateway_Wirecard_Checkout_Seamless_Admin( $this->settings );
 		$this->_config      = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
 		$this->_transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction();
 
 		// if any of the payment types are enabled, set this to "yes", otherwise "no"
 		$this->enabled = count( $this->get_enabled_payment_types( false ) ) > 0 ? "yes" : "no";
+		$this->title = 'Wirecard Checkout Seamless';
 
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
@@ -248,11 +249,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function admin_options() {
 		$this->_admin->include_backend_header( $this );
-		if ( ! isset( $_GET['transaction_start'] ) ) {
-			$this->_admin->print_admin_form_fields( $this );
-		} else {
+
+		if ( isset( $_GET['transaction_start'] ) ) {
 			$this->_admin->print_transaction_table( $this->_transaction, $_GET['transaction_start'] );
 			unset( $_GET['transaction_start'] );
+		}
+		else {
+			$this->_admin->print_admin_form_fields( $this );
 		}
 
 	}
@@ -733,6 +736,16 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	function datastorage_return() {
 		die( require_once 'includes/datastorage_fallback.php' );
+	}
+
+	/**
+	 * Opens the support request form
+	 *
+	 * @since 1.0.0
+	 */
+	function do_support_request() {
+		$this->_admin->include_backend_header( $this );
+		$this->_admin->print_support_form();
 	}
 
 }

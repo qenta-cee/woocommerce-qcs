@@ -59,6 +59,7 @@ load_plugin_textdomain(
 );
 
 add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
+add_action( 'admin_menu', 'add_wirecard_support_request_page' );
 
 /**
  * Intialize the Wirecard payment gateway
@@ -133,4 +134,20 @@ function woocommerce_install_wirecard_checkout_seamless() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 
+}
+
+/**
+ * Add extra page for wirecard support request
+ *
+ * @since 1.0.0
+ */
+function add_wirecard_support_request_page() {
+	add_submenu_page(
+		null,
+		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
+		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
+		'manage_options',
+		'wirecard_support_request',
+		array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'do_support_request')
+	);
 }
