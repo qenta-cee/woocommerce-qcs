@@ -85,6 +85,8 @@ function init_woocommerce_wcs_gateway() {
 		} );
 
 	add_filter( 'woocommerce_payment_gateways', 'add_wirecard_checkout_seamless', 0 );
+	add_filter( 'woocommerce_thankyou_order_received_text',
+	            array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'thankyou_order_received_text' ), 10, 2 );
 }
 
 /**
@@ -148,6 +150,6 @@ function add_wirecard_support_request_page() {
 		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
 		'manage_options',
 		'wirecard_support_request',
-		array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'do_support_request')
+		array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'do_support_request' )
 	);
 }

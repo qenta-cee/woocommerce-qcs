@@ -46,29 +46,29 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		//field lables for transaction overview
 		$this->_fields_list = array(
 			'id_tx'    => array(
-				'title' => __( "ID", 'woocommerce-wcs' )
+				'title' => __( "ID", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'message'  => array(
-				'title' => __( "Status", 'woocommerce-wcs' )
+				'title' => __( "Status", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'amount'   => array(
-				'title' => __( "Amount", 'woocommerce-wcs' )
+				'title' => __( "Amount", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'currency' => array(
-				'title' => __( "Currency", 'woocommerce-wcs' )
+				'title' => __( "Currency", 'woocommerce-wirecard-checkout-seamless' )
 			),
 
 			'id_order'          => array(
-				'title' => __( "Order number", 'woocommerce-wcs' )
+				'title' => __( "Order number", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'gateway_reference' => array(
-				'title' => __( "Gateway reference number", 'woocommerce-wcs' )
+				'title' => __( "Gateway reference number", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'payment_method'    => array(
-				'title' => __( "Payment method", 'woocommerce-wcs' )
+				'title' => __( "Payment method", 'woocommerce-wirecard-checkout-seamless' )
 			),
 			'payment_state'     => array(
-				'title' => __( "State", 'woocommerce-wcs' )
+				'title' => __( "State", 'woocommerce-wirecard-checkout-seamless' )
 			),
 
 		);
