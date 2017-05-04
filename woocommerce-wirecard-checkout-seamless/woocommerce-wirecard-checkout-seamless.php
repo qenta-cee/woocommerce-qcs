@@ -155,7 +155,7 @@ function wirecard_transactions_add_page() {
 		__( 'Wirecard Transactions', 'woocommerce-wirecard-checkout-seamless' ),
 		'manage_options',
 		'wirecard_transactions_page',
-		array(new WC_Gateway_Wirecard_Checkout_Seamless(),'wirecard_transactions_do_page')
+		array($gateway,'wirecard_transactions_do_page')
 	);
 
 	// add page to specific transaction
