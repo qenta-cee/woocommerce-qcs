@@ -328,11 +328,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 						<th>' . __( 'Deposited', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
 						<th>' . __( 'Currency', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
 						<th>' . __( 'Operations', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
-					</tr>
-				';
+					</tr>';
+
+		if ( count( $data->payments ) == 0 ) {
+			echo "<tr class='wcs-no-entries'>
+					<td colspan='8'>
+						<span class='dashicons dashicons-warning'></span><br>
+						" . __( 'No payments available', 'woocommerce-wirecard-checkout-seamless' ) . "
+					</td>
+				  </tr>";
+		}
 
 		foreach ( $data->payments as $payment ) {
 			$payment = $payment->getData();
+
 			echo "<td>{$payment['paymentNumber']}</td>
 				  <td>{$payment['timeCreated']}</td>
 			      <td>{$payment['gatewayReferenceNumber']}</td>
@@ -362,12 +371,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		}
 
 		echo '</table>
-				</div>
-			</div>';
-
-		echo '<div class="postbox ">
-				<h2 class="wcs-transaction-h2"><span>' . __( 'Credits', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
-				<div class="inside">
 				</div>
 			</div>';
 	}

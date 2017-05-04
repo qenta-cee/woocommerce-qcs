@@ -53,10 +53,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		$order_id      = $_POST['order_id'];
 		$refund_amount = $_POST['refund_amount'];
 
+
 		if ( $refund_amount <= 0 ) {
 			return new WP_Error( 'error', __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
 		}
 
+		print_r($_POST);die;
 		$line_item_qtys   = str_replace( '\\', "", $_POST['line_item_qtys'] );
 		$line_item_totals = str_replace( '\\', "", $_POST['line_item_totals'] );
 		$refund_items     = array();
@@ -181,6 +183,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 				return $this->deposit( $orderNumber, $amount, $currency );
 			case 'DEPOSITREVERSAL':
 				return $this->depositreversal( $orderNumber, $paymentNumber );
+			case 'APPROVEREVERSAL':
+				return $this->approvereversal( $orderNumber );
 			default:
 				return false;
 		}
@@ -209,7 +213,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
-			return array( 'type' => 'updated', 'message' => sprintf( 'DEPOSIT %d %s', $amount, $currency ) );
+			return array( 'type' => 'updated', 'message' => sprintf( 'DEPOSIT %1.2f %s', $amount, $currency ) );
 		}
 	}
 
@@ -236,6 +240,31 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
 			return array( 'type' => 'updated', 'message' => 'DEPOSITREVERSAL' );
+		}
+	}
+
+	/**
+	 * reversal the approval of a payment
+	 *
+	 * @since
+	 *
+	 * @param $orderNumber
+	 *
+	 * @return array
+	 */
+	public function approvereversal( $orderNumber ) {
+		$response = $this->get_client()->approveReversal( $orderNumber );
+
+		if ( $response->hasFailed() ) {
+			$this->logResponseErrors( __METHOD__, $response->getErrors() );
+			$errors = array();
+			foreach ( $response->getErrors() as $error ) {
+				$errors[] = $error->getConsumerMessage();
+			}
+
+			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
+		} else {
+			return array( 'type' => 'updated', 'message' => 'APPROVEREVERSAL' );
 		}
 	}
 }
