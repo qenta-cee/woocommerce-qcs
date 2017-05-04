@@ -43,7 +43,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 * @since 1.0.0
 	 */
 
-	function print_admin_form_fields( $gateway ){
+	function print_admin_form_fields( $gateway ) {
 		?>
 		<div class="woo-wcs-settings-header-wrapper">
 			<div class="woo-wcs-backend-links">
@@ -157,7 +157,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @param $gateway
 	 */
-	function include_backend_header( $gateway ){
+	function include_backend_header( $gateway ) {
 		?>
 		<link rel='stylesheet'
 		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
@@ -190,46 +190,53 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	function print_transaction_table( $transaction, $start ) {
 		?>
 		<div class="woo-wcs-backend-links">
-			<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+			<a class="button-primary"
+			   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
 				<?= __( 'Back to Settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
 			</a>
 		</div>
 
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
-			<a href="javascript:void(0);" data-target="#transaction-table" class="nav-tab nav-tab-active"><?= __( 'Transaction Overview',
-			                                                                                                      'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#backend-operations" class="nav-tab "><?= __( 'Backend Operations',
-			                                                                                         'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#transaction-table"
+			   class="nav-tab nav-tab-active"><?= __( 'Transaction Overview',
+			                                          'woocommerce-wirecard-checkout-seamless' ) ?></a>
+			<a href="javascript:void(0);" data-target="#backend-operations"
+			   class="nav-tab "><?= __( 'Backend Operations',
+			                            'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#fund-transfer" class="nav-tab "><?= __( 'Fund Transfer',
 			                                                                                    'woocommerce-wirecard-checkout-seamless' ) ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="transaction-table">
-				<table><?php $more = $transaction->get_rows( $start , 20 + $start ); ?></table>
+				<table><?php $more = $transaction->get_rows( $start, 20 + $start ); ?></table>
 				<?php
-				if ( $start > 20 ){
+				if ( $start > 20 ) {
 					?>
-					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start-20); ?>">
+					<a class="button-primary"
+					   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo( $start - 20 ); ?>">
 						<?= __( 'Back', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 					<?php
 				}
-				if( $start + 20 < $more ){
+				if ( $start + 20 < $more ) {
 					?>
-					<a class="button-primary woocommerce-save-button" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo ($start+20); ?>">
+					<a class="button-primary"
+					   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=<?php echo( $start + 20 ); ?>">
 						<?= __( 'Next', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 
-					<input type="number" name="transaction_start" onchange="setStartValue(this.value)" min="0" max="<?php echo $more;?>"/>
+					<input type="number" name="transaction_start" onchange="setStartValue(this.value)" min="0"
+					       max="<?php echo $more; ?>"/>
 
 					<script language="javascript" type="text/javascript">
 						var start = 1;
-						function setStartValue(data){
+						function setStartValue(data) {
 							start = "?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=" + data;
 							document.getElementById("wcs-transaction-start").setAttribute("href", start);
 						}
 					</script>
-					<a class="button-primary woocommerce-save-button" id="wcs-transaction-start" href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
+					<a class="button-primary" id="wcs-transaction-start"
+					   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs&transaction_start=1">
 						<?= __( 'Get transactions starting at ', 'woocommerce-wirecard-checkout-seamless' ) ?>
 					</a>
 					<?php
@@ -244,6 +251,125 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			</div>
 		</div>
 		<?php
+	}
+
+	public function print_transaction_details( $data ) {
+		echo "<div class='woo-wcs-backend-links'>
+			<a class='button-primary' href='?page=wirecard_transactions_page'>
+				" . __( 'Back to Transactions', 'woocommerce-wirecard-checkout-seamless' ) . "
+			</a>
+		</div>
+		
+		<br>";
+
+		echo "<div class='postbox' style='border: 0;'><h2 style='margin: 0;'></h2></div>";
+
+		echo '<div class="postbox">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction details', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
+				<table>
+					<tr>
+						<th>' . __( 'Order', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td><a href="' . admin_url( "post.php?post=" . absint( $data->id_order ) ) . '&action=edit">' . $data->id_order . '</a></td>
+					</tr>
+					<tr>
+						<th>' . __( 'Payment method', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->payment_method . '</td>
+					</tr>
+					<tr>
+						<th>' . __( 'Payment state', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->payment_state . '</td>
+					</tr>
+					<tr>
+						<th>' . __( 'Amount', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->amount . '</td>
+					</tr>
+					<tr>
+						<th>' . __( 'Currency', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->currency . '</td>
+					</tr>
+					<tr>
+						<th>' . __( 'Gateway reference number', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->gateway_reference . '</td>
+					</tr>
+					<tr>
+						<th>' . __( 'Wirecard order number', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<td>' . $data->order_number . '</td>
+					</tr>
+				</table>
+				</div>
+			</div>';
+
+		if ( $data->order_details ) {
+			echo '<div class="postbox ">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Wirecard order details', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
+				<table>';
+
+			foreach ( $data->order_details as $key => $value ) {
+				echo "<tr><th>$key</th><td>$value</td></tr>";
+			}
+
+			echo '</table>
+				</div>
+			</div>';
+		}
+
+		echo '<div class="postbox ">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Payments', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
+				<table class="wcs-payments-table">
+					<tr>
+						<th>' . __( 'Number', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Date', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Gateway reference', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Payment state', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Approved', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Deposited', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Currency', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Operations', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+					</tr>
+				';
+
+		foreach ( $data->payments as $payment ) {
+			$payment = $payment->getData();
+			echo "<td>{$payment['paymentNumber']}</td>
+				  <td>{$payment['timeCreated']}</td>
+			      <td>{$payment['gatewayReferenceNumber']}</td>
+			      <td>{$payment['state']}</td>
+			      <td>{$payment['approveAmount']}</td>
+			      <td>{$payment['depositAmount']}</td>
+			      <td>{$payment['currency']}</td>
+			      <td><form method='post'>";
+
+			echo "<input type='hidden' name='paymentNumber' value='{$payment['paymentNumber']}'>";
+			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
+			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
+
+			foreach ( explode( ",", $payment['operationsAllowed'] ) as $operation ) {
+				if ( empty( $operation ) ) {
+					continue;
+				}
+
+				if ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
+					echo "<input type='text' autocomplete='off' value='' name='amount'>";
+				}
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>$operation</button>";
+			}
+
+			echo "</form></td>
+				  </tr>";
+		}
+
+		echo '</table>
+				</div>
+			</div>';
+
+		echo '<div class="postbox ">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Credits', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
+				</div>
+			</div>';
 	}
 
 }

@@ -34,6 +34,7 @@ require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-admin.ph
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-config.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-datastorage.php' );
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-transaction.php' );
+require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-backend-operations.php' );
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless
@@ -58,6 +59,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->_admin       = new WC_Gateway_Wirecard_Checkout_Seamless_Admin();
 		$this->_config      = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $this->settings );
 		$this->_transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction( $this->settings );
+		$this->supports     = array( 'refunds' );
 
 		// if any of the payment types are enabled, set this to "yes", otherwise "no"
 		$this->enabled = count( $this->get_enabled_payment_types( false ) ) > 0 ? "yes" : "no";
@@ -312,6 +314,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		} catch ( Exception $e ) {
 			$this->_logger->emergency( __METHOD__ . ":" . print_r( $e, true ) );
 		}
+	}
+
+	/**
+	 * Process a refund if supported.
+	 *
+	 * @param  int $order_id
+	 * @param  float $amount
+	 * @param  string $reason
+	 *
+	 * @return bool True or false based on success, or a WP_Error object
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+
+		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
+
+		return $backend_operations->refund();
 	}
 
 	/**
@@ -729,6 +747,54 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		die( require_once 'includes/datastorage_fallback.php' );
 	}
 
+	public function wirecard_transaction_do_page() {
+
+		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
+
+		echo "<div class='wrap'>";
+
+		$this->_admin->include_backend_header( $this );
+
+
+
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+
+			$operation = $backend_operations->do_backend_operation(
+				$_POST['paymentNumber'],
+				$_POST['orderNumber'],
+				$_POST['currency'],
+				( isset( $_POST['amount'] ) ? $_POST['amount'] : 0 ),
+				$_POST['submitWcsBackendOperation'] );
+
+			add_settings_error( '', '', $operation['message'], $operation['type'] );
+		}
+
+		settings_errors();
+
+
+
+		$id_tx = $_REQUEST['id'];
+
+		$tx = $this->_transaction->get( $id_tx );
+
+		if ( empty ( $id_tx ) ) {
+			$this->wirecard_transactions_do_page();
+		}
+
+		$data = $tx;
+
+		$wc_order = new WC_Order( $tx->id_order );
+
+		$data->order_number  = $wc_order->get_meta( 'wcs_order_number' );
+		$data->order_details = $backend_operations->get_order_details( $data->order_number )->getOrder()->getData();
+		$data->payments      = $backend_operations->get_payments( $data->order_number )->getArray();
+
+		$this->_admin->print_transaction_details( $data );
+		print_r( $data );
+
+
+	}
+
 	public function wirecard_transactions_do_page() {
 		echo "<div class='wrap woocommerce'>";
 		$this->_admin->include_backend_header( $this );
@@ -736,13 +802,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$transaction_start = ! isset( $_GET['transaction_start'] ) ? 1 : $_GET['transaction_start'];
 		$this->_admin->print_transaction_table( $this->_transaction, $transaction_start );
 		unset( $_GET['transaction_start'] );
-		echo "</div>";
-	}
-
-	public function wirecard_transaction_do_page() {
-		echo "<div class='wrap woocommerce'>";
-		$this->_admin->include_backend_header( $this );
-
 		echo "</div>";
 	}
 

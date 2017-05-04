@@ -175,7 +175,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 			}
 
 			echo "<td><a href='?page=wirecard_transaction_page&id={$row["id_tx"]}' class='button-primary'>";
-			echo __('Open', 'woocommerce-wirecard-checkout-seamless');
+			echo __( 'View', 'woocommerce-wirecard-checkout-seamless' );
 			echo "</a></td>";
 			echo "</tr>";
 		}
