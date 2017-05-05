@@ -759,7 +759,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
 			if ( ! isset( $_POST['wcs-do-bop'] ) || ! wp_verify_nonce( $_POST['wcs-do-bop'], 'wcs-do-bop' ) ) {
-				$this->_logger->error(__METHOD__ . ":ERROR:" . __("Prevented possible CSRF attack."));
+				$this->_logger->error( __METHOD__ . ":ERROR:" . __( "Prevented possible CSRF attack." ) );
 				die( 'CSRF Protection prevented you from doing this operation.' );
 			}
 
@@ -767,8 +767,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				( isset( $_POST['paymentNumber'] ) ) ? $_POST['paymentNumber'] : $_POST['creditNumber'],
 				$_POST['orderNumber'],
 				$_POST['currency'],
-				( isset( $_POST['amount'] ) ? $_POST['amount'] : 0 ),
-				$_POST['submitWcsBackendOperation'] );
+				( isset( $_POST['amount'] ) ? round( $_POST['amount'], wc_get_rounding_precision() ) : 0 ),
+				$_POST['submitWcsBackendOperation'],
+				( isset( $_POST['wcOrder'] ) ) ? $_POST['wcOrder'] : null );
 
 			add_settings_error( '', '', $operation['message'], $operation['type'] );
 		}
@@ -792,6 +793,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$data->order_details = $backend_operations->get_order_details( $data->order_number )->getOrder()->getData();
 		$data->payments      = $backend_operations->get_payments( $data->order_number )->getArray();
 		$data->credits       = $backend_operations->get_credits( $data->order_number )->getArray();
+
+
+		uasort($data->payments, function($a,$b){
+			$a = $a->getData();
+			$b = $b->getData();
+			return new DateTime($a['timeCreated']) > new DateTime($b['timeCreated']);
+		});
+
+		uasort($data->credits, function($a,$b){
+			$a = $a->getData();
+			$b = $b->getData();
+			return new DateTime($a['timeCreated']) > new DateTime($b['timeCreated']);
+		});
 
 		$this->_admin->print_transaction_details( $data );
 	}

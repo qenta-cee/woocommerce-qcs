@@ -255,7 +255,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 	public function print_transaction_details( $data ) {
 
-		$nonce = wp_create_nonce('wcs-do-bop');
+		$nonce = wp_create_nonce( 'wcs-do-bop' );
 
 		echo "<div class='woo-wcs-backend-links'>
 			<a class='button-primary' href='?page=wirecard_transactions_page'>
@@ -422,14 +422,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='creditNumber' value='{$credit['creditNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$credit['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$credit['currency']}'>";
+			echo "<input type='hidden' name='wcOrder' value='{$data->id_order}'>";
 
 			foreach ( explode( ",", $credit['operationsAllowed'] ) as $operation ) {
 				if ( empty( $operation ) ) {
 					continue;
-				}
-
-				if ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
-					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}
 				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>$operation</button>";
 			}

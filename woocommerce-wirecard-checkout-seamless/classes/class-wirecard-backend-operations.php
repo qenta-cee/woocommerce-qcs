@@ -54,7 +54,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		$order_id      = $_POST['order_id'];
 		$refund_amount = $_POST['refund_amount'];
 
-
 		if ( $refund_amount <= 0 ) {
 			return new WP_Error( 'error', __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
 		}
@@ -109,17 +108,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			} else {
 				$response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
 
-				if ( $response->hasFailed() ){
+				if ( $response->hasFailed() ) {
 					$this->logResponseErrors( __METHOD__, $response->getErrors() );
+
 					return false;
-				}
-				else{
+				} else {
 					return true;
 				}
 			}
 
 		}
-return false;
+
+		return false;
 
 
 	}
@@ -209,24 +209,25 @@ return false;
 	}
 
 	/**
-	 * @param $paymentNumber
-	 * @param $orderNumber
+	 * @param $payment_number
+	 * @param $order_number
 	 * @param $currency
 	 * @param $amount
 	 * @param $type
+	 * @param $wc_order_id
 	 *
 	 * @return mixed
 	 */
-	public function do_backend_operation( $paymentNumber, $orderNumber, $currency, $amount, $type ) {
+	public function do_backend_operation( $payment_number, $order_number, $currency, $amount, $type, $wc_order_id ) {
 		switch ( $type ) {
 			case 'DEPOSIT':
-				return $this->deposit( $orderNumber, $amount, $currency );
+				return $this->deposit( $order_number, $amount, $currency );
 			case 'DEPOSITREVERSAL':
-				return $this->depositreversal( $orderNumber, $paymentNumber );
+				return $this->depositreversal( $order_number, $payment_number );
 			case 'APPROVEREVERSAL':
-				return $this->approvereversal( $orderNumber );
+				return $this->approvereversal( $order_number );
 			case 'REFUNDREVERSAL':
-				return $this->refundreversal( $orderNumber, $paymentNumber );
+				return $this->refundreversal( $order_number, $payment_number, $wc_order_id );
 			default:
 				return false;
 		}
@@ -286,14 +287,14 @@ return false;
 	}
 
 	/**
- * reversal the approval of a payment
- *
- * @since
- *
- * @param $orderNumber
- *
- * @return array
- */
+	 * reversal the approval of a payment
+	 *
+	 * @since
+	 *
+	 * @param $orderNumber
+	 *
+	 * @return array
+	 */
 	public function approvereversal( $orderNumber ) {
 		$response = $this->get_client()->approveReversal( $orderNumber );
 
@@ -319,9 +320,30 @@ return false;
 	 *
 	 * @return array
 	 */
-	public function refundreversal( $orderNumber, $creditNumber ) {
-		$response = $this->get_client()->refundReversal( $orderNumber, $creditNumber );
+	public function refundreversal( $orderNumber, $creditNumber, $wc_order_number ) {
+		// get the amount from the credit
+		$credit_amount = 0;
+		foreach ( $this->get_client()->getOrderDetails( $orderNumber )->getOrder()->getCredits() as $credit ) {
+			$credit = $credit->getData();
+			if ( $credit['creditNumber'] == $creditNumber ) {
+				$credit_amount = $credit['amount'];
+				break;
+			}
+		}
 
+		// get the order to find the correct refund_number
+		$wc_order = new WC_Order( $wc_order_number );
+
+		$refunds = $wc_order->get_refunds();
+		$refund  = null;
+		foreach ( $refunds as $_refund ) {
+			if ( $_refund->get_amount() == $credit_amount ) {
+				$refund = $_refund;
+			}
+		}
+
+		// do the refundreversal
+		$response = $this->get_client()->refundReversal( $orderNumber, $creditNumber );
 		if ( $response->hasFailed() ) {
 			$this->logResponseErrors( __METHOD__, $response->getErrors() );
 			$errors = array();
@@ -331,7 +353,20 @@ return false;
 
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
-			return array( 'type' => 'updated', 'message' => 'REFUNDREVERSAL' );
+			if ( $refund != null ) {
+
+				// delete the refund
+				$refund->delete();
+
+				return array( 'type'    => 'updated',
+				              'message' => __( 'Refund reversal finished. If you have previously reduced this item\'s stock, or this order was submitted by a customer, you will need to manually restore the item\'s stock.', 'woocommerce' )
+				);
+			} else {
+				return array(
+					'type'    => 'notice-warning',
+					'message' => __( 'Refund reversal finished, but no corresponing refund found in the order. You might need to update the order manually.', 'woocommerce-wirecard-checkout-seamless' )
+				);
+			}
 		}
 	}
 }
