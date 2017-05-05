@@ -254,6 +254,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	}
 
 	public function print_transaction_details( $data ) {
+
+		$nonce = wp_create_nonce('wcs-do-bop');
+
 		echo "<div class='woo-wcs-backend-links'>
 			<a class='button-primary' href='?page=wirecard_transactions_page'>
 				" . __( 'Back to Transactions', 'woocommerce-wirecard-checkout-seamless' ) . "
@@ -351,6 +354,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			      <td>{$payment['currency']}</td>
 			      <td><form method='post'>";
 
+			echo "<input name='wcs-do-bop' type='hidden' value='$nonce'>";
 			echo "<input type='hidden' name='paymentNumber' value='{$payment['paymentNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
@@ -414,7 +418,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			      <td>{$credit['amount']}</td>
 			      <td>{$credit['currency']}</td>
 			      <td><form method='post'>";
-
+			echo "<input name='wcs-do-bop' type='hidden' value='$nonce'>";
 			echo "<input type='hidden' name='creditNumber' value='{$credit['creditNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$credit['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$credit['currency']}'>";

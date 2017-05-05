@@ -758,6 +758,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
+			if ( ! isset( $_POST['wcs-do-bop'] ) || ! wp_verify_nonce( $_POST['wcs-do-bop'], 'wcs-do-bop' ) ) {
+				$this->_logger->error(__METHOD__ . ":ERROR:" . __("Prevented possible CSRF attack."));
+				die( 'CSRF Protection prevented you from doing this operation.' );
+			}
+
 			$operation = $backend_operations->do_backend_operation(
 				( isset( $_POST['paymentNumber'] ) ) ? $_POST['paymentNumber'] : $_POST['creditNumber'],
 				$_POST['orderNumber'],
