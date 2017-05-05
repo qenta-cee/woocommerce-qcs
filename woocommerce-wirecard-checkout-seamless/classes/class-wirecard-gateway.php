@@ -430,6 +430,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
 					                   'woocommerce-wirecard-checkout-seamless' ),
 					               'error' );
+
+					$this->_logger->error( __METHOD__ . ': ' . $error->getConsumerMessage() );
+
+					return;
 				}
 
 
@@ -493,11 +497,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	function confirm_request() {
+		$message = null;
+
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
 			$message = 'order-id missing';
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			die();
 		}
 
 		$order_id       = $_REQUEST['wooOrderId'];
@@ -508,14 +515,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$message = "order with id `$order->get_id()` not found";
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
+
 			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			die();
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
 			$message = "cannot change the order with id `$order->get_id()`";
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
-			print WirecardCEE_QPay_ReturnFactory::generateConfirmResponseString( $message );
+
+			print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			die();
 		}
 
 		//save updated payment data in extra field
@@ -535,10 +546,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 				$message = __( 'Validation error: invalid response', 'woocommerce-wirecard-checkout-seamless' );
 				$this->_logger->error( __METHOD__ . ':' . $message );
-
 				$order->update_status( 'failed', $message );
 
 				print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+				die();
 			}
 
 			$this->_logger->notice( __METHOD__ . ':' . print_r( $return, true ) );
@@ -563,7 +574,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
 					$order->payment_complete();
-					break;
+					print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					die();
+
 				case WirecardCEE_QMore_ReturnFactory::STATE_PENDING:
 					$order->update_status(
 						'on-hold',
@@ -575,7 +588,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 						                             'modified'      => current_time( 'mysql', true )
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
-					break;
+					print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					die();
 
 				case WirecardCEE_QMore_ReturnFactory::STATE_CANCEL:
 					$order->update_status( 'cancelled',
@@ -587,12 +601,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 						                             'modified'          => current_time( 'mysql', true )
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
-					break;
+					print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					die();
 
 				case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
 					$errors = array();
 					foreach ( $return->getErrors() as $error ) {
 						$errors[] = $error->getConsumerMessage();
+						$message  = $error->getConsumerMessage();
 					}
 					$order->update_status(
 						'failed',
@@ -605,7 +621,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 						                             'modified'          => current_time( 'mysql', true )
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
-					break;
+					print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					die();
 
 				default:
 					break;
@@ -624,6 +641,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		print WirecardCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		die();
 	}
 
 	/**
