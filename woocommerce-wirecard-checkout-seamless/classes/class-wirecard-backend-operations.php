@@ -50,6 +50,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	 * @return bool|WP_Error
 	 */
 	public function refund() {
+
 		$order_id      = $_POST['order_id'];
 		$refund_amount = $_POST['refund_amount'];
 
@@ -58,59 +59,69 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			return new WP_Error( 'error', __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
 		}
 
-		print_r($_POST);die;
-		$line_item_qtys   = str_replace( '\\', "", $_POST['line_item_qtys'] );
-		$line_item_totals = str_replace( '\\', "", $_POST['line_item_totals'] );
+		$line_item_qtys   = json_decode( str_replace( '\\', "", $_POST['line_item_qtys'] ) );
+		$line_item_totals = (array) json_decode( str_replace( '\\', "", $_POST['line_item_totals'] ) );
 		$refund_items     = array();
 
-		$wc_order         = wc_get_order( $order_id );
+		if ( ! empty( $line_item_qtys ) ) { // refund via ratepay is possible
+			foreach ( $line_item_totals as $itemno => $qty ) {
+				$refund_items[ $itemno ] = array(
+					'refund_total' => $qty,
+					'refund_qty'   => isset( $line_item_qtys->{$itemno} ) ? $line_item_qtys->{$itemno} : 1
+				);
+			}
+		}
+
+		$wc_order         = wc_get_order( $order_id ); // woocommerce order
 		$wcs_order_number = $wc_order->get_meta( 'wcs_order_number' );
 		$order_details    = $this->get_order_details( $wcs_order_number );
 
 		if ( $order_details->getStatus() != 0 ) {
 			$this->logResponseErrors( __METHOD__, $order_details->getErrors() );
+			$this->showResponseErrors( $order_details->getErrors() );
 
 			return false;
 		}
 
-		$order    = $order_details->getOrder();
-		$payments = $order->getPayments();
+		$order = $order_details->getOrder();
 
+		$basket = null;
 
-		if ( ! empty( $line_item_qtys ) ) { // refund via ratepay is possible
-			foreach ( json_decode( $line_item_qtys ) as $itemno => $qty ) {
-				$refund_items[ $itemno ]['refund_qty'] = $qty;
-			}
-			foreach ( json_decode( $line_item_totals ) as $itemno => $total ) {
-				if ( array_key_exists( $itemno, $refund_items ) ) {
-					$refund_items[ $itemno ]['refund_total'] = $total;
+		if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
+
+			if (
+				(
+					$order->getPaymentType() == WirecardCEE_QMore_PaymentType::INSTALLMENT
+					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
+				)
+				or
+				(
+					$order->getPaymentType() == WirecardCEE_QMore_PaymentType::INSTALLMENT
+					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
+				)
+			) {
+				if ( empty ( $line_item_qtys ) ) {
+					// invoice / installment provider is set to ratepay / wirecard and basket items were not sent
+					//return false;
 				}
-			}
-		} else {
+				//$basket = new WirecardCEE_Stdlib_Basket();
 
-		}
-
-		$operations_allowed = array();
-		foreach ( $payments as $payment ) {
-			foreach ( $payment->getOperationsAllowed() as $operation ) {
-				if ( ! in_array( $operation, $operations_allowed ) ) {
-					$operations_allowed[] = $operation;
-				}
-			}
-		}
-
-		if ( in_array( "REFUND", $operations_allowed ) ) {
-			$response = $this->get_client()->refund(
-				$wcs_order_number,
-				$refund_amount,
-				$wc_order->get_currency() );
-
-			if ( $response->hasFailed() ) {
-				$this->logResponseErrors( __METHOD__, $response->getErrors() );
 			} else {
-				return true;
+				$response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
+
+				if ( $response->hasFailed() ){
+					$this->logResponseErrors( __METHOD__, $response->getErrors() );
+					return false;
+				}
+				else{
+					return true;
+				}
 			}
+
 		}
+return false;
+
+
 	}
 
 	/**
@@ -156,6 +167,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	}
 
 	/**
+	 * show response errors to admin
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WirecardCEE_QMore_Error $errors
+	 */
+	private function showResponseErrors( $errors ) {
+		$_errors = array();
+		foreach ( $errors as $error ) {
+			$_errors[] = $error->getConsumerMessage();
+		}
+		wc_add_notice( join( '<br>', $_errors ), 'error' );
+	}
+
+
+	/**
 	 * get the list of payments associated with $wcs_order_number
 	 *
 	 * @since 1.0.0
@@ -166,6 +193,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	 */
 	public function get_payments( $wcs_order_number ) {
 		return $this->get_order_details( $wcs_order_number )->getOrder()->getPayments();
+	}
+
+	/**
+	 * get the list of credits associated with $wcs_order_number
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $wcs_order_number
+	 *
+	 * @return WirecardCEE_QMore_Response_Backend_Order_CreditIterator
+	 */
+	public function get_credits( $wcs_order_number ) {
+		return $this->get_order_details( $wcs_order_number )->getOrder()->getCredits();
 	}
 
 	/**
@@ -185,6 +225,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 				return $this->depositreversal( $orderNumber, $paymentNumber );
 			case 'APPROVEREVERSAL':
 				return $this->approvereversal( $orderNumber );
+			case 'REFUNDREVERSAL':
+				return $this->refundreversal( $orderNumber, $paymentNumber );
 			default:
 				return false;
 		}
@@ -244,14 +286,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	}
 
 	/**
-	 * reversal the approval of a payment
-	 *
-	 * @since
-	 *
-	 * @param $orderNumber
-	 *
-	 * @return array
-	 */
+ * reversal the approval of a payment
+ *
+ * @since
+ *
+ * @param $orderNumber
+ *
+ * @return array
+ */
 	public function approvereversal( $orderNumber ) {
 		$response = $this->get_client()->approveReversal( $orderNumber );
 
@@ -265,6 +307,31 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
 			return array( 'type' => 'updated', 'message' => 'APPROVEREVERSAL' );
+		}
+	}
+
+	/**
+	 * reverse the refund of a payment
+	 *
+	 * @since
+	 *
+	 * @param $orderNumber
+	 *
+	 * @return array
+	 */
+	public function refundreversal( $orderNumber, $creditNumber ) {
+		$response = $this->get_client()->refundReversal( $orderNumber, $creditNumber );
+
+		if ( $response->hasFailed() ) {
+			$this->logResponseErrors( __METHOD__, $response->getErrors() );
+			$errors = array();
+			foreach ( $response->getErrors() as $error ) {
+				$errors[] = $error->getConsumerMessage();
+			}
+
+			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
+		} else {
+			return array( 'type' => 'updated', 'message' => 'REFUNDREVERSAL' );
 		}
 	}
 }

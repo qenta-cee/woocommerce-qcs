@@ -156,6 +156,7 @@
 
 .wcs-payments-table th {
     border-bottom: 1px solid #A0D0EB;
+    text-align: left;
 }
 
 .wcs-payments-table td {
@@ -164,6 +165,7 @@
 
 .wcs-payments-table th, .wcs-payments-table td {
     padding: 8px;
+    border-right: 1px dotted #f0efef;
 }
 .wcs-payments-table {
     border-spacing: 0;
@@ -171,7 +173,12 @@
 }
 
 .wcs-payments-table .wcs-no-entries td {
-    background-color: #fbfbff;
+    background-color: #f5f5f5;
     color: #999;
     text-align: center;
+}
+
+.wcs-op-group {
+    display:inline-block;
+    margin-right:5px;
 }

@@ -355,7 +355,71 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
 
-			foreach ( explode( ",", $payment['operationsAllowed'] ) as $operation ) {
+			$operations_allowed = explode( ",", $payment['operationsAllowed'] );
+
+			asort( $operations_allowed );
+
+			foreach ( $operations_allowed as $operation ) {
+				if ( empty( $operation ) ) {
+					continue;
+				}
+
+				echo "<div class='wcs-op-group'>";
+				if ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
+					echo "<input type='text' autocomplete='off' value='' name='amount'>";
+				}
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>$operation</button>";
+				echo "</div>";
+			}
+
+			echo "</form></td>
+				  </tr>";
+		}
+
+		echo '</table>
+				</div>
+			</div>';
+
+		// credits
+		echo '<div class="postbox ">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Credits', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
+				<table class="wcs-payments-table">
+					<tr>
+						<th>' . __( 'Number', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Date', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Gateway reference', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Credit state', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Amount', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Currency', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+						<th>' . __( 'Operations', 'woocommerce-wirecard-checkout-seamless' ) . '</th>
+					</tr>';
+
+		if ( count( $data->credits ) == 0 ) {
+			echo "<tr class='wcs-no-entries'>
+					<td colspan='8'>
+						<span class='dashicons dashicons-warning'></span><br>
+						" . __( 'No credits available', 'woocommerce-wirecard-checkout-seamless' ) . "
+					</td>
+				  </tr>";
+		}
+
+		foreach ( $data->credits as $credit ) {
+			$credit = $credit->getData();
+
+			echo "<td>{$credit['creditNumber']}</td>
+				  <td>{$credit['timeCreated']}</td>
+			      <td>{$credit['gatewayReferenceNumber']}</td>
+			      <td>{$credit['state']}</td>
+			      <td>{$credit['amount']}</td>
+			      <td>{$credit['currency']}</td>
+			      <td><form method='post'>";
+
+			echo "<input type='hidden' name='creditNumber' value='{$credit['creditNumber']}'>";
+			echo "<input type='hidden' name='orderNumber' value='{$credit['orderNumber']}'>";
+			echo "<input type='hidden' name='currency' value='{$credit['currency']}'>";
+
+			foreach ( explode( ",", $credit['operationsAllowed'] ) as $operation ) {
 				if ( empty( $operation ) ) {
 					continue;
 				}

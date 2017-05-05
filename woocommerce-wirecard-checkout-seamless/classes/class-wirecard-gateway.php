@@ -756,11 +756,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->_admin->include_backend_header( $this );
 
 
-
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
 			$operation = $backend_operations->do_backend_operation(
-				$_POST['paymentNumber'],
+				( isset( $_POST['paymentNumber'] ) ) ? $_POST['paymentNumber'] : $_POST['creditNumber'],
 				$_POST['orderNumber'],
 				$_POST['currency'],
 				( isset( $_POST['amount'] ) ? $_POST['amount'] : 0 ),
@@ -770,7 +769,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		}
 
 		settings_errors();
-
 
 
 		$id_tx = $_REQUEST['id'];
@@ -788,11 +786,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$data->order_number  = $wc_order->get_meta( 'wcs_order_number' );
 		$data->order_details = $backend_operations->get_order_details( $data->order_number )->getOrder()->getData();
 		$data->payments      = $backend_operations->get_payments( $data->order_number )->getArray();
+		$data->credits       = $backend_operations->get_credits( $data->order_number )->getArray();
 
 		$this->_admin->print_transaction_details( $data );
-		print_r( $data );
-
-
 	}
 
 	public function wirecard_transactions_do_page() {

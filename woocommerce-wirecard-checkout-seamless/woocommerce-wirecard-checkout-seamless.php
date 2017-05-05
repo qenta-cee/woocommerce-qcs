@@ -60,6 +60,7 @@ load_plugin_textdomain(
 
 add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
 add_action( 'admin_menu', 'wirecard_transactions_add_page' );
+//add_action( '', '');
 
 /**
  * Intialize the Wirecard payment gateway
