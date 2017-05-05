@@ -182,3 +182,9 @@
     display:inline-block;
     margin-right:5px;
 }
+
+.support-label {
+    padding-right: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}

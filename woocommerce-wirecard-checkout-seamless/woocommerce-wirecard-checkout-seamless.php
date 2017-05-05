@@ -59,8 +59,10 @@ load_plugin_textdomain(
 );
 
 add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
+
 add_action( 'admin_menu', 'wirecard_transactions_add_page' );
-//add_action( '', '');
+add_action( 'admin_menu', 'add_wirecard_support_request_page' );
+
 
 /**
  * Intialize the Wirecard payment gateway
@@ -86,6 +88,8 @@ function init_woocommerce_wcs_gateway() {
 		} );
 
 	add_filter( 'woocommerce_payment_gateways', 'add_wirecard_checkout_seamless', 0 );
+	add_filter( 'woocommerce_thankyou_order_received_text',
+	            array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'thankyou_order_received_text' ), 10, 2 );
 }
 
 /**
@@ -141,7 +145,7 @@ function woocommerce_install_wirecard_checkout_seamless() {
  * add submenu and page for wirecard transactions
  */
 function wirecard_transactions_add_page() {
-	if (class_exists('WooCommerce')) {
+	if ( class_exists( 'WooCommerce' ) ) {
 		$parent_slug = 'woocommerce';
 	} else {
 		$parent_slug = 'options-general.php';
@@ -156,7 +160,7 @@ function wirecard_transactions_add_page() {
 		__( 'Wirecard Transactions', 'woocommerce-wirecard-checkout-seamless' ),
 		'manage_options',
 		'wirecard_transactions_page',
-		array($gateway,'wirecard_transactions_do_page')
+		array( $gateway, 'wirecard_transactions_do_page' )
 	);
 
 	// add page to specific transaction
@@ -166,7 +170,22 @@ function wirecard_transactions_add_page() {
 		__( 'Wirecard Transaction', 'woocommerce-wirecard-checkout-seamless' ),
 		'manage_options',
 		'wirecard_transaction_page',
-		array($gateway,'wirecard_transaction_do_page')
+		array( $gateway, 'wirecard_transaction_do_page' )
 	);
+}
 
+/**
+ * Add extra page for wirecard support request
+ *
+ * @since 1.0.0
+ */
+function add_wirecard_support_request_page() {
+	add_submenu_page(
+		null,
+		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
+		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
+		'manage_options',
+		'wirecard_support_request',
+		array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'do_support_request' )
+	);
 }
