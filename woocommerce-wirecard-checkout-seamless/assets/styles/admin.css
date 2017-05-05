@@ -139,3 +139,9 @@
 #transaction-table tr:hover td {
     background-color: rgba(250,250,250,0.7);
 }
+
+.support-label {
+    padding-right: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
