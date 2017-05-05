@@ -55,29 +55,33 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		$refund_amount = $_POST['refund_amount'];
 
 		if ( $refund_amount <= 0 ) {
-			return new WP_Error( 'error', __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
+			$this->_logger->error( __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
+
+			return false;
 		}
 
 		$line_item_qtys   = json_decode( str_replace( '\\', "", $_POST['line_item_qtys'] ) );
 		$line_item_totals = (array) json_decode( str_replace( '\\', "", $_POST['line_item_totals'] ) );
 		$refund_items     = array();
+		$total_items      = 0;
 
 		if ( ! empty( $line_item_qtys ) ) { // refund via ratepay is possible
 			foreach ( $line_item_totals as $itemno => $qty ) {
+				$total_items += $qty;
 				$refund_items[ $itemno ] = array(
 					'refund_total' => $qty,
-					'refund_qty'   => isset( $line_item_qtys->{$itemno} ) ? $line_item_qtys->{$itemno} : 1
+					'refund_qty'   => isset( $line_item_qtys->{$itemno} ) ? $line_item_qtys->{$itemno} : 0
 				);
 			}
 		}
 
 		$wc_order         = wc_get_order( $order_id ); // woocommerce order
+		$wc_order_items   = $wc_order->get_items();
 		$wcs_order_number = $wc_order->get_meta( 'wcs_order_number' );
 		$order_details    = $this->get_order_details( $wcs_order_number );
 
 		if ( $order_details->getStatus() != 0 ) {
 			$this->logResponseErrors( __METHOD__, $order_details->getErrors() );
-			$this->showResponseErrors( $order_details->getErrors() );
 
 			return false;
 		}
@@ -87,6 +91,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		$basket = null;
 
 		if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
+
 
 			if (
 				(
@@ -99,15 +104,49 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
 				)
 			) {
-				if ( empty ( $line_item_qtys ) ) {
+				if ( $total_items == 0 ) {
 					// invoice / installment provider is set to ratepay / wirecard and basket items were not sent
-					//return false;
+					$this->_logger->error( __METHOD__ . ': basket needs to be defined for ' . $this->_settings['woo_wcs_invoiceprovider'] . ' during refund.' );
+
+					return false;
+				} else {
+					$basket = new WirecardCEE_Stdlib_Basket();
+					foreach ( $refund_items as $item_id => $item ) {
+						if ( $item['refund_qty'] < 1 ) {// $wc_order_items[ $item_id ] == null ) {
+							continue;
+						}
+						$wc_product  = new WC_Product( $wc_order_items[ $item_id ]->get_product_id() );
+						$basket_item = new WirecardCEE_Stdlib_Basket_Item( $wc_product->get_id(), $item['refund_qty'] );
+
+						$price             = new stdClass();
+						$price->net        = wc_get_price_excluding_tax( $wc_product );
+						$price->gross      = wc_get_price_including_tax( $wc_product );
+						$price->tax_amount = $price->gross - $price->net;
+						$price->tax_rate   = $price->tax_amount / $price->net;
+
+						$basket_item->setName( $wc_product->get_name() )
+						            ->setDescription( $wc_product->get_short_description() )
+						            ->setImageUrl( wp_get_attachment_image_url( $wc_product->get_image_id() ) )
+						            ->setUnitNetAmount( wc_format_decimal( $price->net, wc_get_price_decimals() ) )
+						            ->setUnitGrossAmount( wc_format_decimal( $price->gross, wc_get_price_decimals() ) )
+						            ->setUnitTaxAmount( wc_format_decimal( $price->tax_amount, wc_get_price_decimals() ) )
+						            ->setUnitTaxRate( wc_format_decimal( $price->tax_rate, 3 ) );
+
+						$basket->addItem( $basket_item );
+					}
+					$response_with_basket = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency(), $basket );
+					if ( $response_with_basket->hasFailed() ) {
+						$this->logResponseErrors( __METHOD__, $response_with_basket->getErrors() );
+
+						return false;
+					} else {
+						return true;
+					}
 				}
-				//$basket = new WirecardCEE_Stdlib_Basket();
 
 			} else {
-				$response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
 
+				$response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
 				if ( $response->hasFailed() ) {
 					$this->logResponseErrors( __METHOD__, $response->getErrors() );
 
@@ -164,21 +203,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			$_errors[] = $error->getConsumerMessage();
 		}
 		$this->_logger->error( "$method : processing refund failed with error(s): " . join( '|', $_errors ) );
-	}
-
-	/**
-	 * show response errors to admin
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WirecardCEE_QMore_Error $errors
-	 */
-	private function showResponseErrors( $errors ) {
-		$_errors = array();
-		foreach ( $errors as $error ) {
-			$_errors[] = $error->getConsumerMessage();
-		}
-		wc_add_notice( join( '<br>', $_errors ), 'error' );
 	}
 
 
@@ -358,8 +382,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 				// delete the refund
 				$refund->delete();
 
-				return array( 'type'    => 'updated',
-				              'message' => __( 'Refund reversal finished. If you have previously reduced this item\'s stock, or this order was submitted by a customer, you will need to manually restore the item\'s stock.', 'woocommerce' )
+				return array(
+					'type'    => 'updated',
+					'message' => __( 'Refund reversal finished. If you have previously reduced this item\'s stock, or this order was submitted by a customer, you will need to manually restore the item\'s stock.', 'woocommerce' )
 				);
 			} else {
 				return array(
