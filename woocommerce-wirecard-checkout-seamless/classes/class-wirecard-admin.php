@@ -179,32 +179,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		<div class="woo-wcs-settings-header-wrapper">
 			<div class="woo-wcs-backend-links">
 				<a class="button-primary" id="wcs-transaction-button"
-				   href="?page=wirecard_transactions_page&transaction_start=1">
+				   href="?page=wirecard_transactions_page&transaction_start=1" <?= ( $_GET['page'] == 'wirecard_transactions_page' ) ? 'disabled="disabled"' : '' ?>>
 					<?= __( 'Transaction overview', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 
 				<a class="button-primary" id="wcs-support-button"
-				   href="?page=wirecard_support_request" <?= ( isset( $_GET['wirecard_support_request'] ) ) ? 'disabled="disabled"' : '' ?>>
+				   href="?page=wirecard_support_request" <?= ( $_GET['page'] == 'wirecard_support_request' ) ? 'disabled="disabled"' : '' ?>>
 					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
 				</a>
 				<a class="button-primary" id="wcs-settings-button"
-				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs">
+				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs" <?= ( $_GET['page'] == 'wc-settings' ) ? 'disabled="disabled"' : '' ?>>
 					<?= __( 'Wirecard settings', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 			</div>
 		</div>
-		<script type="text/javascript">
-			if (window.location.search.indexOf('transaction_start') > -1) {
-				document.getElementById('wcs-transaction-button').setAttribute('disabled', 'disabled');
-				document.getElementById('wcs-transaction-button').setAttribute('href', 'javascript:void(0)');
-			} else if (window.location.search.indexOf('wirecard_support_request') > -1) {
-				document.getElementById('wcs-support-button').setAttribute('disabled', 'disabled');
-				document.getElementById('wcs-support-button').setAttribute('href', 'javascript:void(0)');
-			} else {
-				document.getElementById('wcs-settings-button').setAttribute('disabled', 'disabled');
-				document.getElementById('wcs-settings-button').setAttribute('href', 'javascript:void(0)');
-			}
-		</script>
 		<?php
 	}
 
@@ -275,14 +263,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	public function print_transaction_details( $data ) {
 
 		$nonce = wp_create_nonce( 'wcs-do-bop' );
-
-		echo "<div class='woo-wcs-backend-links'>
-			<a class='button-primary' href='?page=wirecard_transactions_page'>
-				" . __( 'Back to Transactions', 'woocommerce-wirecard-checkout-seamless' ) . "
-			</a>
-		</div>
-		
-		<br>";
 
 		echo "<div class='postbox' style='border: 0;'><h2 style='margin: 0;'></h2></div>";
 
