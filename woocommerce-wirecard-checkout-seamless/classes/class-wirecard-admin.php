@@ -376,8 +376,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			      <td>{$payment['currency']}</td>
 			      <td><form method='post'>";
 
-			echo "<input name='wcs-do-bop' type='hidden' value='
-$nonce'>";
+			echo "<input name='wcs-do-bop' type='hidden' value='$nonce'>";
 			echo "<input type='hidden' name='paymentNumber' value='{$payment['paymentNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
