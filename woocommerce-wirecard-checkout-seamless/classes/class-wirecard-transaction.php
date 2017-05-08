@@ -37,9 +37,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
 	protected $_table_name;
 	protected $_fields_list;
+	protected $_settings;
 
-	public function __construct() {
+	public function __construct( $settings ) {
 		global $wpdb;
+
+		$this->_settings = $settings;
 
 		$this->_table_name = $wpdb->base_prefix . 'wirecard_checkout_seamless_tx';
 
@@ -70,6 +73,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 			'payment_state'     => array(
 				'title' => __( "State", 'woocommerce-wirecard-checkout-seamless' )
 			),
+			'actions'           => array(
+				'title' => __( "", 'woocommerce-wirecard-checkout-seamless' )
+			)
 
 		);
 	}
@@ -125,8 +131,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		//return $update;
 	}
 
+	/**
+	 * get a single transaction
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $id_tx
+	 *
+	 * @return array|null|object|void
+	 */
 	function get( $id_tx ) {
-		//return transaction entry row
+		global $wpdb;
+
+		return $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_tx = $id_tx" );
 	}
 
 	/**
@@ -136,35 +153,42 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @param int $start
 	 * @param int $stop
+	 *
+	 * @return int $row_count
 	 */
 	function get_rows( $start = 1, $stop = 21 ) {
 		global $wpdb;
-		$start--;
-		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
-		                         $stop );
-		$rows  = $wpdb->get_results( $query, ARRAY_A );
-		$row_count = count($rows);
-		?>
-		<tr><?php
+		$start --;
+		$query     = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
+		                             $stop );
+		$rows      = $wpdb->get_results( $query, ARRAY_A );
+		$row_count = count( $rows );
+
+		echo "<tr>";
 		foreach ( $this->_fields_list as $field_key => $field_value ) {
-			?>
-			<th><?php echo $field_value['title']; ?></th><?php
+			echo "<th>";
+			echo $field_value['title'];
+			echo "</th>";
 		}
-		?></tr><?php
+		echo "</tr>";
 
 		foreach ( $rows as $row ) {
-			?>
-			<tr><?php
+			echo "<tr>";
+
 			foreach ( $this->_fields_list as $field_key => $field_value ) {
-				?>
-				<td>
-				<?php if ( key_exists( $field_key, $row ) ) {
+				echo "<td>";
+				if ( key_exists( $field_key, $row ) ) {
 					echo $row[ $field_key ];
 				}
-				?></td><?php
+				echo "</td>";
 			}
-			?></tr><?php
+
+			echo "<td><a href='?page=wirecard_transaction_page&id={$row["id_tx"]}' class='button-primary'>";
+			echo __( 'View', 'woocommerce-wirecard-checkout-seamless' );
+			echo "</a></td>";
+			echo "</tr>";
 		}
+
 		return $row_count;
 	}
 }

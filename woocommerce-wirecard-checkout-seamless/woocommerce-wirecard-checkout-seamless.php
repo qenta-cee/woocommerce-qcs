@@ -59,7 +59,10 @@ load_plugin_textdomain(
 );
 
 add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
+
+add_action( 'admin_menu', 'wirecard_transactions_add_page' );
 add_action( 'admin_menu', 'add_wirecard_support_request_page' );
+
 
 /**
  * Intialize the Wirecard payment gateway
@@ -80,7 +83,7 @@ function init_woocommerce_wcs_gateway() {
 		function ( $class_name ) {
 			if ( strpos( $class_name, "Wirecard_Checkout_Seamless" ) ) {
 				$method = str_replace( "WC_Gateway_Wirecard_Checkout_Seamless_", "", $class_name );
-				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . $method . ".php" );
+				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . strtolower( $method ) . ".php" );
 			}
 		} );
 
@@ -136,6 +139,39 @@ function woocommerce_install_wirecard_checkout_seamless() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 
+}
+
+/**
+ * add submenu and page for wirecard transactions
+ */
+function wirecard_transactions_add_page() {
+	if ( class_exists( 'WooCommerce' ) ) {
+		$parent_slug = 'woocommerce';
+	} else {
+		$parent_slug = 'options-general.php';
+	}
+
+	$gateway = new WC_Gateway_Wirecard_Checkout_Seamless();
+
+	// add page to transactions
+	add_submenu_page(
+		$parent_slug,
+		__( 'Wirecard Transactions', 'woocommerce-wirecard-checkout-seamless' ),
+		__( 'Wirecard Transactions', 'woocommerce-wirecard-checkout-seamless' ),
+		'manage_options',
+		'wirecard_transactions_page',
+		array( $gateway, 'wirecard_transactions_do_page' )
+	);
+
+	// add page to specific transaction
+	add_submenu_page(
+		null,
+		__( 'Wirecard Transaction', 'woocommerce-wirecard-checkout-seamless' ),
+		__( 'Wirecard Transaction', 'woocommerce-wirecard-checkout-seamless' ),
+		'manage_options',
+		'wirecard_transaction_page',
+		array( $gateway, 'wirecard_transaction_do_page' )
+	);
 }
 
 /**
