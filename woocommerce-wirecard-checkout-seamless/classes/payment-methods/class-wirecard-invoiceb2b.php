@@ -102,8 +102,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoiceb2b {
 
 			$html .= "<p class='form-row'>";
 
-			$html .= "<label><input type='checkbox' name='b2b_consent' id='woo_wcs_b2b_consent'>" . __( 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My ' . $consent_link . ' can be revoked at any time with effect for the future.',
-			                                                               'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+			$html .= "<label><input type='checkbox' name='b2b_consent' id='woo_wcs_b2b_consent'>"
+			         . __( 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My ', 'woocommerce-wirecard-checkout-seamless' )
+			         . $consent_link
+			         . __( ' can be revoked at any time with effect for the future.', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
 
 			$html .= "</p>";
 		}
@@ -301,7 +303,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoiceb2b {
 		}
 
 		if ( empty( $customer->get_billing_company() ) )
-			$errors[] = "&bull; " . __( 'For Invoice B2B, <a href="#billing_company">Company name</a> must not be empty.', 'woocommerce-wirecard-checkout-seamless' );
+			$errors[] = "&bull; " . __( 'For Invoice B2B, <a href=\'#billing_company\'>Company name</a> must not be empty.', 'woocommerce-wirecard-checkout-seamless' );
 
 		return count( $errors ) == 0 ? true : join( "<br>", $errors );
 	}
