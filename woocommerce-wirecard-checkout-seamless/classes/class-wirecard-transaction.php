@@ -131,6 +131,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		//return $update;
 	}
 
+	/**
+	 * get a single transaction
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $id_tx
+	 *
+	 * @return array|null|object|void
+	 */
 	function get( $id_tx ) {
 		global $wpdb;
 
