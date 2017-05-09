@@ -94,6 +94,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				'datastorage_return'
 			)
 		);
+		add_action(
+			'woocommerce_receipt_' . $this->id,
+			array(
+				$this,
+				'payment_page'
+			)
+		);
 	}
 
 	/**
@@ -339,16 +346,36 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		$redirect = $this->initiate_payment( $order, $_POST['wcs_payment_method'] );
+		$payment_type = $_POST['wcs_payment_method'];
+		WC()->session->wirecard_checkout_seamless_payment_type = $payment_type;
 
-		if ( ! $redirect ) {
-			return;
-		}
+		$page_url = $order->get_checkout_payment_url(true);
+		$page_url = add_query_arg( 'key', $order->get_order_key(), $page_url );
+		$page_url = add_query_arg( 'order-pay', $order_id, $page_url );
+		$page_url = add_query_arg( 'storage-id', $_POST['storageId'], $page_url );
 
 		return array(
 			'result'   => 'success',
-			'redirect' => $redirect
+			'redirect' => $page_url
 		);
+	}
+
+	/**
+    * Handles iframe on payment page
+    *
+    * @since 1.0.0
+    *
+	* @param $order_id
+    */
+	function payment_page( $order_id ) {
+		$order = new WC_Order( $order_id );
+
+		$iframeUrl = $this->initiate_payment( $order, WC()->session->wirecard_checkout_seamless_payment_type );
+		?>
+			<iframe src="<?php echo $iframeUrl ?>" width="100%" height="700px" border="0" frameborder="0">
+				<p>Your browser does not support iframes.</p>
+			</iframe>
+		<?php
 	}
 
 	/**
@@ -405,7 +432,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setServiceUrl( $service_url )
 			       ->setAutoDeposit( $auto_deposit )
 			       ->setConsumerData( $consumer_data )
-			       ->setStorageId( $_POST['storageId'] )
+			       ->setStorageId( $_GET['storage-id'] )
 			       ->setOrderIdent( md5( implode( "", ( array_keys( $cart->cart_contents ) ) ) ) )
 			       ->createConsumerMerchantCrmId( $order->get_billing_email() );
 
@@ -686,6 +713,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			header( 'Location: ' . $redirectUrl );
 		}
+
+		if ( !array_key_exists( 'redirected', $_REQUEST ) ) {
+        	$url = add_query_arg( array(
+        		'wc-api' => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
+        		'order-id' => $_REQUEST['order-id'],
+        		'paymetState' => $_REQUEST['paymentState']
+        		), site_url( '/', is_ssl() ? 'https' : 'http' ) );
+        		wc_get_template(
+        			'templates/back.php',
+        			array(
+        				'url' => $url
+        			),
+        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR,
+        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR
+        		);
+        		die();
+        }
+
 		$order_id = $_REQUEST['order-id'];
 		$order    = new WC_Order( $order_id );
 

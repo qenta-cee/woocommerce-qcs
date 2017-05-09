@@ -129,8 +129,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Installment {
 
 			$html .= "<p class='form-row'>";
 
-			$html .= "<label><input type='checkbox' name='wcs_installment_consent'>" . __( 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My ' . $consent_link . ' can be revoked at any time with effect for the future.',
-			                                                                               'woocommerce-wirecard-checkout-seamless' ) . "</label>";
+			$html .= "<label><input type='checkbox' name='wcs_installment_consent'>"
+			         . __( 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My ', 'woocommerce-wirecard-checkout-seamless' )
+			         . $consent_link
+			         . __( ' can be revoked at any time with effect for the future.', 'woocommerce-wirecard-checkout-seamless' ) . "</label>";
 
 			$html .= "</p>";
 		}

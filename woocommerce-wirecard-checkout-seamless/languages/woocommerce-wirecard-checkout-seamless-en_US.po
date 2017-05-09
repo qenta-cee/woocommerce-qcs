@@ -1,0 +1,776 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WirecardCheckoutSeamless 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/wirecard/woocommerce-wcs\n"
+"POT-Creation-Date: 2017-05-05 10:52+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: class-wirecard-gateway.php:374
+msgid "Service URL is invalid"
+msgstr ""
+
+#: class-wirecard-gateway.php:583
+msgid "Awaiting payment notification from 3rd party."
+msgstr ""
+
+#: class-wirecard-gateway.php:596
+msgid "Payment cancelled."
+msgstr ""
+
+#: class-wirecard-gateway.php:676
+msgid "Order-Id missing"
+msgstr ""
+
+#: class-wirecard-gateway.php:691
+msgid "Payment has been cancelled."
+msgstr ""
+
+#: class-wirecard-gateway.php:696
+msgid "Payment has failed."
+msgstr ""
+
+#: class-wirecard-gateway.php:717
+msgid "Payment verification is pending"
+msgstr ""
+
+#: class-wirecard-gateway.php:719
+msgid "Your order will be processed as soon as we receive the payment confirmation from your bank."
+msgstr ""
+
+#: woocommerce-wirecard-checkout-seamless.php:149
+msgid "Wirecard Support Request"
+msgstr ""
+
+#: form_fields.php:45
+msgid "Configuration"
+msgstr ""
+
+#: form_fields.php:48
+msgid "For integration, select predefined configuration settings or 'Production' for live systems "
+msgstr ""
+
+#: form_fields.php:52
+msgid "Production"
+msgstr ""
+
+#: form_fields.php:53
+msgid "Demo"
+msgstr ""
+
+#: form_fields.php:54
+msgid "Test"
+msgstr ""
+
+#: form_fields.php:55
+msgid "Test 3D"
+msgstr ""
+
+#: form_fields.php:59
+msgid "Customer ID"
+msgstr ""
+
+#: form_fields.php:62
+msgid "Customer number you received from Wirecard (customerId, i.e. D2#####)."
+msgstr ""
+
+#: form_fields.php:67
+msgid "Shop ID"
+msgstr ""
+
+#: form_fields.php:70
+msgid "Shop identifier in case of more than one shop."
+msgstr ""
+
+#: form_fields.php:74
+msgid "Secret"
+msgstr ""
+
+#: form_fields.php:77
+msgid "String which you received from Wirecard for signing and validating data to prove their authenticity."
+msgstr ""
+
+#: form_fields.php:82
+msgid "URL to contact page"
+msgstr ""
+
+#: form_fields.php:85
+msgid "URL to web page containing your contact information (imprint)."
+msgstr ""
+
+#: form_fields.php:90
+msgid "Back-end password"
+msgstr ""
+
+#: form_fields.php:93
+msgid "Password for back-end operations (Toolkit)."
+msgstr ""
+
+#: form_fields.php:100
+msgid "Create orders"
+msgstr ""
+
+#: form_fields.php:102
+msgid "Selecting 'Always', orders are created even if the payment process leads to failed payment.<br>Selecting 'Only for successful payments', orders are created if the payment process was successful. "
+msgstr ""
+
+#: form_fields.php:107
+msgid "Always"
+msgstr ""
+
+#: form_fields.php:109
+msgid "Only for successful payments"
+msgstr ""
+
+#: form_fields.php:114
+msgid "Transaction ID"
+msgstr ""
+
+#: class-wirecard-admin.php:298
+msgid "Wirecard order number"
+msgstr ""
+
+#: class-wirecard-admin.php:294
+msgid "Gateway reference number"
+msgstr ""
+
+#: form_fields.php:125
+msgid "Wirecard order number: Unique number defined by Wirecard identifying the payment.<br>Gateway reference number: Reference number defined by the processor or acquirer. "
+msgstr ""
+
+#: form_fields.php:130
+msgid "Shop reference in posting text"
+msgstr ""
+
+#: form_fields.php:132
+msgid "Reference to your online shop on your consumer's bank statement, limited to 9 characters."
+msgstr ""
+
+#: form_fields.php:138
+msgid "Forward consumer shipping data"
+msgstr ""
+
+#: form_fields.php:140
+msgid "Forwarding shipping data about your consumer to the respective financial service provider."
+msgstr ""
+
+#: form_fields.php:146
+msgid "Forward consumer billing data"
+msgstr ""
+
+#: form_fields.php:148
+msgid "Forwarding billing data about your consumer to the respective financial service provider."
+msgstr ""
+
+#: form_fields.php:154
+msgid "Forward basket data"
+msgstr ""
+
+#: form_fields.php:156
+msgid "Forwarding basket data to the respective financial service provider. "
+msgstr ""
+
+#: form_fields.php:162
+msgid "Notification e-mail"
+msgstr ""
+
+#: form_fields.php:164
+msgid "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Wirecard and your online shop.<br>Please contact our sales teams to activate this feature."
+msgstr ""
+
+#: form_fields.php:170
+msgid "Automated deposit"
+msgstr ""
+
+#: form_fields.php:172
+msgid "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature."
+msgstr ""
+
+#: form_fields.php:178
+msgid "payolution terms"
+msgstr ""
+
+#: form_fields.php:180
+msgid "Consumer must accept payolution terms during the checkout process."
+msgstr ""
+
+#: form_fields.php:186
+msgid "payolution mID"
+msgstr ""
+
+#: form_fields.php:187
+msgid "Your payolution merchant ID, non-base64-encoded."
+msgstr ""
+
+#: form_fields.php:194
+msgid "Display BIC field"
+msgstr ""
+
+#: form_fields.php:195
+msgid "Display input field to enter the BIC. Note that this field is not mandatory for your consumer even if it is enabled."
+msgstr ""
+
+#: form_fields.php:202
+msgid "SAQ A compliance"
+msgstr ""
+
+#: form_fields.php:203
+msgid "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Wirecard Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable."
+msgstr ""
+
+#: form_fields.php:208
+msgid "Allowing MoTo for roles"
+msgstr ""
+
+#: form_fields.php:209
+msgid "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop."
+msgstr ""
+
+#: form_fields.php:214
+msgid "Iframe CSS-URL"
+msgstr ""
+
+#: form_fields.php:215
+msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin."
+msgstr ""
+
+#: form_fields.php:219
+msgid "Credit card number placeholder text"
+msgstr ""
+
+#: form_fields.php:220
+msgid "Placeholder text for the credit card number field."
+msgstr ""
+
+#: form_fields.php:224
+msgid "Card holder placeholder text"
+msgstr ""
+
+#: form_fields.php:225
+msgid "Placeholder text for the card holder field."
+msgstr ""
+
+#: form_fields.php:229
+msgid "CVC placeholder text"
+msgstr ""
+
+#: form_fields.php:230
+msgid "Placeholder text for the CVC field."
+msgstr ""
+
+#: form_fields.php:233
+msgid "Issue number placeholder text"
+msgstr ""
+
+#: form_fields.php:234
+msgid "Placeholder text for the issue number field."
+msgstr ""
+
+#: form_fields.php:239
+msgid "Display issue date placeholder text"
+msgstr ""
+
+#: form_fields.php:240
+msgid "Display placeholder text for the issue date field. Only applicable if the 'PCI DSS SAQ A Compliance' feature is enabled."
+msgstr ""
+
+#: form_fields.php:245
+msgid "Display expiration date field"
+msgstr ""
+
+#: form_fields.php:246
+msgid "Display input field to enter the expiration date in your credit card form during the checkout process."
+msgstr ""
+
+#: form_fields.php:251
+msgid "Display card holder field"
+msgstr ""
+
+#: form_fields.php:252
+msgid "Display input field to enter the card holder name in your credit card form during the checkout process."
+msgstr ""
+
+#: form_fields.php:257
+msgid "Display CVC field"
+msgstr ""
+
+#: form_fields.php:258
+msgid "Display input field to enter the CVC in your credit card form during the checkout process."
+msgstr ""
+
+#: form_fields.php:263
+msgid "Display issue date field"
+msgstr ""
+
+#: form_fields.php:264
+msgid "Display input field to enter the credit card issue date in your credit card form during the checkout process. Some credit cards do not have an issue date."
+msgstr ""
+
+#: form_fields.php:269
+msgid "Display issue number field"
+msgstr ""
+
+#: form_fields.php:270
+msgid "Display input field to enter the credit card issue number in your credit card form during the checkout process. Some credit cards do not have an issue number."
+msgstr ""
+
+#: form_fields.php:277
+msgid "Invoice provider"
+msgstr ""
+
+#: form_fields.php:282
+msgid "Billing/shipping address must be identical"
+msgstr ""
+
+#: form_fields.php:283
+msgid "Only applicable for payolution."
+msgstr ""
+
+#: form_fields.php:331
+msgid "Allowed billing countries"
+msgstr ""
+
+#: form_fields.php:338
+msgid "Allowed shipping countries"
+msgstr ""
+
+#: form_fields.php:345
+msgid "Accepted currencies"
+msgstr ""
+
+#: form_fields.php:351
+msgid "Minimum amount"
+msgstr ""
+
+#: form_fields.php:354
+msgid "Maximum amount"
+msgstr ""
+
+#: form_fields.php:357
+msgid "Minimum basket size"
+msgstr ""
+
+#: form_fields.php:360
+msgid "Maximum basket size"
+msgstr ""
+
+#: form_fields.php:322
+msgid "Installment provider"
+msgstr ""
+
+#: form_fields.php:327
+msgid "Billing/shipping address musst be identical"
+msgstr ""
+
+#: additional
+msgid "Credit Card"
+msgstr ""
+
+#: form_fields.php:369
+msgid "Credit Card - Mail Order and Telephone Order"
+msgstr ""
+
+#: form_fields.php:373
+msgid "Maestro SecureCode"
+msgstr ""
+
+#: form_fields.php:377
+msgid "SOFORT Banking"
+msgstr ""
+
+#: form_fields.php:381
+msgid "PayPal"
+msgstr ""
+
+#: form_fields.php:385
+msgid "SEPA Direct Debit"
+msgstr ""
+
+#: class-wirecard-admin.php:68
+msgid "Invoice"
+msgstr ""
+
+#: form_fields.php:393
+msgid "Invoice B2B"
+msgstr ""
+
+#: form_fields.php:399
+msgid "eps-Überweisung"
+msgstr ""
+
+#: form_fields.php:403
+msgid "iDEAL"
+msgstr ""
+
+#: form_fields.php:407
+msgid "giropay"
+msgstr ""
+
+#: form_fields.php:411
+msgid "TatraPay"
+msgstr ""
+
+#: form_fields.php:415
+msgid "TrustPay"
+msgstr ""
+
+#: form_fields.php:419
+msgid "Bancontact/Mister Cash"
+msgstr ""
+
+#: form_fields.php:423
+msgid "POLi"
+msgstr ""
+
+#: form_fields.php:427
+msgid "Przelewy24"
+msgstr ""
+
+#: form_fields.php:431
+msgid "eKonto"
+msgstr ""
+
+#: form_fields.php:435
+msgid "Trustly"
+msgstr ""
+
+#: form_fields.php:439
+msgid "Skrill Direct"
+msgstr ""
+
+#: form_fields.php:445
+msgid "paysafecard"
+msgstr ""
+
+#: form_fields.php:449
+msgid "ePay.bg"
+msgstr ""
+
+#: class-wirecard-admin.php:70
+msgid "Installment"
+msgstr ""
+
+#: form_fields.php:457
+msgid "moneta.ru"
+msgstr ""
+
+#: form_fields.php:461
+msgid "Skrill Digital Wallet"
+msgstr ""
+
+#: form_fields.php:467
+msgid "paybox"
+msgstr ""
+
+#: class-wirecard-admin.php:60
+msgid "Access data"
+msgstr ""
+
+#: class-wirecard-admin.php:62
+msgid "General settings"
+msgstr ""
+
+#: class-wirecard-admin.php:64
+msgid "Credit card"
+msgstr ""
+
+#: class-wirecard-admin.php:66
+msgid "Sepa"
+msgstr ""
+
+#: class-wirecard-admin.php:72
+msgid "Standard payments"
+msgstr ""
+
+#: class-wirecard-admin.php:74
+msgid "Banking payments"
+msgstr ""
+
+#: class-wirecard-admin.php:77
+msgid "Alternative payments"
+msgstr ""
+
+#: class-wirecard-admin.php:78
+msgid "Mobile payments"
+msgstr ""
+
+#: class-wirecard-admin.php:164
+msgid "Settings"
+msgstr ""
+
+#: class-wirecard-admin.php:169
+msgid "Wirecard - Your Full Service Payment Provider - Comprehensive solutions from one single source"
+msgstr ""
+
+#: class-wirecard-admin.php:172
+msgid "Wirecard is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions."
+msgstr ""
+
+#: class-wirecard-admin.php:175
+msgid "As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made\tus Austria´s leading payment service provider. Customization, competence, and commitment."
+msgstr ""
+
+#: class-wirecard-admin.php:183
+msgid "Transaction overview"
+msgstr ""
+
+#: class-wirecard-admin.php:187
+msgid "Contact support"
+msgstr ""
+
+#: class-wirecard-admin.php:190
+msgid "Wirecard settings"
+msgstr ""
+
+#: class-wirecard-admin.php:221
+msgid "Backend Operations"
+msgstr ""
+
+#: class-wirecard-admin.php:223
+msgid "Fund Transfer"
+msgstr ""
+
+#: class-wirecard-admin.php:233
+msgid "< Back"
+msgstr ""
+
+#: class-wirecard-admin.php:240
+msgid "Next >"
+msgstr ""
+
+#: class-wirecard-admin.php:253
+msgid "Get transactions starting at "
+msgstr ""
+
+#: class-wirecard-admin.php:270
+msgid "Transaction details"
+msgstr ""
+
+#: class-wirecard-admin.php:274
+msgid "Order"
+msgstr ""
+
+#: class-wirecard-admin.php:278
+msgid "Payment method"
+msgstr ""
+
+#: class-wirecard-admin.php:282
+msgid "Payment state"
+msgstr ""
+
+#: class-wirecard-admin.php:286
+msgid "Amount"
+msgstr ""
+
+#: class-wirecard-admin.php:290
+msgid "Currency"
+msgstr ""
+
+#: class-wirecard-admin.php:307
+msgid "Wirecard order details"
+msgstr ""
+
+#: class-wirecard-admin.php:321
+msgid "Payments"
+msgstr ""
+
+#: class-wirecard-admin.php:325
+msgid "Number"
+msgstr ""
+
+#: class-wirecard-admin.php:326
+msgid "Date"
+msgstr ""
+
+#: class-wirecard-admin.php:327
+msgid "Gateway reference"
+msgstr ""
+
+#: class-wirecard-admin.php:329
+msgid "Approved"
+msgstr ""
+
+#: class-wirecard-admin.php:330
+msgid "Deposited"
+msgstr ""
+
+#: class-wirecard-admin.php:332
+msgid "Operations"
+msgstr ""
+
+#: class-wirecard-admin.php:339
+msgid "No payments available"
+msgstr ""
+
+#: class-wirecard-admin.php:467
+msgid "To:"
+msgstr ""
+
+#: class-wirecard-admin.php:479
+msgid "Your e-mail address:"
+msgstr ""
+
+#: class-wirecard-admin.php:485
+msgid "Your message:"
+msgstr ""
+
+#: class-wirecard-admin.php:493
+msgid "Send your request"
+msgstr ""
+
+#: class-wirecard-admin.php:534
+msgid "Your e-mail address must not be empty."
+msgstr ""
+
+#: class-wirecard-admin.php:539
+msgid "Your request has been sent"
+msgstr ""
+
+#: class-wirecard-admin.php:541
+msgid "Your request could not be sent"
+msgstr ""
+
+#: class-wirecard-trustpay.php:99
+msgid "This payment method is not available. Please contact the administrator."
+msgstr ""
+
+#: class-wirecard-trustpay.php:127
+msgid "Choose your bank"
+msgstr ""
+
+#: class-wirecard-trustpay.php:160
+msgid "Financial institution must not be empty."
+msgstr ""
+
+#: class-wirecard-invoice.php:94
+msgid "Date of Birth:"
+msgstr ""
+
+#: class-wirecard-invoice.php:122
+msgid "consent"
+msgstr ""
+
+#: class-wirecard-invoice.php:132
+msgid "I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My "
+msgstr ""
+
+#: class-wirecard-invoice.php:132
+msgid " can be revoked at any time with effect for the future."
+msgstr ""
+
+#: class-wirecard-invoice.php:305
+msgid "Please accept the consent terms!"
+msgstr ""
+
+#: class-wirecard-invoice.php:314
+msgid "You have to be 18 years or older to use this payment."
+msgstr ""
+
+#: class-wirecard-sepa_dd.php:94
+msgid "Account owner:"
+msgstr ""
+
+#: class-wirecard-sepa_dd.php:102
+msgid "BIC:"
+msgstr ""
+
+#: class-wirecard-sepa_dd.php:102
+msgid "IBAN:"
+msgstr ""
+
+#: class-wirecard-sepa_dd.php:145
+msgid "IBAN must not be empty."
+msgstr ""
+
+#: class-wirecard-invoiceb2b.php:306
+msgid "For Invoice B2B, <a href='#billing_company'>Company name</a> must not be empty."
+msgstr ""
+
+#: class-wirecard-ccard.php:114
+msgid "Card holder:"
+msgstr ""
+
+#: class-wirecard-ccard.php:121
+msgid "Credit card number:"
+msgstr ""
+
+#: class-wirecard-ccard.php:129
+msgid "Expiration date"
+msgstr ""
+
+#: class-wirecard-ccard.php:144
+msgid "Card verification code"
+msgstr ""
+
+#: class-wirecard-ccard.php:160
+msgid "Issue date"
+msgstr ""
+
+#: class-wirecard-ccard.php:175
+msgid "Issue number:"
+msgstr ""
+
+#: class-wirecard-ccard.php:208
+msgid "Card verification code is missing"
+msgstr ""
+
+#: class-wirecard-giropay.php:91
+msgid "Account number:"
+msgstr ""
+
+#: class-wirecard-giropay.php:97
+msgid "Bank number:"
+msgstr ""
+
+#: class-wirecard-giropay.php:128
+msgid "Account number must not be empty."
+msgstr ""
+
+#: class-wirecard-giropay.php:133
+msgid "Bank number must not be empty."
+msgstr ""
+
+#: class-wirecard-pbx.php:93
+msgid "paybox number:"
+msgstr ""
+
+#: class-wirecard-pbx.php:124
+msgid "Paybox number must not be empty."
+msgstr ""
+
+#: class-wirecard-backend-operations.php:58
+msgid "Refund amount must be greater than zero."
+msgstr ""
+
+#: class-wirecard-backend-operations.php:392
+msgid "Refund reversal finished, but no corresponing refund found in the order. You might need to update the order manually."
+msgstr ""
+
+#: class-wirecard-transaction.php:52
+msgid "ID"
+msgstr ""
+
+#: class-wirecard-transaction.php:55
+msgid "Status"
+msgstr ""
+
+#: class-wirecard-transaction.php:187
+msgid "View"
+msgstr ""
+
+#: back.php:6
+msgid "You will be redirected shortly"
+msgstr ""
+
+#: back.php:7
+msgid "If not, please click "
+msgstr ""
+
+#: back.php:7
+msgid "here"
+msgstr ""

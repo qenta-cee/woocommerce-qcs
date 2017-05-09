@@ -142,7 +142,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Sepa_dd {
 		$errors = [ ];
 
 		if ( empty( $data['bankAccountIban'] ) ) {
-			$errors[] = "&bull; " . __( 'Paybox number must not be empty.',
+			$errors[] = "&bull; " . __( 'IBAN must not be empty.',
 					'woocommerce-wirecard-checkout-seamless' );
 		}
 
