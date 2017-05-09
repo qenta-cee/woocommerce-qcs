@@ -185,7 +185,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 				<a class="button-primary" id="wcs-support-button"
 				   href="?page=wirecard_support_request" <?= ( $_GET['page'] == 'wirecard_support_request' ) ? 'disabled="disabled"' : '' ?>>
-					<?= __( 'Contact support', 'woocommerce_wirecard_checkout_seamless' ) ?>
+					<?= __( 'Contact support', 'woocommerce-wirecard-checkout-seamless' ) ?>
 				</a>
 				<a class="button-primary" id="wcs-settings-button"
 				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs" <?= ( $_GET['page'] == 'wc-settings' ) ? 'disabled="disabled"' : '' ?>>

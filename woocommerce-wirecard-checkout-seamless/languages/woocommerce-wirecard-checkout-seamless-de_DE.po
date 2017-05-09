@@ -770,4 +770,18 @@ msgstr "Status"
 msgid "View"
 msgstr "Details"
 
+#: back.php:6
+msgid "You will be redirected shortly"
+msgstr ""
 
+#: back.php:7
+msgid "If not, please click "
+msgstr ""
+
+#: back.php:7
+msgid "here"
+msgstr ""
+
+#: additional
+msgid "Credit card"
+msgstr "Kreditkarte"
