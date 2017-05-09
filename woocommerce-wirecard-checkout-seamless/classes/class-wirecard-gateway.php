@@ -371,6 +371,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$iframeUrl = $this->initiate_payment( $order, WC()->session->wirecard_checkout_seamless_payment_type );
+		if( ! $iframeUrl ) {
+			$iframeUrl = $order->get_cancel_endpoint();
+			header( 'Location: ' . $iframeUrl );
+			die();
+		}
 		?>
 			<iframe src="<?php echo $iframeUrl ?>" width="100%" height="700px" border="0" frameborder="0">
 				<p>Your browser does not support iframes.</p>
@@ -416,6 +421,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
 			                                               get_woocommerce_currency(), $payment_type );
+
+			if ( $transaction_id == 0 ) {
+				wc_add_notice( __( "Creating transaction entry failed!", 'woocommerce-wirecard-checkout-seamless' ),
+					               'error' );
+
+				$this->_logger->error( __METHOD__ . ': Creating transaction entry failed before initializing.' );
+
+				return;
+			}
 
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
 			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
