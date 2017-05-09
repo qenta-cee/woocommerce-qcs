@@ -95,7 +95,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @return mixed
 	 */
-	function create( $id_order, $amount, $currency, $payment_method, $order_number = null, $request = null, $response = null ) {
+	function create(
+		$id_order,
+		$amount,
+		$currency,
+		$payment_method,
+		$order_number = null,
+		$request = null,
+		$response = null
+	) {
 		global $wpdb;
 
 		$wpdb->insert(
@@ -150,6 +158,28 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		global $wpdb;
 
 		return $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_tx = $id_tx" );
+	}
+
+	/**
+	 * Get transaction id for existing transaction, return false if not existing
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $id_order
+	 *
+	 * @return int
+	 */
+	function get_existing_transaction( $id_order ) {
+		global $wpdb;
+
+		$transaction = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = $id_order",
+		                               ARRAY_A );
+		if ( empty( $transaction ) ) {
+			return 0;
+		}
+
+		return $transaction["id_tx"];
+
 	}
 
 	/**
