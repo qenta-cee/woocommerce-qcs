@@ -435,10 +435,6 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		'wcs_trustly_enable'               => array(
 			'title' => __( 'Trustly', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
-		),
-		'wcs_skrilldirect_enable'          => array(
-			'title' => __( 'Skrill Direct', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
 		)
 	),
 	'alternativepayments' => array(

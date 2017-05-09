@@ -40,9 +40,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 
 	protected $_settings = array();
+	protected $_logger = null;
 
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
+		$this->_logger   = new WC_Logger();
 	}
 
 	/**
@@ -95,7 +97,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 		try {
 			$backend_client = new WirecardCEE_QMore_BackendClient( $config_array );
 		} catch ( WirecardCEE_QMore_Exception_InvalidArgumentException $e ) {
-			// @TODO add log for missing password?
+			$this->_logger->error( __METHOD__ . ':' . print_r( $e, true ) );
+
 			return __( 'This payment method is not available. Please contact the administrator.',
 			           'woocommerce-wirecard-checkout-seamless' );
 		}
@@ -112,9 +115,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 		if ( ! $response->hasFailed() ) {
 			$financial_institutions = $response->getFinancialInstitutions();
 
-			uasort($financial_institutions, function ($a, $b) {
-				return strcmp($a['id'], $b['id']);
-			});
+			uasort( $financial_institutions, function ( $a, $b ) {
+				return strcmp( $a['id'], $b['id'] );
+			} );
+		} else {
+			$this->_logger->error( __METHOD__ . ':' . print_r( $response->getErrors(), true ) );
 		}
 
 		$html = '<fieldset  class="wc-credit-card-form wc-payment-form">';
@@ -126,7 +131,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 		$html .= "<select name='woo_wcs_trustpay_financialInstitution' autocomplete='off'>";
 		$html .= "<option value=''>" . __( 'Choose your bank', 'woocommerce-wirecard-checkout-seamless' ) . "</option>";
 		foreach ( $financial_institutions as $institution ) {
-			$html .= "<option value='".$institution['id']."'>".$institution['name']."</option>";
+			$html .= "<option value='" . $institution['id'] . "'>" . $institution['name'] . "</option>";
 		}
 
 		$html .= "</select>";

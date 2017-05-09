@@ -205,17 +205,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 * @param $start
 	 */
 	function print_transaction_table( $transaction, $start ) {
-		echo '<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
-				<a href="javascript:void(0);" data-target="#transaction-table" class="nav-tab nav-tab-active">';
-		echo __( 'Transaction Overview', 'woocommerce-wirecard-checkout-seamless' );
-		echo '</a>
-				<a href="javascript:void(0);" data-target="#fund-transfer" class="nav-tab" >';
-		echo __( 'Fund Transfer', 'woocommerce-wirecard-checkout-seamless' );
-		echo '</a>
-			</nav>';
 
-		echo '<div class="tab-content panel">
-				<div class="tab-pane active" id="transaction-table">
+		echo '<div class="wrap woocommerce"><div class="postbox">
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction overview',
+		                                                     'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<div class="inside">
 					<table>';
 
 		$more = $transaction->get_rows( $start, 19 + $start );
@@ -224,7 +218,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 		if ( $start > 20 ) {
 			echo '<a class="button-primary"
-				   href="?page=wirecard_transactions_page&transaction_start='.( $start - 20 ).'">
+				   href="?page=wirecard_transactions_page&transaction_start=' . ( $start - 20 ) . '">
 					' . __( '< Back', 'woocommerce-wirecard-checkout-seamless' ) . '
 				</a>';
 		}
@@ -252,11 +246,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			<?php
 		}
 		?>
-		</div>
-		<div class="tab-pane" id="fund-transfer">
-			<div>No content yet</div>
-		</div>
-		</div>
+		</div></div></div>
 		<?php
 	}
 
@@ -267,7 +257,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		echo "<div class='postbox' style='border: 0;'><h2 style='margin: 0;'></h2></div>";
 
 		echo '<div class="postbox">
-				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction details', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction details',
+		                                                     'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
 				<div class="inside">
 				<table>
 					<tr>
@@ -304,7 +295,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 		if ( $data->order_details ) {
 			echo '<div class="postbox ">
-				<h2 class="wcs-transaction-h2"><span>' . __( 'Wirecard order details', 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
+				<h2 class="wcs-transaction-h2"><span>' . __( 'Wirecard order details',
+			                                                 'woocommerce-wirecard-checkout-seamless' ) . '</span></h2>
 				<div class="inside">
 				<table>';
 
@@ -312,9 +304,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				echo "<tr><th>$key</th><td>$value</td></tr>";
 			}
 
-			echo '</table>
-				</div>
-			</div>';
+			echo '</table></div></div>';
 		}
 
 		echo '<div class="postbox ">
@@ -344,10 +334,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		foreach ( $data->payments as $payment ) {
 			$payment = $payment->getData();
 
-			echo "<td> {$payment['paymentNumber']
-}
-
-</td>
+			echo "<td> {$payment['paymentNumber']}</td>
 				  <td>{$payment['timeCreated']}</td>
 			      <td>{$payment['gatewayReferenceNumber']}</td>
 			      <td>{$payment['state']}</td>
@@ -450,48 +437,70 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 */
 	function print_support_form() {
 		?>
-		<h2><?= __( 'Support Request', 'woocommerce-wirecard-checkout-seamless' ) ?></h2>
-		<br/>
-		<?php
-		if ( isset( $_POST['send-request'] ) ) {
-			$this->create_support_request();
-			echo '<br/>';
-		}
+		<div class="wrap woocommerce">
+			<div class="postbox">
+				<h2 class="wcs-transaction-h2">
+					<span>
+						<?= __( 'Support Request', 'woocommerce-wirecard-checkout-seamless' ) ?>
+					</span>
+				</h2>
+				<div class="inside">
+					<?php
+					if ( isset( $_POST['send-request'] ) ) {
+						$this->create_support_request();
+						echo '<br/>';
+					}
 
-		settings_errors();
-		?>
-		<form action="?page=wirecard_support_request" method="post" name="support-request-form">
-			<table>
-				<tr>
-					<td class="titledesc support-label"><label
-							for="support-mail"><?= __( 'To:', 'woocommerce-wirecard-checkout-seamless' ) ?></label></td>
-					<td class="forminp"><select name="support-mail">
-							<option value="support.at@wirecard.com"><?= __( 'Support Team Wirecard CEE, Austria',
-							                                                'woocommerce-wirecard-checkout-seamless' ) ?></option>
-							<option value="support@wirecard.com"><?= __( 'Support Team Wirecard AG, Germany',
-							                                             'woocommerce-wirecard-checkout-seamless' ) ?></option>
-							<option value="support.sg@wirecard.com"><?= __( 'Support Team Wirecard Singapore',
-							                                                'woocommerce-wirecard-checkout-seamless' ) ?></option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="titledesc support-label"><label for="customer-mail"><?= __( 'Your e-mail address:',
-					                                                                       'woocommerce-wirecard-checkout-seamless' ) ?></label>
-					</td>
-					<td class="forminp"><input type="email" name="customer-mail"/></td>
-				</tr>
-				<tr>
-					<td class="titledesc support-label"><label for="support-message"><?= __( 'Your message:',
-					                                                                         'woocommerce-wirecard-checkout-seamless' ) ?></label>
-					</td>
-					<td class="forminp"><textarea rows="5" cols="70" name="support-message"></textarea></td>
-				</tr>
-			</table>
-			<br/>
-			<input type="submit" class="button-primary" name="send-request"
-			       value="<?= __( 'Send your request', 'woocommerce-wirecard-checkout-seamless' ) ?>"/>
-		</form>
+					settings_errors();
+					?>
+					<form action="?page=wirecard_support_request" method="post" name="support-request-form">
+						<table>
+							<tr>
+								<td class="titledesc support-label">
+									<label for="support-mail">
+										<?= __( 'To:', 'woocommerce-wirecard-checkout-seamless' ) ?>
+									</label>
+								</td>
+								<td class="forminp"><select name="support-mail">
+										<option value="support.at@wirecard.com">
+											<?= __( 'Support Team Wirecard CEE, Austria',
+											        'woocommerce-wirecard-checkout-seamless' ) ?>
+										</option>
+										<option value="support@wirecard.com">
+											<?= __( 'Support Team Wirecard AG, Germany',
+											        'woocommerce-wirecard-checkout-seamless' ) ?>
+										</option>
+										<option value="support.sg@wirecard.com">
+											<?= __( 'Support Team Wirecard Singapore',
+											        'woocommerce-wirecard-checkout-seamless' ) ?>
+										</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="titledesc support-label">
+									<label for="customer-mail">
+										<?= __( 'Your e-mail address:', 'woocommerce-wirecard-checkout-seamless' ) ?>
+									</label>
+								</td>
+								<td class="forminp"><input type="email" name="customer-mail"/></td>
+							</tr>
+							<tr>
+								<td class="titledesc support-label">
+									<label for="support-message">
+										<?= __( 'Your message:', 'woocommerce-wirecard-checkout-seamless' ) ?>
+									</label>
+								</td>
+								<td class="forminp"><textarea rows="5" cols="70" name="support-message"></textarea></td>
+							</tr>
+						</table>
+						<br/>
+						<input type="submit" class="button-primary" name="send-request"
+						       value="<?= __( 'Send your request', 'woocommerce-wirecard-checkout-seamless' ) ?>"/>
+					</form>
+				</div>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -531,14 +540,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 
 		if ( empty( $from ) ) {
-			add_settings_error( '', '', __( 'Your e-mail address must not be empty.', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+			add_settings_error( '', '', __( 'Your e-mail address must not be empty.',
+			                                'woocommerce-wirecard-checkout-seamless' ), 'error' );
 		} else {
 			$send = wp_mail( $send_to, $subject, $message, $headers );
 
 			if ( $send ) {
-				add_settings_error( '', '', __( 'Your request has been sent', 'woocommerce-wirecard-checkout-seamless' ), 'updated' );
+				add_settings_error( '', '',
+				                    __( 'Your request has been sent', 'woocommerce-wirecard-checkout-seamless' ),
+				                    'updated' );
 			} else {
-				add_settings_error( '', '', __( 'Your request could not be sent', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+				add_settings_error( '', '',
+				                    __( 'Your request could not be sent', 'woocommerce-wirecard-checkout-seamless' ),
+				                    'error' );
 			}
 		}
 	}

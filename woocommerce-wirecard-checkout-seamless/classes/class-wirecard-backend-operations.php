@@ -50,6 +50,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	 * @return bool|WP_Error
 	 */
 	public function refund() {
+		global $wpdb;
 
 		$order_id      = $_POST['order_id'];
 		$refund_amount = $_POST['refund_amount'];
@@ -88,19 +89,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
 		$order = $order_details->getOrder();
 
+		// get transaction informations
+		$tx_query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = %d", $order_id );
+		$tx_data  = $wpdb->get_row( $tx_query );
+
 		$basket = null;
+
 
 		if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
 
 
 			if (
 				(
-					$order->getPaymentType() == WirecardCEE_QMore_PaymentType::INSTALLMENT
+					$tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
 					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
 				)
 				or
 				(
-					$order->getPaymentType() == WirecardCEE_QMore_PaymentType::INSTALLMENT
+					$tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
 					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
 				)
 			) {
@@ -156,11 +162,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 				}
 			}
 
+		} else {
+			// the following have allowed transferFund command
+			$allowed_payment_methods = array(
+				WirecardCEE_QMore_PaymentType::IDL,
+				WirecardCEE_QMore_PaymentType::SKRILLWALLET,
+				WirecardCEE_QMore_PaymentType::SOFORTUEBERWEISUNG,
+				WirecardCEE_QMore_PaymentType::SEPADD
+			);
+
+			if ( in_array( $tx_data->payment_method, $allowed_payment_methods ) ) {
+				return $this->transfer_fund_refund( $refund_amount, $order->getCurrency(), $wcs_order_number, $wc_order, $tx_data->payment_method );
+			}
 		}
 
 		return false;
-
-
 	}
 
 	/**
@@ -205,6 +221,63 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		$this->_logger->error( "$method : processing refund failed with error(s): " . join( '|', $_errors ) );
 	}
 
+	/**
+	 * transfer fund for existing order
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $amount
+	 * @param $currency
+	 * @param $order_number
+	 * @param WC_Order $woocommerce_order
+	 * @param $payment_method
+	 *
+	 * @return boolean
+	 */
+	public function transfer_fund_refund( $amount, $currency, $order_number, $woocommerce_order, $payment_method ) {
+		global $wpdb;
+
+		/** @var WirecardCEE_QMore_Request_Backend_TransferFund_Existing $client */
+		$client = $this->get_client()->transferFund( WirecardCEE_QMore_BackendClient::$TRANSFER_FUND_TYPE_EXISTING );
+
+		// collect data of the order
+		$refundable_sum = $wpdb->prepare( "SELECT SUM(amount) as sum FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = %d", $woocommerce_order->get_id() );
+		$refundable_sum = $wpdb->get_row( $refundable_sum );
+
+		if ( $refundable_sum !== null && $amount > $refundable_sum->sum ) {
+			$this->_logger->error( __METHOD__ . ":" . __( 'The refunded amount must be less than deposited amount.', 'woocommerce-wirecard-checkout-seamless' ) );
+
+			return false;
+		}
+
+		$transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction( $this->_settings );
+
+		$ret = $client->send(
+			$amount,
+			$currency,
+			sprintf(
+				'%s %s %s',
+				$woocommerce_order->get_billing_email(),
+				$woocommerce_order->get_billing_first_name(),
+				$woocommerce_order->get_billing_last_name() ),
+			$order_number );
+
+		$this->_logger->info( __METHOD__ . ':' . print_r( $client->getRequestData(), true ) );
+
+		if ( $ret->hasFailed() ) {
+			$this->logResponseErrors( __METHOD__, $ret->getErrors() );
+
+			return false;
+		} else {
+			/** @var WirecardCEE_QMore_Response_Backend_TransferFund $response */
+			$response = $ret->getResponse();
+
+			$transaction->create( $woocommerce_order->get_id(), - $amount, $currency, 'TRANSFERFUND::' . $payment_method );
+		}
+
+
+		return true;
+	}
 
 	/**
 	 * get the list of payments associated with $wcs_order_number
