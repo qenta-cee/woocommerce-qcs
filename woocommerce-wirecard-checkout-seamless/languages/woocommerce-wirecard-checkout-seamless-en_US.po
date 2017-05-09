@@ -574,245 +574,42 @@ msgid "Fund Transfer"
 msgstr ""
 
 #: class-wirecard-admin.php:233
-msgid "< Back"
+msgid "Back"
 msgstr ""
 
 #: class-wirecard-admin.php:240
-msgid "Next >"
+msgid "Next"
 msgstr ""
 
 #: class-wirecard-admin.php:253
 msgid "Get transactions starting at "
 msgstr ""
 
-#: class-wirecard-admin.php:270
-msgid "Transaction details"
-msgstr ""
-
-#: class-wirecard-admin.php:274
-msgid "Order"
-msgstr ""
-
-#: class-wirecard-admin.php:278
-msgid "Payment method"
-msgstr ""
-
-#: class-wirecard-admin.php:282
-msgid "Payment state"
-msgstr ""
-
-#: class-wirecard-admin.php:286
-msgid "Amount"
-msgstr ""
-
-#: class-wirecard-admin.php:290
-msgid "Currency"
-msgstr ""
-
-#: class-wirecard-admin.php:294
-msgid "Gateway reference number"
-msgstr ""
-
-#: class-wirecard-admin.php:298
-msgid "Wirecard order number"
-msgstr ""
-
-#: class-wirecard-admin.php:307
-msgid "Wirecard order details"
-msgstr ""
-
-#: class-wirecard-admin.php:321
-msgid "Payments"
-msgstr ""
-
-#: class-wirecard-admin.php:325
-msgid "Number"
-msgstr ""
-
-#: class-wirecard-admin.php:326
-msgid "Date"
-msgstr ""
-
-#: class-wirecard-admin.php:327
-msgid "Gateway reference"
-msgstr ""
-
-#: class-wirecard-admin.php:329
-msgid "Approved"
-msgstr ""
-
-#: class-wirecard-admin.php:330
-msgid "Deposited"
-msgstr ""
-
-#: class-wirecard-admin.php:332
-msgid "Operations"
-msgstr ""
-
-#: class-wirecard-admin.php:339
-msgid "No payments available"
-msgstr ""
-
-#: class-wirecard-admin.php:467
+#: class-wirecard-admin.php:287
 msgid "To:"
 msgstr ""
 
-#: class-wirecard-admin.php:479
+#: class-wirecard-admin.php:299
 msgid "Your e-mail address:"
 msgstr ""
 
-#: class-wirecard-admin.php:485
+#: class-wirecard-admin.php:304
 msgid "Your message:"
 msgstr ""
 
-#: class-wirecard-admin.php:493
+#: class-wirecard-admin.php:311
 msgid "Send your request"
 msgstr ""
 
-#: class-wirecard-admin.php:534
-msgid "Your e-mail address must not be empty."
-msgstr ""
-
-#: class-wirecard-admin.php:539
+#: class-wirecard-admin.php:352
 msgid "Your request has been sent"
 msgstr ""
 
-#: class-wirecard-admin.php:541
+#: class-wirecard-admin.php:354
 msgid "Your request could not be sent"
 msgstr ""
 
-###############################################
-#: class-wirecard-trustpay.php:99
-msgid "This payment method is not available. Please contact the administrator."
-msgstr ""
-
-#: class-wirecard-trustpay.php:124
-msgid "Financial institution:"
-msgstr ""
-
-#: class-wirecard-trustpay.php:127
-msgid "Choose your bank"
-msgstr ""
-
-#: class-wirecard-trustpay.php:160
-msgid "Financial institution must not be empty."
-msgstr ""
-
-#: class-wirecard-invoice.php:94
-msgid "Date of Birth:"
-msgstr ""
-
-#: class-wirecard-invoice.php:122
-msgid "consent"
-msgstr ""
-
-#: class-wirecard-invoice.php:132
-msgid "I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My "
-msgstr ""
-
-#: class-wirecard-invoice.php:132
-msgid " can be revoked at any time with effect for the future."
-msgstr ""
-
-#: class-wirecard-invoice.php:305
-msgid "Please accept the consent terms!"
-msgstr ""
-
-#: class-wirecard-invoice.php:314
-msgid "You have to be 18 years or older to use this payment."
-msgstr ""
-
-#: class-wirecard-sepa_dd.php:94
-msgid "Account owner:"
-msgstr ""
-
-#: class-wirecard-sepa_dd.php:102
-msgid "BIC:"
-msgstr ""
-
-#: class-wirecard-sepa_dd.php:102
-msgid "IBAN:"
-msgstr ""
-
-#: class-wirecard-sepa_dd.php:145
-msgid "IBAN must not be empty."
-msgstr ""
-
-#: class-wirecard-invoiceb2b.php:306
-msgid "For Invoice B2B, <a href='#billing_company'>Company name</a> must not be empty."
-msgstr ""
-
-#: class-wirecard-ccard.php:114
-msgid "Card holder:"
-msgstr ""
-
-#: class-wirecard-ccard.php:121
-msgid "Credit card number:"
-msgstr ""
-
-#: class-wirecard-ccard.php:129
-msgid "Expiration date"
-msgstr ""
-
-#: class-wirecard-ccard.php:144
-msgid "Card verification code"
-msgstr ""
-
-#: class-wirecard-ccard.php:160
-msgid "Issue date"
-msgstr ""
-
-#: class-wirecard-ccard.php:175
-msgid "Issue number:"
-msgstr ""
-
-#: class-wirecard-ccard.php:208
-msgid "Card verification code is missing"
-msgstr ""
-
-#: class-wirecard-giropay.php:91
-msgid "Account number:"
-msgstr ""
-
-#: class-wirecard-giropay.php:97
-msgid "Bank number:"
-msgstr ""
-
-#: class-wirecard-giropay.php:128
-msgid "Account number must not be empty."
-msgstr ""
-
-#: class-wirecard-giropay.php:133
-msgid "Bank number must not be empty."
-msgstr ""
-
-#: class-wirecard-pbx.php:93
-msgid "paybox number:"
-msgstr ""
-
-#: class-wirecard-pbx.php:124
-msgid "Paybox number must not be empty."
-msgstr ""
-
-#############################################
-
-#: class-wirecard-backend-operations.php:58
-msgid "Refund amount must be greater than zero."
-msgstr ""
-
-#: class-wirecard-backend-operations.php:392
-msgid "Refund reversal finished, but no corresponing refund found in the order. You might need to update the order manually."
-msgstr ""
-
-#: class-wirecard-transaction.php:52
-msgid "ID"
-msgstr ""
-
-#: class-wirecard-transaction.php:55
-msgid "Status"
-msgstr ""
-
-#: class-wirecard-transaction.php:187
-msgid "View"
+#: class-wirecard-transaction.php:
+msgid ""
 msgstr ""
 
