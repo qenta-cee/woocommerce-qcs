@@ -428,6 +428,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			$initResponse = $client->initiate();
 
+			$this->_transaction->update( array(
+				                             'request' => serialize( $client->getRequestData() )
+			                             ), array( 'id_tx' => $transaction_id ) );
+
 			if ( $initResponse->hasFailed() ) {
 
 
@@ -557,7 +561,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				die();
 			}
 
-			$this->_logger->notice( __METHOD__ . ':' . print_r( $return, true ) );
+			$this->_logger->info( __METHOD__ . ':' . print_r( $return->getReturned(), true ) );
 
 			//save new payment state in updated field
 			if ( get_post_meta( $order->get_id(), 'wcs_payment_state', true ) ) {
@@ -574,6 +578,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$this->_transaction->update( array(
 						                             'payment_state'     => $return->getPaymentState(),
 						                             'message'           => 'ok',
+						                             'response'          => serialize( $return->getReturned() ),
 						                             'gateway_reference' => $return->getGatewayReferenceNumber(),
 						                             'modified'          => current_time( 'mysql', true )
 					                             ),
