@@ -131,11 +131,11 @@ msgstr "Nur für erfolgreiche Zahlungen"
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
-#: form_fields.php:118
+#: class-wirecard-admin.php:298
 msgid "Wirecard order number"
-msgstr "Wirecard Auftragsnummer"
+msgstr "Wirecard Bestellnummer"
 
-#: form_fields.php:121
+#: class-wirecard-admin.php:294
 msgid "Gateway reference number"
 msgstr "Gateway Referenznummer"
 
@@ -563,14 +563,6 @@ msgstr "Summe"
 msgid "Currency"
 msgstr "Währung"
 
-#: class-wirecard-admin.php:294
-msgid "Gateway reference number"
-msgstr "Gateway Referenznummer"
-
-#: class-wirecard-admin.php:298
-msgid "Wirecard order number"
-msgstr "Wirecard Bestellnummer"
-
 #: class-wirecard-admin.php:307
 msgid "Wirecard order details"
 msgstr "Wirecard Bestelldetails"
@@ -635,7 +627,7 @@ msgstr "Ihre Anfrage wurde versand"
 msgid "Your request could not be sent"
 msgstr "Ihre Anfrage konnte nicht gesendet werden"
 
-###############################################
+#  #############################################
 #: class-wirecard-trustpay.php:99
 msgid "This payment method is not available. Please contact the administrator."
 msgstr "Diese Zahlungmethode ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
@@ -748,8 +740,7 @@ msgstr "Paybox Nummer:"
 msgid "Paybox number must not be empty."
 msgstr "Paybox Nummer darf nicht leer sein."
 
-#############################################
-
+#  ###########################################
 #: class-wirecard-backend-operations.php:58
 msgid "Refund amount must be greater than zero."
 msgstr "Summe muss größer 0 sein."
@@ -772,15 +763,15 @@ msgstr "Details"
 
 #: back.php:6
 msgid "You will be redirected shortly"
-msgstr ""
+msgstr "Sie werden in Kürze weitergeleitet."
 
 #: back.php:7
 msgid "If not, please click "
-msgstr ""
+msgstr "Falls dies nicht der Fall sein sollte, klicken Sie "
 
 #: back.php:7
 msgid "here"
-msgstr ""
+msgstr "hier."
 
 #: additional
 msgid "Credit card"

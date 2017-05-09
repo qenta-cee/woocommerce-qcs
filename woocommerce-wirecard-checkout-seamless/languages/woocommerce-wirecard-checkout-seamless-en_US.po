@@ -1,5 +1,3 @@
-# Copyright (C) 2017
-# This file is distributed under the same license as the WirecardCheckoutSeamless package.
 msgid ""
 msgstr ""
 "Project-Id-Version: WirecardCheckoutSeamless 1.0.0\n"
@@ -133,11 +131,11 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: form_fields.php:118
+#: class-wirecard-admin.php:298
 msgid "Wirecard order number"
 msgstr ""
 
-#: form_fields.php:121
+#: class-wirecard-admin.php:294
 msgid "Gateway reference number"
 msgstr ""
 
@@ -333,42 +331,6 @@ msgstr ""
 msgid "Only applicable for payolution."
 msgstr ""
 
-#: form_fields.php:287
-msgid "Allowed billing countries"
-msgstr ""
-
-#: form_fields.php:294
-msgid "Allowed shipping countries"
-msgstr ""
-
-#: form_fields.php:301
-msgid "Accepted currencies"
-msgstr ""
-
-#: form_fields.php:307
-msgid "Minimum amount"
-msgstr ""
-
-#: form_fields.php:310
-msgid "Maximum amount"
-msgstr ""
-
-#: form_fields.php:313
-msgid "Minimum basket size"
-msgstr ""
-
-#: form_fields.php:316
-msgid "Maximum basket size"
-msgstr ""
-
-#: form_fields.php:322
-msgid "Installment provider"
-msgstr ""
-
-#: form_fields.php:327
-msgid "Billing/shipping address musst be identical"
-msgstr ""
-
 #: form_fields.php:331
 msgid "Allowed billing countries"
 msgstr ""
@@ -397,7 +359,15 @@ msgstr ""
 msgid "Maximum basket size"
 msgstr ""
 
-#: form_fields.php:365
+#: form_fields.php:322
+msgid "Installment provider"
+msgstr ""
+
+#: form_fields.php:327
+msgid "Billing/shipping address musst be identical"
+msgstr ""
+
+#: additional
 msgid "Credit Card"
 msgstr ""
 
@@ -421,7 +391,7 @@ msgstr ""
 msgid "SEPA Direct Debit"
 msgstr ""
 
-#: form_fields.php:389
+#: class-wirecard-admin.php:68
 msgid "Invoice"
 msgstr ""
 
@@ -481,7 +451,7 @@ msgstr ""
 msgid "ePay.bg"
 msgstr ""
 
-#: form_fields.php:453
+#: class-wirecard-admin.php:70
 msgid "Installment"
 msgstr ""
 
@@ -513,14 +483,6 @@ msgstr ""
 msgid "Sepa"
 msgstr ""
 
-#: class-wirecard-admin.php:68
-msgid "Invoice"
-msgstr ""
-
-#: class-wirecard-admin.php:70
-msgid "Installment"
-msgstr ""
-
 #: class-wirecard-admin.php:72
 msgid "Standard payments"
 msgstr ""
@@ -550,7 +512,7 @@ msgid "Wirecard is one of the world´s leading providers of outsourcing and whit
 msgstr ""
 
 #: class-wirecard-admin.php:175
-msgid "As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment."
+msgid "As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made\tus Austria´s leading payment service provider. Customization, competence, and commitment."
 msgstr ""
 
 #: class-wirecard-admin.php:183
@@ -607,14 +569,6 @@ msgstr ""
 
 #: class-wirecard-admin.php:290
 msgid "Currency"
-msgstr ""
-
-#: class-wirecard-admin.php:294
-msgid "Gateway reference number"
-msgstr ""
-
-#: class-wirecard-admin.php:298
-msgid "Wirecard order number"
 msgstr ""
 
 #: class-wirecard-admin.php:307
@@ -683,10 +637,6 @@ msgstr ""
 
 #: class-wirecard-trustpay.php:99
 msgid "This payment method is not available. Please contact the administrator."
-msgstr ""
-
-#: class-wirecard-trustpay.php:124
-msgid ""
 msgstr ""
 
 #: class-wirecard-trustpay.php:127
@@ -823,8 +773,4 @@ msgstr ""
 
 #: back.php:7
 msgid "here"
-msgstr ""
-
-#: additional
-msgid "Credit Card"
 msgstr ""
