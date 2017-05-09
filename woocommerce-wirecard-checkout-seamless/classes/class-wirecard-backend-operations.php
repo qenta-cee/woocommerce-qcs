@@ -166,7 +166,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 			// the following have allowed transferFund command
 			$allowed_payment_methods = array(
 				WirecardCEE_QMore_PaymentType::IDL,
-				WirecardCEE_QMore_PaymentType::SKRILLDIRECT,
 				WirecardCEE_QMore_PaymentType::SKRILLWALLET,
 				WirecardCEE_QMore_PaymentType::SOFORTUEBERWEISUNG,
 				WirecardCEE_QMore_PaymentType::SEPADD
