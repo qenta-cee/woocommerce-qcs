@@ -209,11 +209,11 @@ msgstr "payolution-Händler-ID, Nicht base64 kodiert."
 
 #: form_fields.php:194
 msgid "Display BIC field"
-msgstr ""
+msgstr "BIC Feld anzeigen"
 
 #: form_fields.php:195
 msgid "Display input field to enter the BIC. Note that this field is not mandatory for your consumer even if it is enabled."
-msgstr ""
+msgstr "Anzeigen des Feldes für BIC. Beachten Sie dass dieses Feld verpflichtend sein kann, auch wenn es deaktiviert ist."
 
 #: form_fields.php:202
 msgid "SAQ A compliance"
@@ -776,3 +776,11 @@ msgstr "hier."
 #: additional
 msgid "Credit card"
 msgstr "Kreditkarte"
+
+#: class-wirecard-admin.php
+msgid "Support Request"
+msgstr "Support Anfrage"
+
+#: additional
+msgid "Wirecard Transactions"
+msgstr "Wirecard Transaktionen"

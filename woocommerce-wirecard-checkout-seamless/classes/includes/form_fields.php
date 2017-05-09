@@ -325,7 +325,7 @@ Gateway reference number: Reference number defined by the processor or acquirer.
 		),
 		'woo_wcs_installment_billing_shipping_equal'     => array(
 			'type'  => 'switch',
-			'title' => __( 'Billing/shipping address musst be identical', 'woocommerce-wirecard-checkout-seamless' )
+			'title' => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_installment_allowed_billing_countries'  => array(
 			'type'           => 'multiselect',
