@@ -419,8 +419,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$cart = new WC_Cart();
 			$cart->get_cart_from_session();
 
-			$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
+			$transaction_id = $this->_transaction->get_existing_transaction( $order->get_id() );
+
+			if( $transaction_id ) {
+				$this->_transaction->update( array(
+					'id_order' => $order->get_id(),
+					'amount' => $order->get_total(),
+					'currency' => get_woocommerce_currency(),
+					'payment_method' => $payment_type,
+					'payment_state' => 'CREATED'
+				),
+				array( 'id_tx' => $transaction_id ) );
+			} else {
+				$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
 			                                               get_woocommerce_currency(), $payment_type );
+			}
 
 			if ( $transaction_id == 0 ) {
 				wc_add_notice( __( "Creating transaction entry failed!", 'woocommerce-wirecard-checkout-seamless' ),
