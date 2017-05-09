@@ -78,10 +78,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Handles configuration modes and returns config array for FrontendClient
 	 *
-	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
-	 *
 	 * @since 1.0.0
+	 *
 	 * @return array
+	 *
 	 */
 	function get_client_config() {
 		$config_mode = $this->_settings['woo_wcs_configuration'];
@@ -207,10 +207,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 
 		$user_data = get_userdata( $order->get_user_id() );
 		$consumerData->setEmail( isset( $user_data->user_email ) ? $user_data->user_email : '' );
-
-		//TODO: check for birthday
-		//$consumerData->setBirthDate(Date);
-		//TODO: check for company info
 
 		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) ) {
 			$billing_address = $this->get_address_data( $order, 'billing' );
