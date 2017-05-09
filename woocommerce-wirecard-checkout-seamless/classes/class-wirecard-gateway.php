@@ -371,11 +371,17 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$order = new WC_Order( $order_id );
 
 		$iframeUrl = $this->initiate_payment( $order, WC()->session->wirecard_checkout_seamless_payment_type );
+		if( ! $iframeUrl ) {
+			$iframeUrl = $order->get_cancel_endpoint();
+			header( 'Location: ' . $iframeUrl );
+			die();
+		}
 		?>
 			<iframe src="<?php echo $iframeUrl ?>" width="100%" height="700px" border="0" frameborder="0">
 				<p>Your browser does not support iframes.</p>
 			</iframe>
 		<?php
+		die();
 	}
 
 	/**
@@ -390,6 +396,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	function initiate_payment( $order, $payment_type ) {
+		global $woocommerce;
 
 		try {
 			$config_array = $this->_config->get_client_config();
@@ -414,8 +421,30 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$cart = new WC_Cart();
 			$cart->get_cart_from_session();
 
-			$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
+			$transaction_id = $this->_transaction->get_existing_transaction( $order->get_id() );
+
+			if( $transaction_id ) {
+				$this->_transaction->update( array(
+					'id_order' => $order->get_id(),
+					'amount' => $order->get_total(),
+					'currency' => get_woocommerce_currency(),
+					'payment_method' => $payment_type,
+					'payment_state' => 'CREATED'
+				),
+				array( 'id_tx' => $transaction_id ) );
+			} else {
+				$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
 			                                               get_woocommerce_currency(), $payment_type );
+			}
+
+			if ( $transaction_id == 0 ) {
+				wc_add_notice( __( "Creating transaction entry failed!", 'woocommerce-wirecard-checkout-seamless' ),
+					               'error' );
+
+				$this->_logger->error( __METHOD__ . ': Creating transaction entry failed before initializing.' );
+
+				return;
+			}
 
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
 			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
@@ -433,7 +462,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setAutoDeposit( $auto_deposit )
 			       ->setConsumerData( $consumer_data )
 			       ->setStorageId( $_GET['storage-id'] )
-			       ->setOrderIdent( md5( implode( "", ( array_keys( $cart->cart_contents ) ) ) ) )
+			       ->setOrderIdent( $woocommerce->session->get( 'wcs_session_order_ident' ) )
 			       ->createConsumerMerchantCrmId( $order->get_billing_email() );
 
 			$this->_config->set_customer_statement( $client, $this );
@@ -452,6 +481,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			$client->wooOrderId    = $order->get_id();
 			$client->transactionId = $transaction_id;
+
+			$this->_logger->info( print_r( $client->getRequestData(), true ) );
 
 			$initResponse = $client->initiate();
 
@@ -500,6 +531,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			                             array( 'id_tx' => $transaction_id ) );
 			throw ( $e );
 		}
+
+		// reset wcs_session_order_ident so that the new order gets new datastorage id
+		$woocommerce->session->set( 'wcs_session_order_ident', null );
 
 		return $initResponse->getRedirectUrl();
 	}
@@ -711,19 +745,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function return_request() {
 		$redirectUrl = $this->get_return_url();
 
-		$this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
-		if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
-			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
-			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
-
-			header( 'Location: ' . $redirectUrl );
-		}
-
 		if ( !array_key_exists( 'redirected', $_REQUEST ) ) {
         	$url = add_query_arg( array(
         		'wc-api' => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
-        		'order-id' => $_REQUEST['order-id'],
-        		'paymetState' => $_REQUEST['paymentState']
+        		'order-id' => isset( $_REQUEST['order-id'] ) ? $_REQUEST['order-id'] : '',
+        		'paymentState' => isset( $_REQUEST['paymentState'] ) ? $_REQUEST['paymentState'] : 'FAILURE'
         		), site_url( '/', is_ssl() ? 'https' : 'http' ) );
         		wc_get_template(
         			'templates/back.php',
@@ -733,8 +759,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
         			WOOCOMMERCE_GATEWAY_WCS_BASEDIR,
         			WOOCOMMERCE_GATEWAY_WCS_BASEDIR
         		);
-        		die();
+        		exit();
         }
+
+        if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
+			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
+
+			header( 'Location: ' . $redirectUrl );
+
+			die();
+		}
+
+        $this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
 
 		$order_id = $_REQUEST['order-id'];
 		$order    = new WC_Order( $order_id );
@@ -758,6 +795,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 		}
 		header( 'Location: ' . $redirectUrl );
+		die();
 	}
 
 	/**
