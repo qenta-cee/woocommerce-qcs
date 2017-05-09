@@ -711,19 +711,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function return_request() {
 		$redirectUrl = $this->get_return_url();
 
-		$this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
-		if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
-			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
-			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
-
-			header( 'Location: ' . $redirectUrl );
-		}
-
 		if ( !array_key_exists( 'redirected', $_REQUEST ) ) {
         	$url = add_query_arg( array(
         		'wc-api' => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
-        		'order-id' => $_REQUEST['order-id'],
-        		'paymetState' => $_REQUEST['paymentState']
+        		'order-id' => isset( $_REQUEST['order-id'] ) ? $_REQUEST['order-id'] : '',
+        		'paymentState' => isset( $_REQUEST['paymentState'] ) ? $_REQUEST['paymentState'] : 'FAILURE'
         		), site_url( '/', is_ssl() ? 'https' : 'http' ) );
         		wc_get_template(
         			'templates/back.php',
@@ -733,8 +725,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
         			WOOCOMMERCE_GATEWAY_WCS_BASEDIR,
         			WOOCOMMERCE_GATEWAY_WCS_BASEDIR
         		);
-        		die();
+        		exit();
         }
+
+        if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
+			wc_add_notice( __( 'Order-Id missing', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
+
+			header( 'Location: ' . $redirectUrl );
+			die();
+		}
+
+        $this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
 
 		$order_id = $_REQUEST['order-id'];
 		$order    = new WC_Order( $order_id );
@@ -758,6 +760,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 		}
 		header( 'Location: ' . $redirectUrl );
+		die();
 	}
 
 	/**
