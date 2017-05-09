@@ -47,14 +47,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 	 * initialize data storage
 	 */
 	public function init() {
+		global $woocommerce;
 
-		$cart = new WC_Cart();
-		$cart->get_cart_from_session();
+		$order_ident = md5( time() * time() );
+
+		if ( $woocommerce->session->get( 'wcs_session_order_ident' ) !== null ) {
+			$order_ident = $woocommerce->session->get( 'wcs_session_order_ident' );
+		} else {
+			$woocommerce->session->set( 'wcs_session_order_ident', $order_ident );
+		}
 
 		$data_storage_init = new WirecardCEE_QMore_DataStorageClient(
 			$this->_config->get_client_config()
 		);
-
 
 		$data_storage_return_url = add_query_arg(
 			'wc-api',
@@ -62,7 +67,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 			site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 		$data_storage_init->setReturnUrl( $data_storage_return_url );
-		$data_storage_init->setOrderIdent( md5( implode( "", ( array_keys( $cart->cart_contents ) ) ) ) );
+		$data_storage_init->setOrderIdent( $order_ident );
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
 			$data_storage_init->setJavascriptScriptVersion( 'pci3' );
