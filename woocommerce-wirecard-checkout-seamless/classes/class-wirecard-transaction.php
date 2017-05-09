@@ -89,10 +89,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 * @param $amount
 	 * @param $currency
 	 * @param $payment_method
+	 * @param int $order_number
+	 * @param null $request
+	 * @param null $response
 	 *
 	 * @return mixed
 	 */
-	function create( $id_order, $amount, $currency, $payment_method ) {
+	function create( $id_order, $amount, $currency, $payment_method, $order_number = null, $request = null, $response = null ) {
 		global $wpdb;
 
 		$wpdb->insert(
@@ -103,7 +106,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 				'currency'       => $currency,
 				'payment_method' => $payment_method,
 				'payment_state'  => 'CREATED',
-				'created'        => current_time( 'mysql', true )
+				'created'        => current_time( 'mysql', true ),
+				'order_number'   => $order_number,
+				'request'        => $request,
+				'response'       => $response
 			)
 		);
 

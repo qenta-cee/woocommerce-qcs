@@ -130,7 +130,8 @@ function woocommerce_install_wirecard_checkout_seamless() {
 		amount float NOT NULL ,
 		currency varchar(3) NOT NULL ,
 		message varchar(255) default NULL ,
-		request TEXT default NULL ,
+		request TEXT default NULL,
+		response TEXT default NULL,
 		created DATETIME NOT NULL default '0000-00-00 00:00:00' ,
 		modified DATETIME default NULL,
  		PRIMARY KEY (id_tx)
