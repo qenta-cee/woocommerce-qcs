@@ -31,14 +31,48 @@
  */
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Transaction
+ * Transaction class
+ *
+ * Handles transaction table entries
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
+	/**
+	 * Tablename with prefix
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
 	protected $_table_name;
+
+	/**
+	 * fields for transaction table
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_fields_list;
+
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings;
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Transaction constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		global $wpdb;
 
@@ -94,7 +128,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @return mixed
 	 */
-	function create(
+	public function create(
 		$id_order,
 		$amount,
 		$currency,
@@ -129,7 +163,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 * @param $data
 	 * @param $identifier
 	 */
-	function update( $data, $identifier ) {
+	public function update( $data, $identifier ) {
 		global $wpdb;
 
 		//update transaction entry
@@ -138,8 +172,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 			$data,
 			$identifier
 		);
-
-		//return $update;
 	}
 
 	/**
@@ -151,7 +183,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @return array|null|object|void
 	 */
-	function get( $id_tx ) {
+	public function get( $id_tx ) {
 		global $wpdb;
 
 		return $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_tx = $id_tx" );
@@ -166,7 +198,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @return int
 	 */
-	function get_existing_transaction( $id_order ) {
+	public function get_existing_transaction( $id_order ) {
 		global $wpdb;
 
 		$transaction = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = $id_order",
@@ -188,7 +220,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @return int $row_count
 	 */
-	function get_rows( $page = 1 ) {
+	public function get_rows( $page = 1 ) {
 		global $wpdb;
 
 		$start = ( $page * 20 ) - 19;
@@ -199,7 +231,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
 		$sum_query = "SELECT CEILING(COUNT(*)/20) as pages FROM {$wpdb->prefix}wirecard_checkout_seamless_tx";
 
-		$pages     = $wpdb->get_row( $sum_query );
+		$pages = $wpdb->get_row( $sum_query );
 
 		if ( $pages == null ) {
 			$pages        = new stdClass();

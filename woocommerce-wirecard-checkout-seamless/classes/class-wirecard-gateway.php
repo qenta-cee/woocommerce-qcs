@@ -37,15 +37,55 @@ require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-transact
 require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-backend-operations.php' );
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless
+ * Basic gateway class
+ *
+ * Handles payment process and payment methods
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
+	/**
+     * Admin Class
+     *
+     * @since 1.0.0
+     * @access protected
+	 * @var WC_Gateway_Wirecard_Checkout_Seamless_Admin
+     */
 	protected $_admin;
+
+	/**
+     * Config Class
+     *
+     * @since 1.0.0
+     * @access protected
+	 * @var WC_Gateway_Wirecard_Checkout_Seamless_Config
+     */
 	protected $_config;
+
+	/**
+     * Use WC_Logger for errorhandling
+     *
+     * @since 1.0.0
+     * @access protected
+	 * @var WC_Logger
+     */
 	protected $_logger;
+
+	/**
+	 * Transaction Class
+     *
+     * @since 1.0.0
+	 * @access protected
+	 * @var WC_Gateway_Wirecard_Checkout_Seamless_Transaction
+     */
 	protected $_transaction;
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless constructor.
+     *
+     * @since 1.0.0
+     */
 	public function __construct() {
 
 		$this->id           = "woocommerce_wcs";
@@ -105,11 +145,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	/**
 	 * Load form fields saved settings from the database.
-	 *
-	 * @access public
-	 * @return void
+     *
+     * @since 1.0.0
 	 */
-	function init_form_fields() {
+	public function init_form_fields() {
 		global $wpdb;
 
 		$query_string = "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = 'woocommerce_{$this->id}_settings'";
@@ -123,6 +162,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * Array of enabled payment types
 	 *
 	 * @since 1.0.0
+     *
 	 * @return array
 	 */
 	protected function get_enabled_payment_types( $load_class = true ) {
@@ -161,13 +201,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Processes and saves options.
-	 * If there is an error thrown, will continue to save and validate fields, but will leave the erroring field out.
+     * Processes and saves options.
 	 *
-	 * @since 1.0.0
-	 * @return bool was anything saved?
-	 */
-	function process_admin_options() {
+     * If there is an error thrown, will continue to save and validate fields, but will leave the erroring field out.
+     *
+     * @since 1.0.0
+     *
+	 * @return mixed
+     */
+	public function process_admin_options() {
 		$this->init_settings();
 
 		$post_data = $this->get_post_data();
@@ -198,7 +240,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since  1.0.0
 	 * @return string
 	 */
-	function generate_switch_html( $key, $data ) {
+	public function generate_switch_html( $key, $data ) {
 		$field_key = $this->get_field_key( $key );
 		$defaults  = array(
 			'title'             => '',
@@ -257,11 +299,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 	/**
 	 * Generate frontend payment fields
-	 * INFO: Only for temporary testing
 	 *
 	 * @since 1.0.0
 	 */
-	function payment_fields() {
+	public function payment_fields() {
 		$dataStorage = new WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage( $this->settings );
 
 		try {
@@ -321,6 +362,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	/**
 	 * Process a refund if supported.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param  int $order_id
 	 * @param  float $amount
 	 * @param  string $reason
@@ -343,7 +386,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return array
 	 */
-	function process_payment( $order_id ) {
+	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
 		$payment_type = $_POST['wcs_payment_method'];
@@ -361,13 +404,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	}
 
 	/**
-    * Handles iframe on payment page
-    *
-    * @since 1.0.0
-    *
-	* @param $order_id
-    */
-	function payment_page( $order_id ) {
+     * Handles iframe on payment page
+     *
+     * @since 1.0.0
+     *
+	 * @param $order_id
+     */
+	public function payment_page( $order_id ) {
 		$order = new WC_Order( $order_id );
 
 		$iframeUrl = $this->initiate_payment( $order );
@@ -394,7 +437,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return string
 	 * @throws Exception
 	 */
-	function initiate_payment( $order ) {
+	public function initiate_payment( $order ) {
 		global $woocommerce;
 
 		$checkout_data = WC()->session->get( 'wcs_checkout_data' );
@@ -553,7 +596,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return mixed
 	 */
-	function create_return_url( $order, $payment_state ) {
+	public function create_return_url( $order, $payment_state ) {
 		$return_url = add_query_arg( array(
 			                             'wc-api'       => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
 			                             'order-id'     => $order->get_id(),
@@ -571,7 +614,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function confirm_request() {
+	public function confirm_request() {
 		$message = null;
 
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
@@ -730,7 +773,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function create_payment_data() {
+	private function create_payment_data() {
 		$data = '';
 		foreach ( $_POST as $key => $value ) {
 			$data .= "$key:$value\n";
@@ -747,7 +790,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return mixed
 	 */
-	function return_request() {
+	public function return_request() {
 		$redirectUrl = $this->get_return_url();
 		WC()->session->set( 'wcs_checkout_data', array() );
 
@@ -814,7 +857,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @return string
 	 */
-	function thankyou_order_received_text( $var, $order ) {
+	public function thankyou_order_received_text( $var, $order ) {
 		if ( $order->get_status() == 'on-hold' ) {
 			$var = '<h3>' . __( 'Payment verification is pending',
 			                    'woocommerce-wirecard-checkout-seamless' ) . '</h3>' . __(
@@ -829,9 +872,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	/**
 	 * validate input data from payment_fields
 	 *
+	 * @since 1.0.0
+	 *
 	 * @return boolean
 	 */
-	function validate_fields() {
+	public function validate_fields() {
 		$args = $this->get_post_data();
 
 		$payment_class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
@@ -852,10 +897,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		return true;
 	}
 
-	function datastorage_return() {
+	/**
+	* Loads data storage
+	 *
+	 * @since 1.0.0
+	 */
+	public function datastorage_return() {
 		die( require_once 'includes/datastorage_fallback.php' );
 	}
 
+	/**
+	 * Handles specific transaction
+	 *
+	 * @since 1.0.0
+	 */
 	public function wirecard_transaction_do_page() {
 
 		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
@@ -921,6 +976,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$this->_admin->print_transaction_details( $data );
 	}
 
+	/**
+	 * Handles transaction overview
+	 * 
+	 * @since 1.0.0
+	 */
 	public function wirecard_transactions_do_page() {
 		echo "<div class='wrap woocommerce'>";
 		$this->_admin->include_backend_header( $this );
@@ -936,7 +996,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @since 1.0.0
 	 */
-	function do_support_request() {
+	public function do_support_request() {
 		$this->_admin->include_backend_header( $this );
 		$this->_admin->print_support_form();
 	}

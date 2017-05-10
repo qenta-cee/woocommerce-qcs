@@ -36,6 +36,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Ccard_Moto
+ *
+ * @since 1.0.0
+ *
+ * @see WC_Gateway_Wirecard_Checkout_Seamless_Ccard
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Ccard_Moto extends WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 

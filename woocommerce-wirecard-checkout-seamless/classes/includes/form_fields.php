@@ -38,7 +38,6 @@ foreach ( get_editable_roles() as $role => $details ) {
 $countries_obj = new WC_Countries();
 $countries     = $countries_obj->__get( 'countries' );
 
-//TODO: Add tooltips (link to Online Guides)
 $fields = array(
 	'basicdata'           => array(
 		'woo_wcs_configuration'   => array(

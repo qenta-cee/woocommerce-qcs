@@ -36,11 +36,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Eps
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings = array();
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Eps constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 	}
@@ -107,7 +123,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Eps {
 
 	}
 
-
+	/**
+	 * Return payment type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	public function get_payment_type() {
 		return WirecardCEE_QMore_PaymentType::EPS;
 	}
