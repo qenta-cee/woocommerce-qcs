@@ -126,7 +126,7 @@ function woocommerce_install_wirecard_checkout_seamless() {
 		payment_name varchar(32) default NULL ,
 		payment_method varchar(32) NOT NULL ,
 		payment_state varchar(32) NOT NULL ,
-		gateway_reference varchar(32) default NULL ,
+		gateway_reference varchar(128) default NULL ,
 		amount float NOT NULL ,
 		currency varchar(3) NOT NULL ,
 		message varchar(255) default NULL ,
