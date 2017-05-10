@@ -347,12 +347,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$payment_type = $_POST['wcs_payment_method'];
-		WC()->session->wirecard_checkout_seamless_payment_type = $payment_type;
 
 		$page_url = $order->get_checkout_payment_url(true);
 		$page_url = add_query_arg( 'key', $order->get_order_key(), $page_url );
 		$page_url = add_query_arg( 'order-pay', $order_id, $page_url );
-		$page_url = add_query_arg( 'storage-id', $_POST['storageId'], $page_url );
+
+		WC()->session->set( 'wcs_checkout_data', $_POST );
 
 		return array(
 			'result'   => 'success',
@@ -370,7 +370,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	function payment_page( $order_id ) {
 		$order = new WC_Order( $order_id );
 
-		$iframeUrl = $this->initiate_payment( $order, WC()->session->wirecard_checkout_seamless_payment_type );
+		$iframeUrl = $this->initiate_payment( $order );
 		if( ! $iframeUrl ) {
 			$iframeUrl = $order->get_cancel_endpoint();
 			header( 'Location: ' . $iframeUrl );
@@ -390,13 +390,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 *
 	 * @param $order WC_Order
-	 * @param $payment_type
 	 *
 	 * @return string
 	 * @throws Exception
 	 */
-	function initiate_payment( $order, $payment_type ) {
+	function initiate_payment( $order ) {
 		global $woocommerce;
+
+		$checkout_data = WC()->session->get( 'wcs_checkout_data' );
 
 		try {
 			$config_array = $this->_config->get_client_config();
@@ -417,7 +418,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				return;
 			}
 
-
 			$cart = new WC_Cart();
 			$cart->get_cart_from_session();
 
@@ -428,13 +428,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					'id_order' => $order->get_id(),
 					'amount' => $order->get_total(),
 					'currency' => get_woocommerce_currency(),
-					'payment_method' => $payment_type,
+					'payment_method' => $checkout_data['wcs_payment_method'],
 					'payment_state' => 'CREATED'
 				),
 				array( 'id_tx' => $transaction_id ) );
 			} else {
 				$transaction_id = $this->_transaction->create( $order->get_id(), $order->get_total(),
-			                                               get_woocommerce_currency(), $payment_type );
+			                                               get_woocommerce_currency(), $checkout_data['wcs_payment_method'] );
 			}
 
 			if ( $transaction_id == 0 ) {
@@ -451,7 +451,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			$client->setAmount( $order->get_total() )
 			       ->setCurrency( get_woocommerce_currency() )
-			       ->setPaymentType( $payment_type )
+			       ->setPaymentType( $checkout_data['wcs_payment_method'] )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
 			       ->setSuccessUrl( $this->create_return_url( $order, 'SUCCESS' ) )
 			       ->setPendingUrl( $this->create_return_url( $order, 'PENDING' ) )
@@ -461,9 +461,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setServiceUrl( $service_url )
 			       ->setAutoDeposit( $auto_deposit )
 			       ->setConsumerData( $consumer_data )
-			       ->setStorageId( $_GET['storage-id'] )
+			       ->setStorageId( $checkout_data['storageId'] )
 			       ->setOrderIdent( $woocommerce->session->get( 'wcs_session_order_ident' ) )
 			       ->createConsumerMerchantCrmId( $order->get_billing_email() );
+
+			switch ( $checkout_data['wcs_payment_method'] ){
+				case WirecardCEE_QMore_PaymentType::EPS : $client->setFinancialInstitution($checkout_data['woo_wcs_eps_financialInstitution']);
+				break;
+				case WirecardCEE_QMore_PaymentType::IDL : $client->setFinancialInstitution($checkout_data['woo_wcs_idl_financialInstitution']);
+				break;
+				case WirecardCEE_QMore_PaymentType::TRUSTPAY : $client->setFinancialInstitution($checkout_data['woo_wcs_trustpay_financialInstitution']);
+				break;
+			}
 
 			$this->_config->set_customer_statement( $client, $this );
 
@@ -744,6 +753,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	function return_request() {
 		$redirectUrl = $this->get_return_url();
+		WC()->session->set( 'wcs_checkout_data', array() );
 
 		if ( !array_key_exists( 'redirected', $_REQUEST ) ) {
         	$url = add_query_arg( array(
