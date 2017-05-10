@@ -717,7 +717,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$this->_transaction->update( array(
 						                             'payment_state'     => $return->getPaymentState(),
 						                             'message'           => 'ok',
-						                             'gateway_reference' => $return->getGatewayReferenceNumber(),
 						                             'modified'          => current_time( 'mysql', true )
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
@@ -738,7 +737,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 					$this->_transaction->update( array(
 						                             'payment_state'     => $return->getPaymentState(),
 						                             'message'           => 'error',
-						                             'gateway_reference' => $return->getGatewayReferenceNumber(),
 						                             'modified'          => current_time( 'mysql', true )
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
@@ -756,7 +754,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$this->_transaction->update( array(
 				                             'payment_state'     => $return->getPaymentState(),
 				                             'message'           => 'error',
-				                             'gateway_reference' => $return->getGatewayReferenceNumber(),
 				                             'modified'          => current_time( 'mysql', true )
 			                             ),
 			                             array( 'id_tx' => $transaction_id ) );

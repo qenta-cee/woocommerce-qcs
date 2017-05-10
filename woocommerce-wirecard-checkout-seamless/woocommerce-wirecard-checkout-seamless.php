@@ -155,6 +155,8 @@ function wirecard_transactions_add_page() {
 		$parent_slug = 'options-general.php';
 	}
 
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
+
 	$gateway = new WC_Gateway_Wirecard_Checkout_Seamless();
 
 	// add page to transactions
@@ -184,6 +186,8 @@ function wirecard_transactions_add_page() {
  * @since 1.0.0
  */
 function add_wirecard_support_request_page() {
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
+
 	add_submenu_page(
 		null,
 		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),
