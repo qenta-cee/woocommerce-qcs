@@ -224,11 +224,12 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			echo "<a class='button-primary' href='?page=wirecard_transactions_page&transaction_start=$prev_page'>$back</a>";
 		}
 
-		if ( $pages < 5 ){
+		if ( $pages < 5 ) {
 			for ( $i = 0; $i < $pages; $i ++ ) {
 				$pagenr = $i + 1;
 				$active = ( $pagenr == $page ) ? ' active' : '';
-				echo "<a class='button-primary$active' href='?page=wirecard_transactions_page&transaction_start=$pagenr'>$pagenr</a>";
+				$href   = ( $pagenr == $page ) ? 'javascript:void(0)' : "?page=wirecard_transactions_page&transaction_start=$pagenr";
+				echo "<a class='button-primary$active' href='$href'>$pagenr</a>";
 			}
 		}
 
