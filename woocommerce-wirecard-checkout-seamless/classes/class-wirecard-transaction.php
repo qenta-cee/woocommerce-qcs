@@ -192,14 +192,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 		global $wpdb;
 
 		$start = ( $page * 20 ) - 19;
-		$stop  = ( $page * 20 );
 
 		$start --;
-		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
-		                         $stop );
+		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,20", $start );
 		$rows  = $wpdb->get_results( $query, ARRAY_A );
 
-		$sum_query = $wpdb->prepare( "SELECT CEILING(COUNT(*)/ABS(%d)) as pages FROM {$wpdb->prefix}wirecard_checkout_seamless_tx", $stop - $start );
+		$sum_query = $wpdb->prepare( "SELECT CEILING(COUNT(*)/20) as pages FROM {$wpdb->prefix}wirecard_checkout_seamless_tx", null );
+
 		$pages     = $wpdb->get_row( $sum_query );
 
 		if ( $pages == null ) {
