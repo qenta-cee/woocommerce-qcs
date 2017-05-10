@@ -96,37 +96,6 @@ $fields = array(
 		)
 	),
 	'options'             => array(
-		'woo_wcs_createorders'                  => array(
-			'title'       => __( 'Create orders', 'woocommerce-wirecard-checkout-seamless' ),
-			'description' => __(
-				'Selecting \'Always\', orders are created even if the payment process leads to failed payment.<br>Selecting \'Only for successful payments\', orders are created if the payment process was successful. ',
-				'woocommerce-wirecard-checkout-seamless'
-			),
-			'type'        => 'select',
-			'options'     => array(
-				'always'            => __( 'Always', 'woocommerce-wirecard-checkout-seamless' ),
-				'onlyforsuccessful' => __(
-					'Only for successful payments', 'woocommerce-wirecard-checkout-seamless'
-				)
-			)
-		),
-		'woo_wcs_transactionid'                 => array(
-			'title'       => __( 'Transaction ID', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'        => 'select',
-			'options'     => array(
-				'wirecardordernumber'    => __(
-					'Wirecard order number', 'woocommerce-wirecard-checkout-seamless'
-				),
-				'gatewayreferencenumber' => __(
-					'Gateway reference number', 'woocommerce-wirecard-checkout-seamless'
-				)
-			),
-			'description' => __(
-				'Wirecard order number: Unique number defined by Wirecard identifying the payment.<br>
-Gateway reference number: Reference number defined by the processor or acquirer. ',
-				'woocommerce-wirecard-checkout-seamless'
-			)
-		),
 		'woo_wcs_shopreferenceinpostingcontext' => array(
 			'title'             => __( 'Shop reference in posting text', 'woocommerce-wirecard-checkout-seamless' ),
 			'description'       => __(

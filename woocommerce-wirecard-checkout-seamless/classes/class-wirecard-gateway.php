@@ -480,10 +480,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				$client->setConfirmMail( get_bloginfo( 'admin_email' ) );
 			}
 
-			if ( $this->get_option( 'woo_wcs_transactionid' ) == 'gatewayreferencenumber' ) {
-				//TODO: shop-specific order number
-			}
-
 			if ( $this->get_option( 'woo_wcs_forwardbasketdata' ) ) {
 				$client->setBasket( $this->_config->get_shopping_basket() );
 			}
