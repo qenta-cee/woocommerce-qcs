@@ -89,7 +89,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 * @param $amount
 	 * @param $currency
 	 * @param $payment_method
-	 * @param int $order_number
 	 * @param null $request
 	 * @param null $response
 	 *
@@ -185,18 +184,28 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $start
-	 * @param int $stop
+	 * @param int $page
 	 *
 	 * @return int $row_count
 	 */
-	function get_rows( $start = 1, $stop = 21 ) {
+	function get_rows( $page = 1 ) {
 		global $wpdb;
+
+		$start = ( $page * 20 ) - 19;
+		$stop  = ( $page * 20 );
+
 		$start --;
-		$query     = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
-		                             $stop );
-		$rows      = $wpdb->get_results( $query, ARRAY_A );
-		$row_count = count( $rows );
+		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx LIMIT %d,%d", $start,
+		                         $stop );
+		$rows  = $wpdb->get_results( $query, ARRAY_A );
+
+		$sum_query = $wpdb->prepare( "SELECT CEILING(COUNT(*)/ABS(%d)) as pages FROM {$wpdb->prefix}wirecard_checkout_seamless_tx", $stop - $start );
+		$pages     = $wpdb->get_row( $sum_query );
+
+		if ( $pages == null ) {
+			$pages        = new stdClass();
+			$pages->pages = 1;
+		}
 
 		echo "<tr>";
 		foreach ( $this->_fields_list as $field_key => $field_value ) {
@@ -219,10 +228,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 
 			echo "<td><a href='?page=wirecard_transaction_page&id={$row["id_tx"]}' class='button-primary'>";
 			echo __( 'View', 'woocommerce-wirecard-checkout-seamless' );
-			echo "</a></td>";
-			echo "</tr>";
+			echo "</a></td>
+			</tr>";
 		}
 
-		return $row_count;
+		return $pages->pages;
 	}
 }

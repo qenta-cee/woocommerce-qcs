@@ -202,9 +202,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 * @since 1.0.0
 	 *
 	 * @param WC_Gateway_Wirecard_Checkout_Seamless_Transaction $transaction
-	 * @param $start
+	 * @param $page
 	 */
-	function print_transaction_table( $transaction, $start ) {
+	function print_transaction_table( $transaction, $page ) {
 
 		echo '<div class="wrap woocommerce"><div class="postbox">
 				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction overview',
@@ -212,38 +212,59 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				<div class="inside">
 					<table>';
 
-		$more = $transaction->get_rows( $start, 19 + $start );
+		$back = __( '< Back', 'woocommerce-wirecard-checkout-seamless' );
+		$next = __( 'Next >', 'woocommerce-wirecard-checkout-seamless' );
+
+		$pages = $transaction->get_rows( $page );
 
 		echo '</table>';
 
-		if ( $start > 20 ) {
-			echo '<a class="button-primary"
-				   href="?page=wirecard_transactions_page&transaction_start=' . ( $start - 20 ) . '">
-					' . __( '< Back', 'woocommerce-wirecard-checkout-seamless' ) . '
-				</a>';
+		if ( $page > 1 ) {
+			$prev_page = $page - 1;
+			echo "<a class='button-primary' href='?page=wirecard_transactions_page&transaction_start=$prev_page'>$back</a>";
 		}
-		if ( $start + 20 > $more ) {
-			?>
-			<a class="button-primary"
-			   href="?page=wirecard_transactions_page&transaction_start=<?php echo( $start + 20 ); ?>">
-				<?= __( 'Next >', 'woocommerce-wirecard-checkout-seamless' ) ?>
-			</a>
 
-			<input type="number" name="transaction_start" onchange="setStartValue(this.value)" min="0"
-			       max="<?php echo $more; ?>"/>
+		if ( $pages < 5 ){
+			for ( $i = 0; $i < $pages; $i ++ ) {
+				$pagenr = $i + 1;
+				$active = ( $pagenr == $page ) ? ' active' : '';
+				echo "<a class='button-primary$active' href='?page=wirecard_transactions_page&transaction_start=$pagenr'>$pagenr</a>";
+			}
+		}
+
+		if ( $page < $pages && $pages > 4 ) {
+			echo "<select onchange='goToWctPage(this.value)'>";
+			$start = $page - 10;
+			if ( $start < 1 ) {
+				$start = 1;
+			}
+
+			$stop = $page + 10;
+			if ( $stop > $pages ) {
+				$stop = $pages;
+			}
+			for ( $i = $start; $i < $stop + 1; $i ++ ) {
+				$selected = ( $i == $page ) ? "selected='selected'" : '';
+				echo "<option value='$i' $selected>$i</option>";
+			}
+			echo "</select>";
+			?>
+
 
 			<script language="javascript" type="text/javascript">
 				var start = 1;
-				function setStartValue(data) {
-					start = "?page=wirecard_transactions_page&transaction_start=" + data;
-					document.getElementById("wcs-transaction-start").setAttribute("href", start);
+				function goToWctPage(page) {
+					start = "?page=wirecard_transactions_page&transaction_start=" + page;
+					window.location.href = start;
 				}
 			</script>
-			<a class="button-primary" id="wcs-transaction-start"
-			   href="?page=wirecard_transactions_page&transaction_start=1">
-				<?= __( 'Get transactions starting at ', 'woocommerce-wirecard-checkout-seamless' ) ?>
-			</a>
+
 			<?php
+		}
+
+		if ( $page < $pages ) {
+			$next_page = $page + 1;
+			echo "<a class='button-primary' href='?page=wirecard_transactions_page&transaction_start=$next_page'>$next</a>";
 		}
 		?>
 		</div></div></div>
