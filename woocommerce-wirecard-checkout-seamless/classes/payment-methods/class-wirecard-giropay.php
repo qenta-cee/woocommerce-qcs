@@ -36,11 +36,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Giropay
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Giropay {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings = array();
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Giropay constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 	}
@@ -78,6 +94,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Giropay {
 		return true;
 	}
 
+	/**
+	 * returns the payment fields in the frontend
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	public function get_payment_fields() {
 		wp_enqueue_script( 'wc-credit-card-form' );
 		$html = "<fieldset class='wc-credit-card-form wc-payment-form'>";
@@ -106,8 +129,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Giropay {
 
 	}
 
-	public
-	function get_payment_type() {
+	/**
+	 * Return payment type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_payment_type() {
 		return WirecardCEE_QMore_PaymentType::GIROPAY;
 	}
 

@@ -33,16 +33,29 @@
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
 define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.0' );
 
-
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Config
+ * Config class
+ *
+ * Handles configuration settings, basketcreation and addressinformation
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings;
+
 	/**
 	 * Test/Demo configurations
 	 *
+	 * @since 1.0.0
+	 * @access protected
 	 * @var array
 	 */
 	protected $_presets = array(
@@ -67,7 +80,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	);
 
 	/**
-	 * constructor
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Config constructor.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param $settings
 	 */
@@ -83,7 +98,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return array
 	 *
 	 */
-	function get_client_config() {
+	public function get_client_config() {
 		$config_mode = $this->_settings['woo_wcs_configuration'];
 
 		if ( array_key_exists( $config_mode, $this->_presets ) ) {
@@ -109,7 +124,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return mixed
 	 */
-	function get_language_code() {
+	public function get_language_code() {
 		$locale = get_locale();
 		$parts  = explode( '_', $locale );
 
@@ -125,7 +140,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 *
 	 * @return string
 	 */
-	function get_client_secret( $gateway ) {
+	public function get_client_secret( $gateway ) {
 		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
 		if ( array_key_exists( $config_mode, $this->_presets ) ) {
 			return $this->_presets[ $config_mode ]['secret'];
@@ -139,8 +154,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 *
 	 * @since 1.0.0
 	 */
-
-	function get_backend_password() {
+	public function get_backend_password() {
 		$config_mode = $this->_settings['woo_wcs_configuration'];
 
 		if ( array_key_exists( $config_mode, $this->_presets ) ) {
@@ -158,7 +172,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	function get_order_description( $order ) {
+	public function get_order_description( $order ) {
 		return sprintf( '%s %s %s', $order->get_billing_email(), $order->get_billing_first_name(),
 		                $order->get_billing_last_name() );
 	}
@@ -169,7 +183,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	function get_plugin_version() {
+	public function get_plugin_version() {
 		return WirecardCEE_QMore_FrontendClient::generatePluginVersion(
 			'woocommerce',
 			WC()->version,
@@ -186,7 +200,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	function get_order_reference( $order ) {
+	public function get_order_reference( $order ) {
 		return sprintf( '%010s', substr( $order->get_id(), - 10 ) );
 	}
 
@@ -199,7 +213,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_ConsumerData
 	 */
-	function get_consumer_data( $order, $gateway ) {
+	public function get_consumer_data( $order, $gateway ) {
 		$consumerData = new WirecardCEE_Stdlib_ConsumerData();
 
 		$consumerData->setIpAddress( $order->get_customer_ip_address() );
@@ -229,7 +243,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_ConsumerData_Address
 	 */
-	function get_address_data( $order, $type = 'billing' ) {
+	public function get_address_data( $order, $type = 'billing' ) {
 		switch ( $type ) {
 			case 'shipping':
 				$address = new WirecardCEE_Stdlib_ConsumerData_Address( WirecardCEE_Stdlib_ConsumerData_Address::TYPE_SHIPPING );
@@ -268,7 +282,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 *
 	 * @since 1.0.0
 	 */
-	function set_customer_statement( $client, $gateway ) {
+	public function set_customer_statement( $client, $gateway ) {
 		$prefix = $gateway->get_option( 'woo_wcs_shopreferenceinpostingcontext' );
 		if ( ! isset( $prefix ) ) {
 			$prefix = null;
@@ -282,7 +296,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_Basket
 	 */
-	function get_shopping_basket() {
+	public function get_shopping_basket() {
 		global $woocommerce;
 
 		$cart = $woocommerce->cart;

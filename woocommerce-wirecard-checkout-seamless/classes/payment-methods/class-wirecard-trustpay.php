@@ -36,12 +36,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings = array();
+
+	/**
+	 * Use WC_Logger for errorhandling
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var null|WC_Logger
+	 */
 	protected $_logger = null;
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Trustpay constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 		$this->_logger   = new WC_Logger();
@@ -108,8 +132,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 			$response = $backend_client->getFinancialInstitutions( 'TRUSTPAY' );
 		} catch ( Exception $e ) {
 
-			// @TODO logging for init of backend client response
+			$this->_logger->error( __METHOD__ . ':' . print_r( $e, true ) );
 
+			return __( 'This payment method is not available. Please contact the administrator.',
+			           'woocommerce-wirecard-checkout-seamless' );
 		}
 
 		if ( ! $response->hasFailed() ) {
@@ -143,7 +169,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Trustpay {
 
 	}
 
-
+	/**
+	 * Return payment type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
 	public function get_payment_type() {
 		return WirecardCEE_QMore_PaymentType::TRUSTPAY;
 	}

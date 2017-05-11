@@ -31,14 +31,27 @@
  */
 
 /**
- * Class WC_Gateway_Wirecard_Checkout_Seamless_Admin
+ * Admin class
+ *
+ * Handles output on admin panel (settings, transactions, support request)
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings;
 
 	/**
-	 * constructor
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Admin constructor.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param $settings
 	 */
@@ -49,12 +62,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	/**
 	 * Handles form output for admin panel
 	 *
-	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
-	 *
 	 * @since 1.0.0
+	 *
+	 * @param $gateway WC_Gateway_Wirecard_Checkout_Seamless
 	 */
-
-	function print_admin_form_fields( $gateway ) {
+	public function print_admin_form_fields( $gateway ) {
 		?>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?= __( 'Access data',
@@ -135,12 +147,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	/**
 	 * Get all or the corresponding settings fields group
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $which
 	 *
-	 * @since 1.0.0
 	 * @return array
 	 */
-	function get_settings_fields( $which = null ) {
+	public function get_settings_fields( $which = null ) {
 		include "includes/form_fields.php";
 		if ( $which !== null ) {
 			return $fields[ $which ];
@@ -156,7 +169,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @param $gateway
 	 */
-	function include_backend_header( $gateway ) {
+	public function include_backend_header( $gateway ) {
 		?>
 		<link rel='stylesheet'
 		      href='<?= plugins_url( 'woocommerce-wirecard-checkout-seamless/assets/styles/admin.css' ) ?>'>
@@ -204,7 +217,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 * @param WC_Gateway_Wirecard_Checkout_Seamless_Transaction $transaction
 	 * @param $page
 	 */
-	function print_transaction_table( $transaction, $page ) {
+	public function print_transaction_table( $transaction, $page ) {
 
 		echo '<div class="wrap woocommerce"><div class="postbox">
 				<h2 class="wcs-transaction-h2"><span>' . __( 'Transaction overview',
@@ -272,6 +285,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 		<?php
 	}
 
+	/**
+	 * Handles transaction detail output in admin panel
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $data
+	 */
 	public function print_transaction_details( $data ) {
 
 		$nonce = wp_create_nonce( 'wcs-do-bop' );
@@ -457,7 +477,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	function print_support_form() {
+	public function print_support_form() {
 		?>
 		<div class="wrap woocommerce">
 			<div class="postbox">
@@ -531,7 +551,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	function create_support_request() {
+	public function create_support_request() {
 		global $wp_version;
 		$postdata = $_POST;
 

@@ -44,15 +44,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- *
- */
+
 define( 'WOOCOMMERCE_GATEWAY_WCS_BASEDIR', plugin_dir_path( __FILE__ ) );
 define( 'WOOCOMMERCE_GATEWAY_WCS_URL', plugin_dir_url( __FILE__ ) );
 
 register_activation_hook( __FILE__, 'woocommerce_install_wirecard_checkout_seamless' );
-
-//register_uninstall_hook( __FILE__, 'woocommerce_uninstall_wirecard_checkout_seamless' );
 
 load_plugin_textdomain(
 	'woocommerce-wirecard-checkout-seamless', false, dirname( plugin_basename( __FILE__ ) ) . '/languages'
@@ -107,6 +103,11 @@ function add_wirecard_checkout_seamless( $methods ) {
 	return $methods;
 }
 
+/**
+ * Create transactions table during install process
+ *
+ * @since 1.0.0
+ */
 function woocommerce_install_wirecard_checkout_seamless() {
 	global $wpdb;
 
@@ -144,6 +145,8 @@ function woocommerce_install_wirecard_checkout_seamless() {
 
 /**
  * add submenu and page for wirecard transactions
+ *
+ * @since 1.0.0
  */
 function wirecard_transactions_add_page() {
 	if ( class_exists( 'WooCommerce' ) ) {
@@ -151,6 +154,8 @@ function wirecard_transactions_add_page() {
 	} else {
 		$parent_slug = 'options-general.php';
 	}
+
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
 
 	$gateway = new WC_Gateway_Wirecard_Checkout_Seamless();
 
@@ -181,6 +186,8 @@ function wirecard_transactions_add_page() {
  * @since 1.0.0
  */
 function add_wirecard_support_request_page() {
+	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-wirecard-gateway.php' );
+
 	add_submenu_page(
 		null,
 		__( 'Wirecard Support Request', 'woocommerce-wirecard-checkout-seamless' ),

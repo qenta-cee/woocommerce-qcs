@@ -36,9 +36,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Maestro
+ *
+ * @since 1.0.0
+ *
+ * @see WC_Gateway_Wirecard_Checkout_Seamless_Ccard
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Maestro extends WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 
+	/**
+	 * override the label to maestro securecode
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|void
+	 */
 	public function get_label() {
 		return __( 'Maestro SecureCode', 'woocommerce-wirecard-checkout-seamless' );
 	}

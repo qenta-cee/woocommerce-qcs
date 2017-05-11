@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Shop System Plugins - Terms of Use
  *
@@ -30,12 +29,50 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
+
+/**
+ * Backend Operations class
+ *
+ * Handles back-end operations, refund, deposit, ...
+ *
+ * @since 1.0.0
+ */
 class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings;
+
+	/**
+	 * Configurations
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var WC_Gateway_Wirecard_Checkout_Seamless_Config
+	 */
 	protected $_config;
+
+	/**
+	 * Use WC_Logger for errorhandling
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var WC_Logger
+	 */
 	protected $_logger;
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 		$this->_config   = new WC_Gateway_Wirecard_Checkout_Seamless_Config( $settings );

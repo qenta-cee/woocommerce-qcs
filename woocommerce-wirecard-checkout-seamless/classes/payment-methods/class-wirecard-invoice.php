@@ -36,11 +36,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Invoice
+ *
+ * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 
+	/**
+	 * Payment gateway settings
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
 	protected $_settings = array();
 
+	/**
+	 * WC_Gateway_Wirecard_Checkout_Seamless_Invoice constructor.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param $settings
+	 */
 	public function __construct( $settings ) {
 		$this->_settings = $settings;
 	}
@@ -172,6 +188,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 		return false;
 	}
 
+	/**
+	 * Handles payolution conditions
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
 	private function is_available_payolution() {
 		global $woocommerce;
 
@@ -273,6 +296,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 		return true;
 	}
 
+	/**
+	 * Handles ratepay conditions
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
 	private function is_available_ratepay() {
 		// should conditions of ratepay change, add them here
 		return $this->is_available_payolution();
