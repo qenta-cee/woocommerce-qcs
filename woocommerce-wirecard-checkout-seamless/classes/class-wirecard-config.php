@@ -277,17 +277,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Generate customer statement
 	 *
-	 * @param $client
-	 * @param $gateway
-	 *
 	 * @since 1.0.0
+	 *
+	 * @param $order
+	 * @param $payment_type
+	 *
+	 * @return string
 	 */
-	public function set_customer_statement( $client, $gateway ) {
-		$prefix = $gateway->get_option( 'woo_wcs_shopreferenceinpostingcontext' );
-		if ( ! isset( $prefix ) ) {
-			$prefix = null;
+	public function get_customer_statement( $order, $payment_type ) {
+		$shop_name = sprintf( '%9s', substr( get_bloginfo( 'name' ), - 9 ) );
+		$order_reference = $this->get_order_reference( $order );
+		if ( $payment_type == WirecardCEE_QMore_PaymentType::POLI ) {
+			return $shop_name;
 		}
-		$client->generateCustomerStatement( $prefix, get_bloginfo( 'name' ) );
+		return $shop_name . ' ' . $order_reference;
 	}
 
 	/**
