@@ -37,6 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class WC_Gateway_Wirecard_Checkout_Seamless_Skrilldirect
  *
+ * @deprecated 1.0.0 this class will be deleted in later version
  * @since 1.0.0
  */
 class WC_Gateway_Wirecard_Checkout_Seamless_Skrilldirect {
