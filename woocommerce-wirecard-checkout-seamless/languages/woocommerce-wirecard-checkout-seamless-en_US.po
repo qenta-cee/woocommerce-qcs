@@ -420,7 +420,7 @@ msgid "TrustPay"
 msgstr ""
 
 #: form_fields.php:419
-msgid "Bancontact/Mister Cash"
+msgid "Bancontact"
 msgstr ""
 
 #: form_fields.php:423
@@ -480,8 +480,8 @@ msgid "Credit card"
 msgstr ""
 
 #: class-wirecard-admin.php:66
-msgid "Sepa"
-msgstr ""
+msgid "SEPA"
+msgstr "SEPA"
 
 #: class-wirecard-admin.php:72
 msgid "Standard payments"

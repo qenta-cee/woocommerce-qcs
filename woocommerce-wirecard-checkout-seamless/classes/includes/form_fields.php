@@ -377,7 +377,7 @@ $fields = array(
 			'type'  => 'switch'
 		),
 		'wcs_bancontact_mistercash_enable' => array(
-			'title' => __( 'Bancontact/Mister Cash', 'woocommerce-wirecard-checkout-seamless' ),
+			'title' => __( 'Bancontact', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
 		),
 		'wcs_poli_enable'                  => array(

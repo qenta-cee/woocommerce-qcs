@@ -416,8 +416,8 @@ msgid "TrustPay"
 msgstr "TrustPay"
 
 #: form_fields.php:419
-msgid "Bancontact/Mister Cash"
-msgstr "Bancontact/Mister Cash"
+msgid "Bancontact"
+msgstr "Bancontact"
 
 #: form_fields.php:423
 msgid "POLi"
@@ -472,8 +472,8 @@ msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
 #: class-wirecard-admin.php:66
-msgid "Sepa"
-msgstr "Sepa"
+msgid "SEPA"
+msgstr "SEPA"
 
 #: class-wirecard-admin.php:72
 msgid "Standard payments"
