@@ -390,7 +390,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
 
-			$operations_allowed = explode( ",", $payment['operationsAllowed'] );
+			$operations_allowed = explode( ",", @$payment['operationsAllowed'] );
 
 			asort( $operations_allowed );
 
@@ -403,7 +403,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				if ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
 					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}
-				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>$operation</button>";
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>" . __( $operation,
+				                                                                                                               'woocommerce-wirecard-checkout-seamless' ) . "</button>";
 				echo "</div>";
 			}
 
@@ -459,7 +460,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				if ( empty( $operation ) ) {
 					continue;
 				}
-				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>$operation</button>";
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>" . __( $operation,
+				                                                                                                               'woocommerce-wirecard-checkout-seamless' ) . "</button>";
 			}
 
 			echo "</form></td>
