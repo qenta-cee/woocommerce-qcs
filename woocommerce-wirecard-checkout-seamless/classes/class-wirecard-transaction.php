@@ -184,9 +184,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 * @return array|null|object|void
 	 */
 	public function get( $id_tx ) {
-		global $wpdb;
-
-		return $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_tx = $id_tx" );
+		return $this->get_tx_by( 'id_tx', $id_tx );
 	}
 
 	/**
@@ -194,21 +192,36 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Transaction {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param $id_order
+	 * @param WC_Order ::id $id_order
 	 *
 	 * @return int
 	 */
 	public function get_existing_transaction( $id_order ) {
-		global $wpdb;
+		$tx = $this->get_tx_by( 'id_order', $id_order );
 
-		$transaction = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = $id_order",
-		                               ARRAY_A );
-		if ( empty( $transaction ) ) {
+		if( !$tx ){
 			return 0;
 		}
 
-		return $transaction["id_tx"];
+		return $tx->id_tx;
+	}
 
+	/**
+	 * @param $by
+	 * @param $value
+	 *
+	 * @return bool|object
+	 */
+	public function get_tx_by( $by, $value ) {
+		global $wpdb;
+
+		$tx = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE $by = $value" );
+
+		if ( empty( $tx ) ) {
+			return false;
+		}
+
+		return $tx;
 	}
 
 	/**

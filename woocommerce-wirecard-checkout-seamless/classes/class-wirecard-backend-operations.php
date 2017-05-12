@@ -431,6 +431,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	 */
 	public function approvereversal( $orderNumber ) {
 		$response = $this->get_client()->approveReversal( $orderNumber );
+		$transaction = new WC_Gateway_Wirecard_Checkout_Seamless_Transaction( $this->_settings );
 
 		if ( $response->hasFailed() ) {
 			$this->logResponseErrors( __METHOD__, $response->getErrors() );
@@ -441,7 +442,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
-			return array( 'type' => 'updated', 'message' => 'APPROVEREVERSAL' );
+			if( isset($_POST['id_tx'])){
+				$transaction->update( array( 'payment_state' => 'CANCELED BY ADMIN' ), array( 'id_tx' => $_POST['id_tx'] ) );
+			}
+			return array( 'type' => 'updated', 'message' => __( 'APPROVEREVERSAL', 'woocommerce-wirecard-checkout-seamless' ) );
 		}
 	}
 

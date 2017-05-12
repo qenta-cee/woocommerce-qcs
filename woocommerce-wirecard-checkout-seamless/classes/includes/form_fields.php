@@ -43,6 +43,7 @@ $fields = array(
 		'woo_wcs_configuration'   => array(
 			'title'       => __( 'Configuration', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'select',
+			'default'     => 'production',
 			'description' => __(
 				'For integration, select predefined configuration settings or \'Production\' for live systems ',
 				'woocommerce-wirecard-checkout-seamless'
@@ -57,6 +58,7 @@ $fields = array(
 		'woo_wcs_customerid'      => array(
 			'title'       => __( 'Customer ID', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'text',
+			'default'     => 'D200001',
 			'description' => __(
 				'Customer number you received from Wirecard (customerId, i.e. D2#####).',
 				'woocommerce-wirecard-checkout-seamless'
@@ -65,6 +67,7 @@ $fields = array(
 		'woo_wcs_shopid'          => array(
 			'title'       => __( 'Shop ID', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'text',
+			'default'     => 'seamless',
 			'description' => __(
 				'Shop identifier in case of more than one shop.', 'woocommerce-wirecard-checkout-seamless'
 			)
@@ -72,6 +75,7 @@ $fields = array(
 		'woo_wcs_secret'          => array(
 			'title'       => __( 'Secret', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'text',
+			'default'     => 'B8AKTPWBRMNBV455FG6M2DANE99WU2',
 			'description' => __(
 				'String which you received from Wirecard for signing and validating data to prove their authenticity.',
 				'woocommerce-wirecard-checkout-seamless'
@@ -80,6 +84,7 @@ $fields = array(
 		'woo_wcs_serviceurl'      => array(
 			'title'       => __( 'URL to contact page', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'text',
+			'default'     => '',
 			'description' => __(
 				'URL to web page containing your contact information (imprint).',
 				'woocommerce-wirecard-checkout-seamless'
@@ -88,6 +93,7 @@ $fields = array(
 		'woo_wcs_backendpassword' => array(
 			'title'       => __( 'Back-end password', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'        => 'text',
+			'default'     => 'jcv45z',
 			'description' => __(
 				'Password for back-end operations (Toolkit).',
 				'woocommerce-wirecard-checkout-seamless'
@@ -101,6 +107,7 @@ $fields = array(
 				'Forwarding shipping data about your consumer to the respective financial service provider.',
 				'woocommerce-wirecard-checkout-seamless'
 			),
+			'default'     => 1,
 			'type'        => 'switch'
 		),
 		'woo_wcs_forwardconsumerbillingdata'    => array(
@@ -109,6 +116,7 @@ $fields = array(
 				'Forwarding billing data about your consumer to the respective financial service provider.',
 				'woocommerce-wirecard-checkout-seamless'
 			),
+			'default'     => 1,
 			'type'        => 'switch'
 		),
 		'woo_wcs_forwardbasketdata'             => array(
@@ -129,6 +137,7 @@ $fields = array(
 		),
 		'woo_wcs_automateddeposit'              => array(
 			'title'       => __( 'Automated deposit', 'woocommerce-wirecard-checkout-seamless' ),
+			'default'     => 0,
 			'description' => __(
 				'Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature.',
 				'woocommerce-wirecard-checkout-seamless'
@@ -137,6 +146,7 @@ $fields = array(
 		),
 		'woo_wcs_payolutionterms'               => array(
 			'title'       => __( 'payolution terms', 'woocommerce-wirecard-checkout-seamless' ),
+			'default'     => 1,
 			'description' => __(
 				'Consumer must accept payolution terms during the checkout process.',
 				'woocommerce-wirecard-checkout-seamless'
@@ -152,6 +162,7 @@ $fields = array(
 	'sepaoptions'         => array(
 		'woo_wcs_sepa_display_bic_field' => array(
 			'type'        => 'switch',
+			'default'     => 1,
 			'title'       => __( 'Display BIC field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the BIC. Note that this field is not mandatory for your consumer even if it is enabled.',
 			                     'woocommerce-wirecard-checkout-seamless' )
@@ -160,6 +171,7 @@ $fields = array(
 	'creditcardoptions'   => array(
 		'woo_wcs_saqacompliance'                         => array(
 			'type'        => 'switch',
+			'default'     => 0,
 			'title'       => __( 'SAQ A compliance', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Selecting \'NO\', the stringent SAQ A-EP is applicable. Selecting \'YES\', Wirecard Checkout Seamless is integrated with the \'PCI DSS SAQ A Compliance\' feature and SAQ A is applicable.',
 			                     'woocommerce-wirecard-checkout-seamless' )
@@ -209,12 +221,14 @@ $fields = array(
 		),
 		'woo_wcs_cc_display_cardholder_field'            => array(
 			'type'        => 'switch',
+			'default'     => 1,
 			'title'       => __( 'Display card holder field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the card holder name in your credit card form during the checkout process.',
 			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_display_cvc_field'                   => array(
 			'type'        => 'switch',
+			'default'     => 1,
 			'title'       => __( 'Display CVC field', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the CVC in your credit card form during the checkout process.',
 			                     'woocommerce-wirecard-checkout-seamless' )
@@ -235,18 +249,21 @@ $fields = array(
 	'invoiceoptions'      => array(
 		'woo_wcs_invoiceprovider'                    => array(
 			'type'    => 'select',
+			'default' => 'payolution',
 			'title'   => __( 'Invoice provider', 'woocommerce-wirecard-checkout-seamless' ),
 			'options' => array( 'wirecard' => 'Wirecard', 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
 		),
 		'woo_wcs_invoice_billing_shipping_equal'     => array(
-			'type'  => 'switch',
-			'title' => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' ),
+			'type'        => 'switch',
+			'default'     => 1,
+			'title'       => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __( 'Only applicable for payolution.', 'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_invoice_allowed_billing_countries'  => array(
 			'type'           => 'multiselect',
 			'title'          => __( 'Allowed billing countries', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => $countries,
+			'default'        => array( 'AT', 'DE', 'CH' ),
 			'multiple'       => true,
 			'select_buttons' => true
 		),
@@ -254,6 +271,7 @@ $fields = array(
 			'type'           => 'multiselect',
 			'title'          => __( 'Allowed shipping countries', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => $countries,
+			'default'        => array( 'AT', 'DE', 'CH' ),
 			'multiple'       => true,
 			'select_buttons' => true
 		),
@@ -262,13 +280,16 @@ $fields = array(
 			'title'          => __( 'Accepted currencies', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => get_woocommerce_currencies(),
 			'multiple'       => true,
+			'default'        => array( 'EUR' ),
 			'select_buttons' => true
 		),
 		'woo_wcs_invoice_min_amount'                 => array(
-			'title' => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' )
+			'title'   => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' ),
+			'default' => 10
 		),
 		'woo_wcs_invoice_max_amount'                 => array(
-			'title' => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' )
+			'title'   => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' ),
+			'default' => 3500
 		),
 		'woo_wcs_invoice_min_basket_size'            => array(
 			'title' => __( 'Minimum basket size', 'woocommerce-wirecard-checkout-seamless' )
@@ -280,17 +301,20 @@ $fields = array(
 	'installmentoptions'  => array(
 		'woo_wcs_installmentprovider'                    => array(
 			'type'    => 'select',
+			'default' => 'payolution',
 			'title'   => __( 'Installment provider', 'woocommerce-wirecard-checkout-seamless' ),
 			'options' => array( 'wirecard' => 'Wirecard', 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
 		),
 		'woo_wcs_installment_billing_shipping_equal'     => array(
-			'type'  => 'switch',
-			'title' => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' )
+			'type'    => 'switch',
+			'default' => 1,
+			'title'   => __( 'Billing/shipping address must be identical', 'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_installment_allowed_billing_countries'  => array(
 			'type'           => 'multiselect',
 			'title'          => __( 'Allowed billing countries', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => $countries,
+			'default'        => array( 'AT', 'DE', 'CH' ),
 			'multiple'       => true,
 			'select_buttons' => true
 		),
@@ -298,6 +322,7 @@ $fields = array(
 			'type'           => 'multiselect',
 			'title'          => __( 'Allowed shipping countries', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => $countries,
+			'default'        => array( 'AT', 'DE', 'CH' ),
 			'multiple'       => true,
 			'select_buttons' => true
 		),
@@ -305,14 +330,17 @@ $fields = array(
 			'type'           => 'multiselect',
 			'title'          => __( 'Accepted currencies', 'woocommerce-wirecard-checkout-seamless' ),
 			'options'        => get_woocommerce_currencies(),
+			'default'        => array( 'EUR' ),
 			'multiple'       => true,
 			'select_buttons' => true
 		),
 		'woo_wcs_installment_min_amount'                 => array(
-			'title' => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' )
+			'title'   => __( 'Minimum amount', 'woocommerce-wirecard-checkout-seamless' ),
+			'default' => 150
 		),
 		'woo_wcs_installment_max_amount'                 => array(
-			'title' => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' )
+			'title' => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' ),
+			'default' => 3500
 		),
 		'woo_wcs_installment_min_basket_size'            => array(
 			'title' => __( 'Minimum basket size', 'woocommerce-wirecard-checkout-seamless' )
@@ -324,7 +352,8 @@ $fields = array(
 	'standardpayments'    => array(
 		'wcs_ccard_enable'              => array(
 			'title' => __( 'Credit Card', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		),
 		'wcs_ccard-moto_enable'         => array(
 			'title' => __( 'Credit Card - Mail Order and Telephone Order', 'woocommerce-wirecard-checkout-seamless' ),
@@ -336,23 +365,28 @@ $fields = array(
 		),
 		'wcs_sofortueberweisung_enable' => array(
 			'title' => __( 'SOFORT Banking', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		),
 		'wcs_paypal_enable'             => array(
 			'title' => __( 'PayPal', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		),
 		'wcs_sepa-dd_enable'            => array(
 			'title' => __( 'SEPA Direct Debit', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		),
 		'wcs_invoice_enable'            => array(
 			'title' => __( 'Invoice', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		),
 		'wcs_invoiceb2b_enable'         => array(
 			'title' => __( 'Invoice B2B', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch'
+			'type'  => 'switch',
+			'default' => 1
 		)
 	),
 	'bankingpayments'     => array(
@@ -420,7 +454,7 @@ $fields = array(
 		)
 	),
 	'mobilepayments'      => array(
-		'wcs_pbx_enable'   => array(
+		'wcs_pbx_enable' => array(
 			'title' => __( 'paybox', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
 		)
