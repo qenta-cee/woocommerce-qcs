@@ -277,8 +277,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	/**
 	 * Generate customer statement
 	 *
-	 * @param $client
-	 * @param $gateway
+	 * @param WirecardCEE_QMore_FrontendClient $client
+	 * @param WC_Gateway_Wirecard_Checkout_Seamless $gateway
 	 *
 	 * @since 1.0.0
 	 */
