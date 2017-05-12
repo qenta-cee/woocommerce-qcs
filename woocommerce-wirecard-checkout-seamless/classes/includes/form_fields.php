@@ -303,7 +303,7 @@ $fields = array(
 			'type'    => 'select',
 			'default' => 'payolution',
 			'title'   => __( 'Installment provider', 'woocommerce-wirecard-checkout-seamless' ),
-			'options' => array( 'wirecard' => 'Wirecard', 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
+			'options' => array( 'ratepay' => 'RatePay', 'payolution' => 'payolution' )
 		),
 		'woo_wcs_installment_billing_shipping_equal'     => array(
 			'type'    => 'switch',
