@@ -140,7 +140,7 @@ function woocommerce_install_wirecard_checkout_seamless() {
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
-
+	init_config_values();
 }
 
 /**
@@ -196,4 +196,25 @@ function add_wirecard_support_request_page() {
 		'wirecard_support_request',
 		array( new WC_Gateway_Wirecard_Checkout_Seamless(), 'do_support_request' )
 	);
+}
+
+/**
+ * Store default values in the database
+ *
+ * @since 1.0.0
+ */
+function init_config_values() {
+	require_once WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/includes/form_fields.php';
+
+	$settings = array();
+
+	foreach ( $fields as $group => $options ) {
+		foreach ( $options as $key => $value ) {
+			if ( isset( $value['default'] ) ) {
+				$settings[$key] = $value['default'];
+			}
+		}
+	}
+
+	add_option( 'woocommerce_woocommerce_wcs_settings', $settings );
 }
