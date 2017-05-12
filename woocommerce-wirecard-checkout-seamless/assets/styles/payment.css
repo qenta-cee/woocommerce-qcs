@@ -33,13 +33,21 @@
     display: none;
 }
 
-
-
-li.wc_payment_method label img {
+li.wc_payment_method > label {
+    position: absolute;
+    left: 20px;
+    right: -2px;
+    top:0;
+    bottom:0;
+}
+li.wc_payment_method > label > img {
     max-height:26px;
-    position: absolute !important;
+    float:right;
     top: 5px;
-    right: 0;
+}
+
+li.wc_payment_method > label > img + a {
+    line-height: inherit !important;
 }
 
 li.wc_payment_method {
@@ -47,21 +55,14 @@ li.wc_payment_method {
     position: relative;
 }
 
-li.wc_payment_method > label {
-    position:absolute;
-    white-space: nowrap;
-    top:0;
-    left:20px;
-    right:0;
-}
 
 li.wc_payment_method:last-child {
     border: none;
 }
 
 @media (max-width: 435px) {
-    #payment_method_wcs_SOFORTUEBERWEISUNG + label img,
-    #payment_method_wcs_PSC + label img{
+    #payment_method_wcs_SOFORTUEBERWEISUNG + label > img,
+    #payment_method_wcs_PSC + label > img{
         max-height: 15px;
         top: 10px;
     }
