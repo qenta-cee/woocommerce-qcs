@@ -75,7 +75,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			                                                                              'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#creditcardoptions" class="nav-tab "><?= __( 'Credit card',
 			                                                                                        'woocommerce-wirecard-checkout-seamless' ) ?></a>
-			<a href="javascript:void(0);" data-target="#sepaoptions" class="nav-tab "><?= __( 'Sepa',
+			<a href="javascript:void(0);" data-target="#sepaoptions" class="nav-tab "><?= __( 'SEPA',
 			                                                                                  'woocommerce-wirecard-checkout-seamless' ) ?></a>
 			<a href="javascript:void(0);" data-target="#invoiceoptions" class="nav-tab "><?= __( 'Invoice',
 			                                                                                     'woocommerce-wirecard-checkout-seamless' ) ?></a>

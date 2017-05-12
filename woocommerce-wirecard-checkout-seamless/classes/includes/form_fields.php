@@ -101,14 +101,6 @@ $fields = array(
 		)
 	),
 	'options'             => array(
-		'woo_wcs_shopreferenceinpostingcontext' => array(
-			'title'             => __( 'Shop reference in posting text', 'woocommerce-wirecard-checkout-seamless' ),
-			'description'       => __(
-				'Reference to your online shop on your consumer\'s bank statement, limited to 9 characters.',
-				'woocommerce-wirecard-checkout-seamless'
-			),
-			'custom_attributes' => array( 'maxlength' => 9 )
-		),
 		'woo_wcs_forwardconsumershippingdata'   => array(
 			'title'       => __( 'Forward consumer shipping data', 'woocommerce-wirecard-checkout-seamless' ),
 			'description' => __(
@@ -419,7 +411,7 @@ $fields = array(
 			'type'  => 'switch'
 		),
 		'wcs_bancontact_mistercash_enable' => array(
-			'title' => __( 'Bancontact/Mister Cash', 'woocommerce-wirecard-checkout-seamless' ),
+			'title' => __( 'Bancontact', 'woocommerce-wirecard-checkout-seamless' ),
 			'type'  => 'switch'
 		),
 		'wcs_poli_enable'                  => array(

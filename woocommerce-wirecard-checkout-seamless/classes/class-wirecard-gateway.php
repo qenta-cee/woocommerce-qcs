@@ -517,7 +517,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 			}
 
-			$this->_config->set_customer_statement( $client, $this );
+			$client->setCustomerStatement( $this->_config->get_customer_statement( $order, $checkout_data['wcs_payment_method'] ) );
 
 			if ( $this->get_option( 'woo_wcs_notificationemail' ) ) {
 				$client->setConfirmMail( get_bloginfo( 'admin_email' ) );

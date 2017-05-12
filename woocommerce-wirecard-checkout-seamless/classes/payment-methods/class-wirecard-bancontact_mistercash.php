@@ -69,7 +69,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Bancontact_mistercash{
 	 * @return string|void
 	 */
 	public function get_label() {
-		return __( 'Bancontact/Mister Cash', 'woocommerce-wirecard-checkout-seamless' );
+		return __( 'Bancontact', 'woocommerce-wirecard-checkout-seamless' );
 	}
 
 	/**
