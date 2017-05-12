@@ -389,6 +389,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='paymentNumber' value='{$payment['paymentNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
+			echo "<input type='hidden' name='id_tx' value='{$data->id_tx}'>";
 
 			// suppres notices for transferFund transactions, otherwise no notices are raised
 			$operations_allowed = explode( ",", @$payment['operationsAllowed'] );

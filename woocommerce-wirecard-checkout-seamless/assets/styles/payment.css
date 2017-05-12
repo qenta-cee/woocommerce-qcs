@@ -33,6 +33,37 @@
     display: none;
 }
 
-label[for^=payment_method_wcs_] img {
-    max-height:30px;
+li.wc_payment_method > label {
+    position: absolute;
+    left: 20px;
+    right: -2px;
+    top:0;
+    bottom:0;
+}
+li.wc_payment_method > label > img {
+    max-height:26px;
+    float:right;
+    top: 5px;
+}
+
+li.wc_payment_method > label > img + a {
+    line-height: inherit !important;
+}
+
+li.wc_payment_method {
+    border-bottom: 1px dotted #d3d3d3;
+    position: relative;
+}
+
+
+li.wc_payment_method:last-child {
+    border: none;
+}
+
+@media (max-width: 435px) {
+    #payment_method_wcs_SOFORTUEBERWEISUNG + label > img,
+    #payment_method_wcs_PSC + label > img{
+        max-height: 15px;
+        top: 10px;
+    }
 }
