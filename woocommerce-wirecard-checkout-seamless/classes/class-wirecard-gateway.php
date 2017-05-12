@@ -850,11 +850,22 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 *
 	 * @param $var
-	 * @param $order
+	 * @param WC_Order $order
 	 *
 	 * @return string
 	 */
 	public function thankyou_order_received_text( $var, $order ) {
+		$metadata = $order->get_meta( 'wcs_data' );
+
+		$metadata = explode( "\n", $metadata );
+
+		if( is_array( $metadata ) );
+		foreach( $metadata as $line ) {
+			$line = explode( ":", $line );
+			if( isset( $line[0] ) && $line[0] == 'paymentType' ){
+				$order->set_payment_method_title( __( $line[1], 'woocommerce-wirecard-checkout-seamless' ) );
+			}
+		}
 		if ( $order->get_status() == 'on-hold' ) {
 			$var = '<h3>' . __( 'Payment verification is pending',
 			                    'woocommerce-wirecard-checkout-seamless' ) . '</h3>' . __(
