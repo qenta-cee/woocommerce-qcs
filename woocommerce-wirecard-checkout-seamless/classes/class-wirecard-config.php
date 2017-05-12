@@ -247,27 +247,27 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		switch ( $type ) {
 			case 'shipping':
 				$address = new WirecardCEE_Stdlib_ConsumerData_Address( WirecardCEE_Stdlib_ConsumerData_Address::TYPE_SHIPPING );
-				$address->setFirstname( $order->shipping_first_name )
-				        ->setLastname( $order->shipping_last_name )
-				        ->setAddress1( $order->shipping_address_1 )
-				        ->setAddress2( $order->shipping_address_2 )
-				        ->setCity( $order->shipping_city )
-				        ->setState( $order->shipping_state )
-				        ->setZipCode( $order->shipping_postcode )
-				        ->setCountry( $order->shipping_country );
+				$address->setFirstname( $order->get_shipping_first_name() )
+				        ->setLastname( $order->get_shipping_last_name() )
+				        ->setAddress1( $order->get_shipping_address_1() )
+				        ->setAddress2( $order->get_shipping_address_2() )
+				        ->setCity( $order->get_shipping_city() )
+				        ->setState( $order->get_shipping_state() )
+				        ->setZipCode( $order->get_shipping_postcode() )
+				        ->setCountry( $order->get_shipping_country() );
 				break;
 			case 'billing':
 			default:
 				$address = new WirecardCEE_Stdlib_ConsumerData_Address( WirecardCEE_Stdlib_ConsumerData_Address::TYPE_BILLING );
-				$address->setFirstname( $order->billing_first_name )
-				        ->setLastname( $order->billing_last_name )
-				        ->setAddress1( $order->billing_address_1 )
-				        ->setAddress2( $order->billing_address_2 )
-				        ->setCity( $order->billing_city )
-				        ->setState( $order->billing_state )
-				        ->setZipCode( $order->billing_postcode )
-				        ->setCountry( $order->billing_country )
-				        ->setPhone( $order->billing_phone );
+				$address->setFirstname( $order->get_billing_first_name() )
+				        ->setLastname( $order->get_billing_last_name() )
+				        ->setAddress1( $order->get_billing_address_1() )
+				        ->setAddress2( $order->get_billing_address_2() )
+				        ->setCity( $order->get_billing_city() )
+				        ->setState( $order->get_billing_state() )
+				        ->setZipCode( $order->get_billing_postcode() )
+				        ->setCountry( $order->get_billing_country() )
+				        ->setPhone( $order->get_billing_phone() );
 				break;
 		}
 
