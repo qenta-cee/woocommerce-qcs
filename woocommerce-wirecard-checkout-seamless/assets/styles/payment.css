@@ -29,27 +29,27 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-li.wc_payment_method.payment_method_woocommerce_wcs {
+.methods .wc_payment_method.payment_method_woocommerce_wcs {
     display: none;
 }
 
-li.payment_method_woocommerce_wcs_payment > label > img {
+li.wc_payment_method > label > img {
     max-height:26px;
     float:right;
     top: 5px;
 }
 
-li.payment_method_woocommerce_wcs_payment > label > img + a {
+li.wc_payment_method > label > img + a {
     line-height: inherit !important;
 }
 
-li.payment_method_woocommerce_wcs_payment {
+li.wc_payment_method {
     border-bottom: 1px dotted #d3d3d3;
     position: relative;
 }
 
 
-li.payment_method_woocommerce_wcs_payment:last-child {
+li.wc_payment_method:last-child {
     border: none;
 }
 
