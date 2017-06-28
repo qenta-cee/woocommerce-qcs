@@ -282,14 +282,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoice {
 		}
 
 		// check if shipping country is allowed
-		if ( ! in_array( $customer->get_shipping_country,
-				$this->_settings['woo_wcs_invoice_allowed_shipping_countries'] ) && ! empty( $customer->get_shipping_country )
+		if ( ! in_array( $customer->get_shipping_country(),
+				$this->_settings['woo_wcs_invoice_allowed_shipping_countries'] ) && ! empty( $customer->get_shipping_country() )
 		) {
 			return false;
 		}
 
 		// check if billing country is allowed
-		if ( ! in_array( $customer->get_billing_country, $this->_settings['woo_wcs_invoice_allowed_billing_countries'] ) && ! empty( $customer->get_billing_country ) ) {
+		if ( ! in_array( $customer->get_billing_country(), $this->_settings['woo_wcs_invoice_allowed_billing_countries'] ) && ! empty( $customer->get_billing_country() ) ) {
 			return false;
 		}
 
