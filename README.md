@@ -1,8 +1,8 @@
 # Wirecard Checkout Seamless plugin for WooCommerce
 
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/wirecard/woocommerce-wcs/master/LICENSE)
-[![WooCommerce](https://img.shields.io/badge/WooCommerce-v3.0.6-green.svg)](https://woocommerce.com/)
-[![WordPress](https://img.shields.io/badge/WordPress-v4.7.4-green.svg)](https://wordpress.org/)
+[![WooCommerce](https://img.shields.io/badge/WooCommerce-v3.0.9-green.svg)](https://woocommerce.com/)
+[![WordPress](https://img.shields.io/badge/WordPress-v4.8-green.svg)](https://wordpress.org/)
 [![PHP v5.6](https://img.shields.io/badge/php-v5.6-yellow.svg)](http://www.php.net)
 [![PHP v7](https://img.shields.io/badge/php-v7-yellow.svg)](http://www.php.net)
 

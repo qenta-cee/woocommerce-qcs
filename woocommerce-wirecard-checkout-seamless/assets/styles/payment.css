@@ -33,13 +33,6 @@
     display: none;
 }
 
-li.wc_payment_method > label {
-    position: absolute;
-    left: 20px;
-    right: -2px;
-    top:0;
-    bottom:0;
-}
 li.wc_payment_method > label > img {
     max-height:26px;
     float:right;
