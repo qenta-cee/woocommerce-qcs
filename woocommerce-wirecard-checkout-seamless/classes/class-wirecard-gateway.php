@@ -355,7 +355,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 		} catch ( Exception $e ) {
-			$this->_logger->emergency( __METHOD__ . ":" . print_r( $e, true ) );
+			$this->_logger->emergency( __METHOD__ . ":" . $e->getMessage() );
+			$this->_logger->emergency( __METHOD__ . ":" . $e->getTraceAsString() );
 		}
 	}
 
