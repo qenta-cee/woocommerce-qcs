@@ -352,8 +352,7 @@ $fields = array(
 	'standardpayments'    => array(
 		'wcs_ccard_enable'              => array(
 			'title' => __( 'Credit Card', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		),
 		'wcs_ccard-moto_enable'         => array(
 			'title' => __( 'Credit Card - Mail Order and Telephone Order', 'woocommerce-wirecard-checkout-seamless' ),
@@ -365,28 +364,23 @@ $fields = array(
 		),
 		'wcs_sofortueberweisung_enable' => array(
 			'title' => __( 'SOFORT Banking', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		),
 		'wcs_paypal_enable'             => array(
 			'title' => __( 'PayPal', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		),
 		'wcs_sepa-dd_enable'            => array(
 			'title' => __( 'SEPA Direct Debit', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		),
 		'wcs_invoice_enable'            => array(
 			'title' => __( 'Invoice', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		),
 		'wcs_invoiceb2b_enable'         => array(
 			'title' => __( 'Invoice B2B', 'woocommerce-wirecard-checkout-seamless' ),
-			'type'  => 'switch',
-			'default' => 1
+			'type'  => 'switch'
 		)
 	),
 	'bankingpayments'     => array(
