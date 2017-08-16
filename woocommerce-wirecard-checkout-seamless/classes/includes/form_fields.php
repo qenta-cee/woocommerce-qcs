@@ -290,12 +290,6 @@ $fields = array(
 		'woo_wcs_invoice_max_amount'                 => array(
 			'title'   => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' ),
 			'default' => 3500
-		),
-		'woo_wcs_invoice_min_basket_size'            => array(
-			'title' => __( 'Minimum basket size', 'woocommerce-wirecard-checkout-seamless' )
-		),
-		'woo_wcs_invoice_max_basket_size'            => array(
-			'title' => __( 'Maximum basket size', 'woocommerce-wirecard-checkout-seamless' )
 		)
 	),
 	'installmentoptions'  => array(
@@ -341,12 +335,6 @@ $fields = array(
 		'woo_wcs_installment_max_amount'                 => array(
 			'title' => __( 'Maximum amount', 'woocommerce-wirecard-checkout-seamless' ),
 			'default' => 3500
-		),
-		'woo_wcs_installment_min_basket_size'            => array(
-			'title' => __( 'Minimum basket size', 'woocommerce-wirecard-checkout-seamless' )
-		),
-		'woo_wcs_installment_max_basket_size'            => array(
-			'title' => __( 'Maximum basket size', 'woocommerce-wirecard-checkout-seamless' )
 		)
 	),
 	'standardpayments'    => array(
