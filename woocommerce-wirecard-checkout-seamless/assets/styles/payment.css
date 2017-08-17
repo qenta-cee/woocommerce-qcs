@@ -34,7 +34,6 @@
 }
 
 li.wc_payment_method > label > img {
-    max-height:26px;
     float:right;
     top: 5px;
 }
@@ -51,12 +50,4 @@ li.wc_payment_method {
 
 li.wc_payment_method:last-child {
     border: none;
-}
-
-@media (max-width: 435px) {
-    #payment_method_wcs_SOFORTUEBERWEISUNG + label > img,
-    #payment_method_wcs_PSC + label > img{
-        max-height: 15px;
-        top: 10px;
-    }
 }
