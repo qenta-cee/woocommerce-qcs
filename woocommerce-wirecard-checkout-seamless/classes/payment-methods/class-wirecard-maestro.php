@@ -73,10 +73,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Maestro extends WC_Gateway_Wirecard_
 	 * @return array
 	 */
 	public function get_icon() {
-		return array(
-			WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Maestro_h32.png',
-			WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Secure_code_h32.png'
-		);
+		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Maestro_h32.png';
 	}
 
 }

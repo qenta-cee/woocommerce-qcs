@@ -2,8 +2,8 @@
 Contributors:
 Tags: ecommerce, e-commerce, sales, checkout, paypal, credit card, woocommerce, payment, gateway
 Requires at least: 4.4
-Tested up to: 4.7
-Stable tag: 1.0.2
+Tested up to: 4.8.1
+Stable tag: 1.0.3
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

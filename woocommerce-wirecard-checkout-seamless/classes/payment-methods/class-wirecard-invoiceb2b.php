@@ -195,19 +195,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoiceb2b {
 			return false;
 		}
 
-		// if cart items count is smaller than set limits
-		if ( $cart->get_cart_contents_count() < intval( $this->_settings['woo_wcs_invoice_min_basket_size'] ) ) {
-			return false;
-		}
-
-		// if cart items count is greater than set limit
-		if (
-			floatval( $this->_settings['woo_wcs_invoice_max_basket_size'] ) != 0
-			&& $cart->get_cart_contents_count() >= floatval( $this->_settings['woo_wcs_invoice_max_basket_size'] )
-		) {
-			return false;
-		}
-
 		foreach ( $cart->cart_contents as $hash => $item ) {
 			$product = new WC_Product( $item['product_id'] );
 

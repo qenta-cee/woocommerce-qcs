@@ -150,6 +150,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	}
 
 	/**
+	 * Get client secret from config or optionvalue
+	 *
+	 * @since 1.0.3
+	 *
+	 * @param $gateway
+	 *
+	 * @return string
+	 */
+	public function get_client_customer_id( $gateway ) {
+		$config_mode = $gateway->get_option( 'woo_wcs_configuration' );
+		if ( array_key_exists( $config_mode, $this->_presets ) ) {
+			return $this->_presets[ $config_mode ]['customer_id'];
+		} else {
+			return trim( $gateway->get_option( 'woo_wcs_customerid' ) );
+		}
+	}
+
+	/**
 	 * Get client backend password from config or optionvalue
 	 *
 	 * @since 1.0.0

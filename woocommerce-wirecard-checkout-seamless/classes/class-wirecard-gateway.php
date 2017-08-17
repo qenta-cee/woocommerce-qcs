@@ -304,6 +304,28 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function payment_fields() {
 		$dataStorage = new WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage( $this->settings );
+		if ( WC()->session->get( 'consumerDeviceId' ) ) {
+            $consumerDeviceId = WC()->session->get( 'consumerDeviceId' );
+	    } else {
+	        $timestamp = microtime();
+	        $customerId = $this->_config->get_client_customer_id( $this );
+	        $consumerDeviceId = md5( $customerId . "_" . $timestamp );
+	        WC()->session->set( 'consumerDeviceId', $consumerDeviceId );
+	    }
+
+	    echo "<script language='JavaScript'>
+                var di = {t:'" . $consumerDeviceId . "',v:'WDWL',l:'Checkout'};
+              </script>
+              <script type='text/javascript' src='//d.ratepay.com/" . $consumerDeviceId . "/di.js'></script>
+              <noscript>
+                <link rel='stylesheet' type='text/css' href='//d.ratepay.com/di.css?t=" . $consumerDeviceId . "&v=WDWL&l=Checkout'>
+              </noscript>
+              <object type='application/x-shockwave-flash' data='//d.ratepay.com/WDWL/c.swf' width='0' height='0'>
+                <param name='movie' value='//d.ratepay.com/WDWL/c.swf' />
+                <param name='flashvars' value='t=" . $consumerDeviceId . "&v=WDWL'/>
+                <param name='AllowScriptAccess' value='always'/>
+              </object>";
+
 
 		try {
 			$response = $dataStorage->init();
@@ -508,6 +530,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			       ->setStorageId( $checkout_data['storageId'] )
 			       ->setOrderIdent( $woocommerce->session->get( 'wcs_session_order_ident' ) )
 			       ->createConsumerMerchantCrmId( $order->get_billing_email() );
+
+			if ( WC()->session->get( 'consumerDeviceId' ) ) {
+			    $client->consumerDeviceId = WC()->session->get( 'consumerDeviceId' );
+			    WC()->session->set( 'consumerDeviceId', false );
+			}
 
 			switch ( $checkout_data['wcs_payment_method'] ){
 				case WirecardCEE_QMore_PaymentType::EPS : $client->setFinancialInstitution($checkout_data['woo_wcs_eps_financialInstitution']);
