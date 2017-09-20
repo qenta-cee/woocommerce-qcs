@@ -608,9 +608,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			throw ( $e );
 		}
 
-		// reset wcs_session_order_ident so that the new order gets new datastorage id
-		$woocommerce->session->set( 'wcs_session_order_ident', null );
-
 		return $initResponse->getRedirectUrl();
 	}
 
@@ -816,6 +813,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return mixed
 	 */
 	public function return_request() {
+	    global $woocommerce;
+
+	    // reset wcs_session_order_ident so that the new order gets new datastorage id
+		$woocommerce->session->set( 'wcs_session_order_ident', null );
+
 		$redirectUrl = $this->get_return_url();
 		WC()->session->set( 'wcs_checkout_data', array() );
 
@@ -920,19 +922,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$payment_class = 'WC_Gateway_Wirecard_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
 		                                                                                              $args['wcs_payment_method'] ) ) );
-		$payment_class = new $payment_class( $this->settings );
+		if ( class_exists( $payment_class ) ) {
+		    $payment_class = new $payment_class( $this->settings );
 
-		if ( method_exists( $payment_class, 'validate_payment_fields' ) ) {
-			$validation = $payment_class->validate_payment_fields( $args );
-			if ( $validation === true ) {
-				return true;
-			} else {
-				wc_add_notice( $validation, 'error' );
+		    if ( method_exists( $payment_class, 'validate_payment_fields' ) ) {
+			    $validation = $payment_class->validate_payment_fields( $args );
+			    if ( $validation === true ) {
+				    return true;
+			    } else {
+				    wc_add_notice( $validation, 'error' );
 
-				return;
-			}
-		}
-
+				    return;
+			    }
+		    }
+        }
 		return true;
 	}
 
