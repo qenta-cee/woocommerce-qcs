@@ -172,60 +172,6 @@
         ]
     },
     {
-        "name": "mobiledetect/mobiledetectlib",
-        "version": "2.8.25",
-        "version_normalized": "2.8.25.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/serbanghita/Mobile-Detect.git",
-            "reference": "f0896b5c7274d1450023b0b376240be902c3251c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/f0896b5c7274d1450023b0b376240be902c3251c",
-            "reference": "f0896b5c7274d1450023b0b376240be902c3251c",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.0.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "*"
-        },
-        "time": "2017-03-29 13:59:30",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "Mobile_Detect.php"
-            ],
-            "psr-0": {
-                "Detection": "namespaced/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Serban Ghita",
-                "email": "serbanghita@gmail.com",
-                "homepage": "http://mobiledetect.net",
-                "role": "Developer"
-            }
-        ],
-        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
-        "homepage": "https://github.com/serbanghita/Mobile-Detect",
-        "keywords": [
-            "detect mobile devices",
-            "mobile",
-            "mobile detect",
-            "mobile detector",
-            "php mobile detect"
-        ]
-    },
-    {
         "name": "guzzlehttp/guzzle",
         "version": "6.3.0",
         "version_normalized": "6.3.0.0",
@@ -293,29 +239,83 @@
         ]
     },
     {
-        "name": "wirecard/checkout-client-library",
-        "version": "3.3.4",
-        "version_normalized": "3.3.4.0",
+        "name": "mobiledetect/mobiledetectlib",
+        "version": "2.8.26",
+        "version_normalized": "2.8.26.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/wirecard/checkout-client-library.git",
-            "reference": "121caf648fe3a4063b1d3ed7d65a5a758e0ddcc9"
+            "url": "https://github.com/serbanghita/Mobile-Detect.git",
+            "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/wirecard/checkout-client-library/zipball/121caf648fe3a4063b1d3ed7d65a5a758e0ddcc9",
-            "reference": "121caf648fe3a4063b1d3ed7d65a5a758e0ddcc9",
+            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
+            "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*"
+        },
+        "time": "2017-08-29 18:23:54",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "Mobile_Detect.php"
+            ],
+            "psr-0": {
+                "Detection": "namespaced/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Serban Ghita",
+                "email": "serbanghita@gmail.com",
+                "homepage": "http://mobiledetect.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+        "homepage": "https://github.com/serbanghita/Mobile-Detect",
+        "keywords": [
+            "detect mobile devices",
+            "mobile",
+            "mobile detect",
+            "mobile detector",
+            "php mobile detect"
+        ]
+    },
+    {
+        "name": "wirecard/checkout-client-library",
+        "version": "3.3.5",
+        "version_normalized": "3.3.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wirecard/checkout-client-library.git",
+            "reference": "ad0f8c88dfb3c39091c80b1b58e8dd3604f3e25c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/wirecard/checkout-client-library/zipball/ad0f8c88dfb3c39091c80b1b58e8dd3604f3e25c",
+            "reference": "ad0f8c88dfb3c39091c80b1b58e8dd3604f3e25c",
             "shasum": ""
         },
         "require": {
             "guzzlehttp/guzzle": "^6.2",
             "mobiledetect/mobiledetectlib": "^2.8",
-            "php": "~5.5.0|~5.6.0|~7.0.0"
+            "php": "~5.5.0|~5.6.0|~7.0.0|~7.1"
         },
         "require-dev": {
             "phpunit/phpunit": "^5.0"
         },
-        "time": "2017-05-23 12:14:29",
+        "time": "2017-07-11 11:53:20",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

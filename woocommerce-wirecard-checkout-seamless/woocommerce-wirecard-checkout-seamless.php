@@ -3,7 +3,7 @@
  * Plugin Name: Wirecard Checkout Seamless
  * Plugin URI: https://github.com/wirecard/woocommerce-wcs
  * Description: Wirecard Checkout Seamless plugin for WooCommerce
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Wirecard
  * Author URI: https://www.wirecard.at/
  * License: GPL2
@@ -79,7 +79,9 @@ function init_woocommerce_wcs_gateway() {
 		function ( $class_name ) {
 			if ( strpos( $class_name, "Wirecard_Checkout_Seamless" ) ) {
 				$method = str_replace( "WC_Gateway_Wirecard_Checkout_Seamless_", "", $class_name );
-				require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . strtolower( $method ) . ".php" );
+				if ( file_exists( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . strtolower( $method ) . ".php" ) ) {
+					require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-wirecard-' . strtolower( $method ) . ".php" );
+				}
 			}
 		} );
 
