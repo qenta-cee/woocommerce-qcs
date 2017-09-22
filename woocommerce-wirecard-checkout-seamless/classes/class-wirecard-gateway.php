@@ -851,6 +851,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$order_id = $_REQUEST['order-id'];
 		$order    = new WC_Order( $order_id );
+        $consumerMessage = '';
 
 		switch ( $_REQUEST['paymentState'] ) {
 			case WirecardCEE_QMore_ReturnFactory::STATE_SUCCESS:
@@ -864,7 +865,20 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 
 			case WirecardCEE_QMore_ReturnFactory::STATE_FAILURE:
-				wc_add_notice( __( 'Payment has failed.', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+			    // get error messages from order
+			    if ( get_post_meta( $order_id, 'wcs_data', true ) ) {
+			        $errors = get_post_meta( $order_id, 'wcs_data', true );
+			        if ( strpos( $errors, 'error_1_consumerMessage:' ) && strpos( $errors, 'error_1_paySysMessage:' ) ) {
+			            $start = strlen( 'error_1_consumerMessage:' ) + strpos( $errors, 'error_1_consumerMessage:' );
+			            $end = strpos( $errors, 'error_1_paySysMessage:' ) - $start;
+			            $consumerMessage = substr( $errors, $start, $end );
+			        }
+		        }
+		        if( strlen( $consumerMessage ) ) {
+			        wc_add_notice( __( $consumerMessage, 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+		        } else {
+				    wc_add_notice( __( 'Payment has failed.', 'woocommerce-wirecard-checkout-seamless' ), 'error' );
+				}
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
 			default:
