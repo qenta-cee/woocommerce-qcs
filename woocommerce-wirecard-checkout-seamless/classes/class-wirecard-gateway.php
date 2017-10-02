@@ -350,6 +350,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			foreach ( $this->get_enabled_payment_types() as $type ) {
 				?>
 				</div></li>
+				<input type="hidden" name="storageId" value="<?= $response->getStorageId() ?>"/>
 				<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
 				<input
 					id="payment_method_wcs_<?php echo $type->get_payment_type() ?>"

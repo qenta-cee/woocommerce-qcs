@@ -377,7 +377,7 @@ msgstr "Maestro SecureCode"
 
 #: form_fields.php:377
 msgid "SOFORT Banking"
-msgstr "SOFORT Überweisung"
+msgstr "Sofort."
 
 #: form_fields.php:381
 msgid "PayPal"

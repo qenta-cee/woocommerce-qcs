@@ -381,7 +381,7 @@ msgstr ""
 
 #: form_fields.php:377
 msgid "SOFORT Banking"
-msgstr ""
+msgstr "Online bank transfer."
 
 #: form_fields.php:381
 msgid "PayPal"
