@@ -900,29 +900,32 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function thankyou_order_received_text( $var, $order ) {
-		$metadata = $order->get_meta( 'wcs_data' );
+	    if ($order->get_payment_method() === "woocommerce_wcs") {
+            $metadata = $order->get_meta( 'wcs_data' );
 
-		$metadata = explode( "\n", $metadata );
+            $metadata = explode( "\n", $metadata );
 
-		if( is_array( $metadata ) );
-		foreach( $metadata as $line ) {
-			$line = explode( ":", $line );
-			if( isset( $line[0] ) && $line[0] == 'paymentType' ){
-				$paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'.ucfirst(strtolower($line[1]));
-				$paymentClass = new $paymentClass( $this->settings );
+            if( is_array( $metadata ) );
+            foreach( $metadata as $line ) {
+                $line = explode( ":", $line );
+                if( isset( $line[0] ) && $line[0] == 'paymentType' ){
+                    $paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'.ucfirst(strtolower($line[1]));
+                    $paymentClass = new $paymentClass( $this->settings );
 
-				$order->set_payment_method_title( $paymentClass->get_label() );
-			}
+                    $order->set_payment_method_title( $paymentClass->get_label() );
+                }
+            }
+            if ( $order->get_status() == 'on-hold' ) {
+                $var = '<h3>' . __( 'Payment verification is pending',
+                                    'woocommerce-wirecard-checkout-seamless' ) . '</h3>' . __(
+                           'Your order will be processed as soon as we receive the payment confirmation from your bank.',
+                           'woocommerce-wirecard-checkout-seamless'
+                       );
+            }
+
+            return $var;
 		}
-		if ( $order->get_status() == 'on-hold' ) {
-			$var = '<h3>' . __( 'Payment verification is pending',
-			                    'woocommerce-wirecard-checkout-seamless' ) . '</h3>' . __(
-				       'Your order will be processed as soon as we receive the payment confirmation from your bank.',
-				       'woocommerce-wirecard-checkout-seamless'
-			       );
-		}
-
-		return $var;
+		return;
 	}
 
 	/**
