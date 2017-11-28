@@ -643,6 +643,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	public function confirm_request() {
 		$message = null;
 
+        foreach ( $_REQUEST as &$param ) {
+            $param = stripslashes( $param );
+        }
+        foreach ( $_POST as &$param ) {
+            $param = stripslashes( $param );
+        }
+
 		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
 			$message = 'order-id missing';
 			$this->_logger->error( __METHOD__ . ':' . $message );
