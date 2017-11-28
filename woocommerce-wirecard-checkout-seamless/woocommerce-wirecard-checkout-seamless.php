@@ -58,7 +58,7 @@ add_action( 'plugins_loaded', 'init_woocommerce_wcs_gateway' );
 
 add_action( 'admin_menu', 'wirecard_transactions_add_page' );
 add_action( 'admin_menu', 'add_wirecard_support_request_page' );
-
+add_action( 'wp_footer', 'add_wirecard_storage_check' );
 
 /**
  * Intialize the Wirecard payment gateway
@@ -219,4 +219,21 @@ function init_config_values() {
 	}
 
 	add_option( 'woocommerce_woocommerce_wcs_settings', $settings );
+}
+
+function add_wirecard_storage_check() {
+    ?>
+    <script type="text/javascript">
+        if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
+            const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
+            WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
+                if ( this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
+                    this.iframes.CCARD = $('iframe')[0];
+                }
+
+                return originalMethod.apply( this, arguments );
+            }
+        }
+    </script>
+    <?php
 }
