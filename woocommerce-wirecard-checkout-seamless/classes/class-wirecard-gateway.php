@@ -437,14 +437,17 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	public function payment_page( $order_id ) {
 		$order = new WC_Order( $order_id );
 
-		$iframeUrl = $this->initiate_payment( $order );
-		if( ! $iframeUrl ) {
-			$iframeUrl = $order->get_cancel_endpoint();
-			header( 'Location: ' . $iframeUrl );
+		$data = $this->initiate_payment( $order );
+		if( ! $data['iframeUrl'] ) {
+			$data['iframeUrl'] = $order->get_cancel_endpoint();
+			header( 'Location: ' . $data['iframeUrl'] );
+			die();
+		} else if ( $data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::SOFORTUEBERWEISUNG ) {
+		    header( 'Location: ' . $data['iframeUrl'] );
 			die();
 		}
 		?>
-			<iframe src="<?php echo $iframeUrl ?>" width="100%" height="700px" border="0" frameborder="0">
+			<iframe src="<?php echo $data['iframeUrl'] ?>" width="100%" height="700px" border="0" frameborder="0">
 				<p>Your browser does not support iframes.</p>
 			</iframe>
 		<?php
@@ -458,7 +461,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 *
 	 * @param $order WC_Order
 	 *
-	 * @return string
+	 * @return array
 	 * @throws Exception
 	 */
 	public function initiate_payment( $order ) {
@@ -609,7 +612,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			throw ( $e );
 		}
 
-		return $initResponse->getRedirectUrl();
+		return ['iframeUrl'          => $initResponse->getRedirectUrl(),
+		        'wcs_payment_method' => $checkout_data['wcs_payment_method']];
 	}
 
 	/**
