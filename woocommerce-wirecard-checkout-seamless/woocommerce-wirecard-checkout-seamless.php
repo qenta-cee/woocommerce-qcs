@@ -227,7 +227,7 @@ function add_wirecard_storage_check() {
         if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
             const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
             WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
-                if ( this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
+                if ( 'undefined' != typeof this.iframes && this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
                     this.iframes.CCARD = $('iframe')[0];
                 }
 
