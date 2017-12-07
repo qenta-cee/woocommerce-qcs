@@ -31,7 +31,7 @@
  */
 
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.7' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.8' );
 
 /**
  * Config class

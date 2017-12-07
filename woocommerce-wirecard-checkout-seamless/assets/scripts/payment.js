@@ -52,7 +52,11 @@ jQuery(function ($) {
         if ($('input[name=woo_wcs_ok]', this).length > 0)
             return true;
 
-        var serialized_array = $(this).find('input:checked').parent().find('fieldset').serializeArray();
+        var serialized_array = [];
+        $(this).find('input:checked').parent().find('fieldset input').each(function () {
+            if ($(this).attr('name') != null)
+                serialized_array.push({ name : $(this).attr('name'), value : $(this).val()});
+        });
 
         wirecard_wcs.prepare_data(serialized_array);
 
