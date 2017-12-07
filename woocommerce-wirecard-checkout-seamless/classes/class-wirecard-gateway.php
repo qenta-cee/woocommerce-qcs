@@ -920,7 +920,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
             foreach( $metadata as $line ) {
                 $line = explode( ":", $line );
                 if( isset( $line[0] ) && $line[0] == 'paymentType' ){
-                    $paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'.ucfirst(strtolower($line[1]));
+                    $paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'.
+                    str_replace('-', '_', ucfirst(strtolower($line[1])));
                     $paymentClass = new $paymentClass( $this->settings );
 
                     $order->set_payment_method_title( $paymentClass->get_label() );
