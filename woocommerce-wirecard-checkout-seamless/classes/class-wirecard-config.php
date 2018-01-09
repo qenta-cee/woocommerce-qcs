@@ -306,6 +306,10 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	    $shop_name = get_bloginfo('name');
         $order_reference = strval( intval( $this->get_order_reference( $order ) ) );
 
+        if ( $payment_type == WirecardCEE_QMore_PaymentType::POLI ) {
+            return sprintf( '%9s', substr( get_bloginfo( 'name' ), 0, 9 ) );
+        }
+
         $length = strlen( $shop_name . " " . $order_reference );
 
         if ( $length > 20 ) {
