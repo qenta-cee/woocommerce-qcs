@@ -303,12 +303,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	public function get_customer_statement( $order, $payment_type ) {
-		$shop_name = sprintf( '%9s', substr( get_bloginfo( 'name' ), - 9 ) );
-		$order_reference = $this->get_order_reference( $order );
-		if ( $payment_type == WirecardCEE_QMore_PaymentType::POLI ) {
-			return $shop_name;
-		}
-		return $shop_name . ' ' . $order_reference;
+	    $shop_name = get_bloginfo('name');
+        $order_reference = strval( intval( $this->get_order_reference( $order ) ) );
+
+        if ( $payment_type == WirecardCEE_QMore_PaymentType::POLI ) {
+            return sprintf( '%9s', substr( get_bloginfo( 'name' ), 0, 9 ) );
+        }
+
+        $length = strlen( $shop_name . " " . $order_reference );
+
+        if ( $length > 20 ) {
+            $shop_name = substr($shop_name, 0, 20 - strlen(" " . $order_reference));
+        }
+
+        else if ( $length < 20 ) {
+            $order_reference = str_pad($order_reference, (20 - $length) + strlen($order_reference), '0', STR_PAD_LEFT);
+        }
+
+        return $shop_name . " " . $order_reference;
 	}
 
 	/**
