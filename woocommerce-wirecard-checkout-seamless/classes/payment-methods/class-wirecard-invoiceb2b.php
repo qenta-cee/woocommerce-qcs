@@ -315,7 +315,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoiceb2b {
 
 		$errors = [ ];
 
-		if ( $this->_settings['woo_wcs_payolutionterms'] && $data['b2b_consent'] != 'on' ) {
+		if ( $this->_settings['woo_wcs_payolutionterms'] && $data['b2b_consent'] != 'on' && $this->check_terms( $data['wcs_payment_method'] ) ) {
 			$errors[] = "&bull; " . __( 'Please accept the consent terms!', 'woocommerce-wirecard-checkout-seamless' );
 		}
 
@@ -324,4 +324,18 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Invoiceb2b {
 
 		return count( $errors ) == 0 ? true : join( "<br>", $errors );
 	}
+
+    /**
+     * Check if the provider is payolution if so agb check is needed
+     *
+     * @since 1.0.11
+     * @param $payment_method
+     * @return bool
+     */
+    private function check_terms( $payment_method ) {
+        if ( ( $payment_method == 'INVOICE' && $this->_settings['woo_wcs_invoiceprovider'] == 'payolution' ) ) {
+            return true;
+        }
+        return false;
+    }
 }
