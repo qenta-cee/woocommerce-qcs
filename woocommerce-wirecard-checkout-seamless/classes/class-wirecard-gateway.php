@@ -482,7 +482,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
 			                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
 
-			$consumer_data = $this->_config->get_consumer_data( $order, $this );
+			$consumer_data = $this->_config->get_consumer_data( $order, $this, $checkout_data );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
 			$service_url   = $this->get_option( 'woo_wcs_serviceurl' );
 

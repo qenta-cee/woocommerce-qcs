@@ -231,7 +231,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_ConsumerData
 	 */
-	public function get_consumer_data( $order, $gateway ) {
+	public function get_consumer_data( $order, $gateway, $checkout_data ) {
 		$consumerData = new WirecardCEE_Stdlib_ConsumerData();
 
 		$consumerData->setIpAddress( $order->get_customer_ip_address() );
@@ -248,6 +248,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$shipping_address = $this->get_address_data( $order, 'shipping' );
 			$consumerData->addAddressInformation( $shipping_address );
 		}
+        if ($checkout_data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE ||
+            $checkout_data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT) {
+            $birth_date = new DateTime( $checkout_data['dob_year'] . '-' . $checkout_data['dob_month'] . '-' . $checkout_data['dob_day'] );
+            $consumerData->setBirthDate($birth_date);
+        }
 
 		return $consumerData;
 	}
