@@ -404,12 +404,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				}
 
 				echo "<div class='wcs-op-group'>";
-				if ( ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) && ( $brand != 'Invoice' ) ) {
-					echo "<input type='text' autocomplete='off' value='' name='amount'>";
-				}
+
 				if ( $brand == 'Invoice' ) {
 					echo "<input type='hidden' value='$data->amount' name='amount'>";
+				} else if ( ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) && ( $brand != 'Invoice' ) ) {
+					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}
+
 				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>" . __( $operation,
 				                                                                                                               'woocommerce-wirecard-checkout-seamless' ) . "</button>";
 				echo "</div>";
