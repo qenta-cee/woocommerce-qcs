@@ -407,7 +407,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 
 				if ( $brand == 'Invoice' ) {
 					echo "<input type='hidden' value='$data->amount' name='amount'>";
-				} else if ( ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) && ( $brand != 'Invoice' ) ) {
+				} elseif ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
 					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}
 
