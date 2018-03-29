@@ -236,7 +236,7 @@ msgid "Iframe CSS-URL"
 msgstr "Iframe CSS-URL"
 
 #: form_fields.php:215
-msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin."
+msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css."
 msgstr "Eingabe des CSS-Dateinamens, um die iFrame-Eingabefelder anzupassen, wenn das \"PCI DSS SAQ A Compliance\"-Feature verwendet wird. <a target=\"_blank\" href=\"https://guides.wirecard.at/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start#customization_via_css\">Weitere Informationen</a>"
 
 #: form_fields.php:219
