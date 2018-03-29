@@ -112,8 +112,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 
 		if ( $this->_settings['woo_wcs_saqacompliance'] ) {
 			$data_storage_init->setJavascriptScriptVersion( 'pci3' );
-			if ( strlen( trim( $this->_settings['iframe_css_url'] ) ) ) {
-				$data_storage_init->setIframeCssUrl( $this->_settings['iframe_css_url'] );
+			if ( strlen( trim( $this->_settings['woo_wcs_iframecssurl'] ) ) ) {
+				$data_storage_init->setIframeCssUrl( $this->_settings['woo_wcs_iframecssurl'] );
 			}
 
 			// set placeholders

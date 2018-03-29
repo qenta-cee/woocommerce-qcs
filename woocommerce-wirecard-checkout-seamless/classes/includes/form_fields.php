@@ -185,7 +185,7 @@ $fields = array(
 		),
 		'woo_wcs_iframecssurl'                           => array(
 			'title'       => __( 'Iframe CSS-URL', 'woocommerce-wirecard-checkout-seamless' ),
-			'description' => __( 'Entry of a name for the CSS file in order to customize the iframe input fields when using the \'PCI DSS SAQ A Compliance\' feature. File must be placed in the \'view/css\' directory of the plugin.',
+			'description' => __( 'Entry of a name for the CSS file in order to customize the iframe input fields when using the \'PCI DSS SAQ A Compliance\' feature. File must be placed in the \'view/css\' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css.',
 			                     'woocommerce-wirecard-checkout-seamless' )
 		),
 		'woo_wcs_cc_number_placeholder_text'             => array(
