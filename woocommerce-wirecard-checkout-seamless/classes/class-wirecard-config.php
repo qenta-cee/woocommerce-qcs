@@ -366,7 +366,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$item->setUnitGrossAmount( $item_unit_gross_amount )
 			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
 			     ->setUnitTaxAmount( wc_format_decimal( $item_unit_tax_amount, wc_get_price_decimals() ) )
-			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) )
+			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) * 100 )
 			     ->setDescription( substr( strip_tags( $cart_item['data']->get_short_description() ), 0, 127 ) )
 			     ->setName( substr( strip_tags( $cart_item['data']->get_name() ), 0, 127 ) )
 			     ->setImageUrl( isset( $image_url ) ? $image_url : '' );
@@ -381,7 +381,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			                                              wc_get_price_decimals() ) )
 			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
 			     ->setUnitTaxAmount( wc_format_decimal( $cart->shipping_tax_total, wc_get_price_decimals() ) )
-			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) )
+			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) * 100 )
 			     ->setName( 'Shipping' )
 			     ->setDescription( 'Shipping' );
 			$basket->addItem( $item );
