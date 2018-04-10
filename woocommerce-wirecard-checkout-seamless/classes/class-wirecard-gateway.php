@@ -560,7 +560,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				$client->setConfirmMail( get_bloginfo( 'admin_email' ) );
 			}
 
-			if ( $this->get_option( 'woo_wcs_forwardbasketdata' ) ) {
+			if ( $this->get_option( 'woo_wcs_forwardbasketdata' )
+			|| ( $this->_config->force_basket_data( $checkout_data['wcs_payment_method'], $this ) ) ) {
 				$client->setBasket( $this->_config->get_shopping_basket() );
 			}
 

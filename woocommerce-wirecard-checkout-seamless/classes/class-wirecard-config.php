@@ -240,11 +240,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		$user_data = get_userdata( $order->get_user_id() );
 		$consumerData->setEmail( isset( $user_data->user_email ) ? $user_data->user_email : '' );
 
-		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) ) {
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$billing_address = $this->get_address_data( $order, 'billing' );
 			$consumerData->addAddressInformation( $billing_address );
 		}
-		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) ) {
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$shipping_address = $this->get_address_data( $order, 'shipping' );
 			$consumerData->addAddressInformation( $shipping_address );
 		}
@@ -256,6 +256,50 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 
 		return $consumerData;
 	}
+
+    /**
+     * Force sending data for invoice and installment
+     *
+     * @param $payment_method
+     *
+     * @since 1.0.15
+     * @return bool
+     */
+	public function force_consumer_data( $payment_method ) {
+	    switch ( $payment_method ) {
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE:
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Force sending basket data for invoice and installment via ratepay
+     *
+     * @param $payment_method
+     * @param $gateway
+     *
+     * @since 1.0.15
+     * @return bool
+     */
+    public function force_basket_data( $payment_method, $gateway ) {
+	    switch ( $payment_method ) {
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE:
+                if ( 'payolution' != $gateway->get_option('woo_wcs_invoiceprovider') ) {
+                    return true;
+                }
+                return false;
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+                if ( 'payolution' != $gateway->get_option('woo_wcs_installmentprovider') ) {
+                    return true;
+                }
+                return false;
+            default:
+                return false;
+        }
+    }
 
 	/**
 	 * Generate address data (shipping or billing)
