@@ -406,7 +406,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Admin {
 				echo "<div class='wcs-op-group'>";
 
 				if ( $brand == 'Invoice' ) {
-					echo "<input type='hidden' value='$data->amount' name='amount'>";
+					echo "<input type='hidden' value='".$data->amount."' name='amount'>";
 				} elseif ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
 					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}

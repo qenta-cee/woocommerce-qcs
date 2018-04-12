@@ -403,7 +403,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
 
-		return $backend_operations->refund();
+		return $backend_operations->refund( $order_id, $amount, $reason );
 	}
 
 	/**

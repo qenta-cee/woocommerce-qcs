@@ -86,12 +86,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @return bool|WP_Error
 	 */
-	public function refund() {
+	public function refund( $order_id = 0, $amount = 0, $reason = '' ) {
 		global $wpdb;
 
 		$order_id      = $_POST['order_id'];
 		$refund_amount = $_POST['refund_amount'];
-
 		if ( $refund_amount <= 0 ) {
 			$this->_logger->error( __( 'Refund amount must be greater than zero.', 'woocommerce-wirecard-checkout-seamless' ) );
 
@@ -132,24 +131,21 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
 		$basket = null;
 
-
 		if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
-
-
 			if (
 				(
-					$tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
+					$tx_data->payment_method == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE
 					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
 				)
 				or
 				(
 					$tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
-					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
+					&& $this->_settings['woo_wcs_installmentprovider'] != 'payolution'
 				)
 			) {
 				if ( $total_items == 0 ) {
 					// invoice / installment provider is set to ratepay / wirecard and basket items were not sent
-					$this->_logger->error( __METHOD__ . ': basket needs to be defined for ' . $this->_settings['woo_wcs_invoiceprovider'] . ' during refund.' );
+					$this->_logger->error( __METHOD__ . ': basket needs to be defined for ratepay during refund.' );
 
 					return false;
 				} else {
@@ -167,8 +163,9 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 						$price->tax_amount = $price->gross - $price->net;
 						$price->tax_rate   = $price->tax_amount / $price->net;
 
+						$description = strlen( $wc_product->get_short_description() ) != 0 ? $wc_product->get_short_description() : $wc_product->get_name();
 						$basket_item->setName( $wc_product->get_name() )
-						            ->setDescription( $wc_product->get_short_description() )
+						            ->setDescription( $description )
 						            ->setImageUrl( wp_get_attachment_image_url( $wc_product->get_image_id() ) )
 						            ->setUnitNetAmount( wc_format_decimal( $price->net, wc_get_price_decimals() ) )
 						            ->setUnitGrossAmount( wc_format_decimal( $price->gross, wc_get_price_decimals() ) )
