@@ -420,6 +420,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$payment_type = $_POST['wcs_payment_method'];
 
+		$paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'. str_replace('-', '_', ucfirst(strtolower($payment_type)));
+		$paymentClass = new $paymentClass( $this->settings );
+		update_post_meta( $order_id, '_payment_method_title', $paymentClass->get_label());
+
+
 		$page_url = $order->get_checkout_payment_url(true);
 		$page_url = add_query_arg( 'key', $order->get_order_key(), $page_url );
 		$page_url = add_query_arg( 'order-pay', $order_id, $page_url );
