@@ -212,8 +212,14 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                 continue;
             }
             $wc_product  = new WC_Product( $wc_order_items[ $item_id ]->get_product_id() );
+
+            $article_nr = $wc_product->get_id();
+            if ( $wc_product->get_sku() != '' ) {
+                $article_nr = $wc_product->get_sku();
+            }
+
             $sum += number_format( wc_get_price_including_tax( $wc_product ), wc_get_price_decimals() );
-            $basket_item = new WirecardCEE_Stdlib_Basket_Item( $wc_product->get_id(), $refund_items[$item_id]['refund_qty'] );
+            $basket_item = new WirecardCEE_Stdlib_Basket_Item( $article_nr, $refund_items[$item_id]['refund_qty'] );
 
 
             $tax = wc_get_price_including_tax($wc_product) - wc_get_price_excluding_tax($wc_product);
@@ -231,7 +237,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                 ->setUnitNetAmount( wc_format_decimal( wc_get_price_excluding_tax( $wc_product ), wc_get_price_decimals() ) )
                 ->setUnitGrossAmount( wc_format_decimal( wc_get_price_including_tax( $wc_product ), wc_get_price_decimals() ) )
                 ->setUnitTaxAmount( wc_format_decimal( $tax, wc_get_price_decimals() ) )
-                ->setUnitTaxRate( $tax_rate );
+                ->setUnitTaxRate( $tax_rate * 100 );
 
             $basket->addItem( $basket_item );
         }
