@@ -31,7 +31,7 @@
  */
 
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.15' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.16' );
 
 /**
  * Config class
@@ -262,7 +262,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
      *
      * @param $payment_method
      *
-     * @since 1.0.15
+     * @since 1.0.16
      * @return bool
      */
 	public function force_consumer_data( $payment_method ) {
@@ -281,7 +281,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
      * @param $payment_method
      * @param $gateway
      *
-     * @since 1.0.15
+     * @since 1.0.16
      * @return bool
      */
     public function force_basket_data( $payment_method, $gateway ) {

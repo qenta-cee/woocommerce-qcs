@@ -197,7 +197,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
     /**
      * Create basket with items
      *
-     * @since 1.0.15
+     * @since 1.0.16
      *
      * @param $refund_items
      * @param $wc_order
@@ -247,7 +247,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
     /**
      * Create basket with items
      *
-     * @since 1.0.15
+     * @since 1.0.16
      *
      * @param $refund_items
      * @param $wc_order
