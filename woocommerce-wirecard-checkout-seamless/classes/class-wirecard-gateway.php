@@ -403,7 +403,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
 
-		return $backend_operations->refund();
+		return $backend_operations->refund( $order_id, $amount, $reason );
 	}
 
 	/**
@@ -419,6 +419,11 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$payment_type = $_POST['wcs_payment_method'];
+
+		$paymentClass = 'WC_Gateway_Wirecard_Checkout_Seamless_'. str_replace('-', '_', ucfirst(strtolower($payment_type)));
+		$paymentClass = new $paymentClass( $this->settings );
+		update_post_meta( $order_id, '_payment_method_title', $paymentClass->get_label());
+
 
 		$page_url = $order->get_checkout_payment_url(true);
 		$page_url = add_query_arg( 'key', $order->get_order_key(), $page_url );
@@ -560,7 +565,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 				$client->setConfirmMail( get_bloginfo( 'admin_email' ) );
 			}
 
-			if ( $this->get_option( 'woo_wcs_forwardbasketdata' ) ) {
+			if ( $this->get_option( 'woo_wcs_forwardbasketdata' )
+			|| ( $this->_config->force_basket_data( $checkout_data['wcs_payment_method'], $this ) ) ) {
 				$client->setBasket( $this->_config->get_shopping_basket() );
 			}
 

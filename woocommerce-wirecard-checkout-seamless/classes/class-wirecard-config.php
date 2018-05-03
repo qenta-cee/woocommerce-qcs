@@ -31,7 +31,7 @@
  */
 
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'WirecardCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.11' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '1.0.16' );
 
 /**
  * Config class
@@ -240,7 +240,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		$user_data = get_userdata( $order->get_user_id() );
 		$email = isset( $user_data->user_email ) ? $user_data->user_email : '';
 
-		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) ) {
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$billing_address = $this->get_address_data( $order, 'billing' );
 			$consumerData->addAddressInformation( $billing_address );
 
@@ -248,7 +248,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 				$email = $order->get_billing_email();
 			}
 		}
-		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) ) {
+		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$shipping_address = $this->get_address_data( $order, 'shipping' );
 			$consumerData->addAddressInformation( $shipping_address );
 		}
@@ -261,6 +261,50 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 
 		return $consumerData;
 	}
+
+    /**
+     * Force sending data for invoice and installment
+     *
+     * @param $payment_method
+     *
+     * @since 1.0.16
+     * @return bool
+     */
+	public function force_consumer_data( $payment_method ) {
+	    switch ( $payment_method ) {
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE:
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Force sending basket data for invoice and installment via ratepay
+     *
+     * @param $payment_method
+     * @param $gateway
+     *
+     * @since 1.0.16
+     * @return bool
+     */
+    public function force_basket_data( $payment_method, $gateway ) {
+	    switch ( $payment_method ) {
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE:
+                if ( 'payolution' != $gateway->get_option('woo_wcs_invoiceprovider') ) {
+                    return true;
+                }
+                return false;
+            case WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+                if ( 'payolution' != $gateway->get_option('woo_wcs_installmentprovider') ) {
+                    return true;
+                }
+                return false;
+            default:
+                return false;
+        }
+    }
 
 	/**
 	 * Generate address data (shipping or billing)
@@ -371,7 +415,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$item->setUnitGrossAmount( $item_unit_gross_amount )
 			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
 			     ->setUnitTaxAmount( wc_format_decimal( $item_unit_tax_amount, wc_get_price_decimals() ) )
-			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) )
+			     ->setUnitTaxRate( number_format( ( $item_unit_tax_amount / $item_unit_net_amount ), 2, '.', '' ) * 100 )
 			     ->setDescription( substr( strip_tags( $cart_item['data']->get_short_description() ), 0, 127 ) )
 			     ->setName( substr( strip_tags( $cart_item['data']->get_name() ), 0, 127 ) )
 			     ->setImageUrl( isset( $image_url ) ? $image_url : '' );
@@ -386,7 +430,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			                                              wc_get_price_decimals() ) )
 			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
 			     ->setUnitTaxAmount( wc_format_decimal( $cart->shipping_tax_total, wc_get_price_decimals() ) )
-			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) )
+			     ->setUnitTaxRate( number_format( ( $cart->shipping_tax_total / $cart->shipping_total ), 2, '.', '' ) * 100 )
 			     ->setName( 'Shipping' )
 			     ->setDescription( 'Shipping' );
 			$basket->addItem( $item );
