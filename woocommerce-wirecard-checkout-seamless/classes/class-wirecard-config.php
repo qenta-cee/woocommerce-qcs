@@ -238,21 +238,26 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] );
 
 		$user_data = get_userdata( $order->get_user_id() );
-		$consumerData->setEmail( isset( $user_data->user_email ) ? $user_data->user_email : '' );
+		$email = isset( $user_data->user_email ) ? $user_data->user_email : '';
 
 		if ( $gateway->get_option( 'woo_wcs_forwardconsumerbillingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$billing_address = $this->get_address_data( $order, 'billing' );
 			$consumerData->addAddressInformation( $billing_address );
+
+			if (!strlen($email)) {
+				$email = $order->get_billing_email();
+			}
 		}
 		if ( $gateway->get_option( 'woo_wcs_forwardconsumershippingdata' ) || $this->force_consumer_data( $checkout_data['wcs_payment_method'] ) ) {
 			$shipping_address = $this->get_address_data( $order, 'shipping' );
 			$consumerData->addAddressInformation( $shipping_address );
 		}
-        if ($checkout_data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE ||
+		if ($checkout_data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE ||
             $checkout_data['wcs_payment_method'] == WirecardCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT) {
-            $birth_date = new DateTime( $checkout_data['dob_year'] . '-' . $checkout_data['dob_month'] . '-' . $checkout_data['dob_day'] );
-            $consumerData->setBirthDate($birth_date);
-        }
+			$birth_date = new DateTime( $checkout_data['dob_year'] . '-' . $checkout_data['dob_month'] . '-' . $checkout_data['dob_day'] );
+			$consumerData->setBirthDate($birth_date);
+		}
+		$consumerData->setEmail( $email );
 
 		return $consumerData;
 	}
