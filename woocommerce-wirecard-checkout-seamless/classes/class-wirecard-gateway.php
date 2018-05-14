@@ -485,7 +485,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Wirecard_Checkout_Seamless',
-			                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
+			                             home_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 			$consumer_data = $this->_config->get_consumer_data( $order, $this, $checkout_data );
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
@@ -643,7 +643,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 			                             'order-id'     => $order->get_id(),
 			                             'paymentState' => $payment_state
 		                             ),
-		                             site_url( '/', is_ssl() ? 'https' : 'http' ) );
+		                             home_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 		return $return_url;
 	}
@@ -849,7 +849,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
         		'wc-api' => 'WC_Gateway_Wirecard_Checkout_Seamless_Return',
         		'order-id' => isset( $_REQUEST['order-id'] ) ? $_REQUEST['order-id'] : '',
         		'paymentState' => isset( $_REQUEST['paymentState'] ) ? $_REQUEST['paymentState'] : 'FAILURE'
-        		), site_url( '/', is_ssl() ? 'https' : 'http' ) );
+        		), home_url( '/', is_ssl() ? 'https' : 'http' ) );
         		wc_get_template(
         			'templates/back.php',
         			array(
