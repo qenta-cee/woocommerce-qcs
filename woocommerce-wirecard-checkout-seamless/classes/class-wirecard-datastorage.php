@@ -105,7 +105,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Data_Storage {
 		$data_storage_return_url = add_query_arg(
 			'wc-api',
 			'wc_gateway_wcs_datastorage_return',
-			site_url( '/', is_ssl() ? 'https' : 'http' ) );
+			home_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 		$data_storage_init->setReturnUrl( $data_storage_return_url );
 		$data_storage_init->setOrderIdent( $order_ident );

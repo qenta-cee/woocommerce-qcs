@@ -3,7 +3,7 @@
  * Plugin Name: Wirecard Checkout Seamless
  * Plugin URI: https://github.com/wirecard/woocommerce-wcs
  * Description: Wirecard Checkout Seamless plugin for WooCommerce
- * Version: 1.0.16
+ * Version: 1.0.18
  * Author: Wirecard
  * Author URI: https://www.wirecard.at/
  * License: GPL2
