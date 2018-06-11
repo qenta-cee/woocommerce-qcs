@@ -121,7 +121,8 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 					year_field = document.getElementById("' . $payment_type . '-" + issexp + "-year");
 					if( value.indexOf("/") > -1 ){
 						month_field.value = value.split( "/" )[0].trim();
-						year_field.value = value.split("/")[1].trim();
+						year = value.split("/")[1].trim();
+						year_field.value = year.toString().length <= 2 ? 2000 + parseInt(year) : year;
 					}
 				}
 			</script>';
@@ -148,8 +149,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 					type="text" 
 					autocomplete="off" 
 					placeholder="MM / YYYY"
-					onchange="parse' . $payment_type . 'date(this.value,\'exp\')"
-					onkeyup="parse' . $payment_type . 'date(this.value,\'exp\')"/>
+					onchange="parse' . $payment_type . 'date(this.value,\'exp\')"/>
 				<input type="hidden" id="' . $payment_type . '-exp-month" name="' . $payment_type . 'expirationMonth">
 				<input type="hidden" id="' . $payment_type . '-exp-year" name="' . $payment_type . 'expirationYear">
 			</p>';
@@ -179,8 +179,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Ccard {
 							type="text" 
 							autocomplete="off" 
 							placeholder="MM / YYYY" 
-							onchange="parse' . $payment_type . 'date(this.value,\'issue\')"
-							onkeyup="parse' . $payment_type . 'date(this.value,\'issue\')"/>
+							onchange="parse' . $payment_type . 'date(this.value,\'issue\')"/>
 						<input type="hidden" id="' . $payment_type . '-issue-month" name="' . $payment_type . 'issueMonth">
 						<input type="hidden" id="' . $payment_type . '-issue-year" name="' . $payment_type . 'issueYear">
 					</p>';
