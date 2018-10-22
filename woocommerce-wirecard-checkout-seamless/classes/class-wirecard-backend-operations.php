@@ -113,7 +113,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		}
 
 		$wc_order         = wc_get_order( $order_id ); // woocommerce order
-		$wc_order_items   = $wc_order->get_items();
 		$wcs_order_number = $wc_order->get_meta( 'wcs_order_number' );
 		$order_details    = $this->get_order_details( $wcs_order_number );
 
@@ -131,19 +130,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 
 		$basket = null;
 
-		if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
-			if (
-				(
-					$tx_data->payment_method == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE
-					&& $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
-				)
-				or
-				(
-					$tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
-					&& $this->_settings['woo_wcs_installmentprovider'] != 'payolution'
-				)
-			) {
-				if ( $total_items == 0 ) {
+        if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
+            if (
+                (
+                    $tx_data->payment_method == WirecardCEE_Stdlib_PaymentTypeAbstract::INVOICE
+                    && $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
+                )
+                or
+                (
+                    $tx_data->payment_method == WirecardCEE_QMore_PaymentType::INSTALLMENT
+                    && $this->_settings['woo_wcs_installmentprovider'] != 'payolution'
+                )
+            ) {
+                if ( $total_items == 0 ) {
                     $basket = $this->create_basket_without_items( $refund_amount, $wc_order );
                     $order_data = $wc_order->get_data();
                     $response_with_basket = $this->get_client()->refund( $wcs_order_number, $order_data['total'], $order->getCurrency(), $basket );
@@ -154,30 +153,32 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                     } else {
                         return true;
                     }
-				}
-				$basket = $this->create_basket( $refund_items, $wc_order);
-				$response_with_basket = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency(), $basket );
-				if ( $response_with_basket->hasFailed() ) {
-				    $this->logResponseErrors( __METHOD__, $response_with_basket->getErrors() );
+                }
 
-				    return false;
-				} else {
-				    return true;
-				}
+                $basket = $this->create_basket( $refund_items, $wc_order);
 
-			} else {
+                $response_with_basket = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency(), $basket );
+                if ( $response_with_basket->hasFailed() ) {
+                    $this->logResponseErrors( __METHOD__, $response_with_basket->getErrors() );
 
-				$response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
-				if ( $response->hasFailed() ) {
-					$this->logResponseErrors( __METHOD__, $response->getErrors() );
+                    return false;
+                } else {
+                    return true;
+                }
 
-					return false;
-				} else {
-					return true;
-				}
-			}
+            } else {
 
-		} else {
+                $response = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency() );
+                if ( $response->hasFailed() ) {
+                    $this->logResponseErrors( __METHOD__, $response->getErrors() );
+
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+        } else {
 			// the following have allowed transferFund command
 			$allowed_payment_methods = array(
 				WirecardCEE_QMore_PaymentType::IDL,
@@ -206,11 +207,33 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 	public function create_basket( $refund_items, $wc_order ) {
         $wc_order_items   = $wc_order->get_items();
         $basket = new WirecardCEE_Stdlib_Basket();
-        $sum = 0;
+
         foreach ( $wc_order_items as $item_id => $item ) {
-            if ( $refund_items[$item_id]['refund_qty'] < 1 ) {
+            $refund_item_quantity = $refund_items[$item_id]['refund_qty'];
+            if ( $refund_item_quantity < 1 ) {
                 continue;
             }
+            $order_item_data = $item->get_data();
+            $order_item_total = isset($order_item_data['total']) ? $order_item_data['total'] : 0;
+            $order_item_total_tax = isset($order_item_data['total_tax']) ? $order_item_data['total_tax'] : 0;
+            $order_item_total_quantity = isset($order_item_data['quantity']) ? $order_item_data['quantity'] : 0;
+
+            if ($order_item_total > 0 && $order_item_total_quantity > 0) {
+                $single_item_net = $order_item_total / $order_item_total_quantity;
+                $single_item_gross = $single_item_net;
+                $single_item_tax = 0;
+                $single_item_tax_rate = 0;
+                if ($order_item_total_tax > 0) {
+                    $single_item_net = $order_item_total / $order_item_total_quantity;
+                    $single_item_gross = ($order_item_total + $order_item_total_tax) / $order_item_total_quantity;
+                    $single_item_tax = $order_item_total_tax / $order_item_total_quantity;
+                    $single_item_tax_rate = ($single_item_tax / $single_item_net) * 100;
+                }
+            } else {
+                $this->_logger->error( __('Basket data invalid') );
+                return false;
+            }
+
             $wc_product  = new WC_Product( $wc_order_items[ $item_id ]->get_product_id() );
 
             $article_nr = $wc_product->get_id();
@@ -218,28 +241,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                 $article_nr = $wc_product->get_sku();
             }
 
-            $sum += number_format( wc_get_price_including_tax( $wc_product ), wc_get_price_decimals() );
-            $basket_item = new WirecardCEE_Stdlib_Basket_Item( $article_nr, $refund_items[$item_id]['refund_qty'] );
-
-
-            $tax = wc_get_price_including_tax($wc_product) - wc_get_price_excluding_tax($wc_product);
-            $item_tax_rate          = $tax / wc_get_price_excluding_tax( $wc_product );
+            $basket_item = new WirecardCEE_Stdlib_Basket_Item( $article_nr );
 
             $description = $wc_product->get_short_description();
-            $tax_rate = 0;
-            if ( $wc_product->is_taxable() ) {
-                $tax_rate = floatval(number_format( $item_tax_rate, 3 ));
-            }
 
             $basket_item->setName( $wc_product->get_name() )
                 ->setDescription( $description )
                 ->setImageUrl( wp_get_attachment_image_url( $wc_product->get_image_id() ) )
-                ->setUnitNetAmount( wc_format_decimal( wc_get_price_excluding_tax( $wc_product ), wc_get_price_decimals() ) )
-                ->setUnitGrossAmount( wc_format_decimal( wc_get_price_including_tax( $wc_product ), wc_get_price_decimals() ) )
-                ->setUnitTaxAmount( wc_format_decimal( $tax, wc_get_price_decimals() ) )
-                ->setUnitTaxRate( $tax_rate * 100 );
+                ->setUnitNetAmount( wc_format_decimal( $single_item_net, wc_get_price_decimals() ) )
+                ->setUnitGrossAmount( wc_format_decimal( $single_item_gross, wc_get_price_decimals() ) )
+                ->setUnitTaxAmount( wc_format_decimal( $single_item_tax, wc_get_price_decimals() ) )
+                ->setUnitTaxRate( $single_item_tax_rate );
 
-            $basket->addItem( $basket_item );
+            $basket->addItem( $basket_item, $refund_item_quantity );
         }
         return $basket;
     }
