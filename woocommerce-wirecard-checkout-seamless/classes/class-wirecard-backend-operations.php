@@ -111,7 +111,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 				);
 			}
 		}
-
 		$wc_order         = wc_get_order( $order_id ); // woocommerce order
 		$wcs_order_number = $wc_order->get_meta( 'wcs_order_number' );
 		$order_details    = $this->get_order_details( $wcs_order_number );
@@ -157,7 +156,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                 }
 
                 $basket = $this->create_basket( $refund_items, $wc_order, $tx_original);
-
                 $response_with_basket = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency(), $basket );
                 if ( $response_with_basket->hasFailed() ) {
                     $this->logResponseErrors( __METHOD__, $response_with_basket->getErrors() );
@@ -203,6 +201,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
      *
      * @param $refund_items
      * @param $wc_order
+     * @param $tx_original
      * @return WirecardCEE_Stdlib_Basket
      */
 	public function create_basket( $refund_items, $wc_order, $tx_original ) {
@@ -226,15 +225,19 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                 'imageUrl' => $tx_original[$prefix.'imageUrl']
             );
         }
+
         foreach ( $wc_order_items as $item_id => $item ) {
             $refund_item_quantity = $refund_items[$item_id]['refund_qty'];
             if ( $refund_item_quantity < 1 ) {
                 continue;
             }
-            $order_item_data = $item->get_data();
-            if (key_exists($order_item_data['product_id'], $original_basket)) {
-                $refund_item = $original_basket[$order_item_data['product_id']];
-                $basket_item = new WirecardCEE_Stdlib_Basket_Item( $order_item_data['product_id'] );
+            $product = $item->get_product();
+            $product_data = $product->get_data();
+
+
+            if (key_exists($product_data['sku'], $original_basket)) {
+                $refund_item = $original_basket[$product_data['sku']];
+                $basket_item = new WirecardCEE_Stdlib_Basket_Item( $product_data['sku'] );
 
                 $basket_item->setName( $refund_item['name'] )
                     ->setDescription( $refund_item['description'] )

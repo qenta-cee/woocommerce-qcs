@@ -567,7 +567,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			if ( $this->get_option( 'woo_wcs_forwardbasketdata' )
 			|| ( $this->_config->force_basket_data( $checkout_data['wcs_payment_method'], $this ) ) ) {
-				$client->setBasket( $this->_config->get_shopping_basket() );
+				$client->setBasket( $this->_config->get_shopping_basket($order->get_total()) );
 			}
 
 			$client->wooOrderId    = $order->get_id();

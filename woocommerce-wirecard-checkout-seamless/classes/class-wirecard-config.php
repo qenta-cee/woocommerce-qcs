@@ -383,7 +383,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_Basket
 	 */
-	public function get_shopping_basket() {
+	public function get_shopping_basket($orderAmount = 0) {
 		global $woocommerce;
 
 		$cart = $woocommerce->cart;
@@ -409,8 +409,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			// Calculate amounts per unit
 			$item_unit_net_amount   = $item_net_amount / $item_quantity;
 			$item_unit_tax_amount   = $item_tax_amount / $item_quantity;
-			$item_unit_gross_amount = wc_format_decimal( $item_unit_net_amount + $item_unit_tax_amount,
-			                                             wc_get_price_decimals() );
+			$item_unit_gross_amount = wc_format_decimal($item_unit_net_amount + $item_unit_tax_amount, wc_get_price_decimals());
 
 			$item->setUnitGrossAmount( $item_unit_gross_amount )
 			     ->setUnitNetAmount( wc_format_decimal( $item_unit_net_amount, wc_get_price_decimals() ) )
@@ -436,6 +435,44 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 			$basket->addItem( $item );
 		}
 
+		if ($orderAmount > 0) {
+            $rounding_difference = $this->get_rounding_difference($basket, $orderAmount);
+            if ($rounding_difference != 0) {
+                $item = new WirecardCEE_Stdlib_Basket_Item( 'rounding' );
+                $item->setUnitGrossAmount( wc_format_decimal($rounding_difference, wc_get_price_decimals()) )
+                    ->setUnitNetAmount( wc_format_decimal($rounding_difference, wc_get_price_decimals()) )
+                    ->setUnitTaxAmount( 0 )
+                    ->setUnitTaxRate( 0 )
+                    ->setName( 'Rounding' )
+                    ->setDescription( 'Rounding' );
+                $basket->addItem( $item );
+            }
+        }
+
 		return $basket;
 	}
+
+    /**
+     * Calculate rounding differences
+     * @param WirecardCEE_Stdlib_Basket $basket
+     * @param float $total_amount
+     * @return float
+     */
+	public function get_rounding_difference(WirecardCEE_Stdlib_Basket $basket, $total_amount) {
+        $basket_data = $basket->getData();
+        $basket_items = $basket_data['basketItems'];
+        $total_amount_rounded = 0;
+        $amount_difference = 0;
+
+        for ( $count = 1; $count <= $basket_items; $count++ ) {
+            $prefix_key = 'basketItem'.$count;
+            $total_amount_rounded += $basket_data[$prefix_key . 'unitGrossAmount'] * $basket_data[$prefix_key . 'quantity'];
+        }
+
+        if ($total_amount > $total_amount_rounded || $total_amount_rounded > $total_amount) {
+            $amount_difference = $total_amount - $total_amount_rounded;
+        }
+
+        return $amount_difference;
+    }
 }
