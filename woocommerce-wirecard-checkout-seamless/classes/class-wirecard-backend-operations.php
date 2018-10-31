@@ -205,24 +205,24 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
      * @return WirecardCEE_Stdlib_Basket
      */
 	public function create_basket( $refund_items, $wc_order, $tx_original ) {
-        $wc_order_items   = $wc_order->get_items();
-        $basket = new WirecardCEE_Stdlib_Basket();
+        $wc_order_items = $wc_order->get_items();
+        $basket         = new WirecardCEE_Stdlib_Basket();
 
         $basket_items = 0;
-        if (isset($tx_original['basketItems'])) {
+        if ( isset( $tx_original['basketItems'] ) ) {
             $basket_items = $tx_original['basketItems'];
         }
         $original_basket = array();
         for ( $count = 1; $count <= $basket_items; $count++ ) {
             $prefix = 'basketItem'.$count;
-            $original_basket[$tx_original[$prefix.'articleNumber']] = array(
-                'gross' => $tx_original[$prefix.'unitGrossAmount'],
-                'net' => $tx_original[$prefix.'unitNetAmount'],
-                'tax' => $tx_original[$prefix.'unitTaxAmount'],
-                'tax_rate' => $tx_original[$prefix.'unitTaxRate'],
-                'description' => $tx_original[$prefix.'description'],
-                'name' => $tx_original[$prefix.'name'],
-                'imageUrl' => $tx_original[$prefix.'imageUrl']
+            $original_basket[$tx_original[$prefix . 'articleNumber']] = array(
+                'gross'         => $tx_original[$prefix . 'unitGrossAmount'],
+                'net'           => $tx_original[$prefix . 'unitNetAmount'],
+                'tax'           => $tx_original[$prefix . 'unitTaxAmount'],
+                'tax_rate'      => $tx_original[$prefix . 'unitTaxRate'],
+                'description'   => $tx_original[$prefix . 'description'],
+                'name'          => $tx_original[$prefix . 'name'],
+                'imageUrl'      => $tx_original[$prefix . 'imageUrl']
             );
         }
 
@@ -235,7 +235,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
             $product_data = $product->get_data();
 
 
-            if (key_exists($product_data['sku'], $original_basket)) {
+            if ( key_exists( $product_data['sku'], $original_basket ) ) {
                 $refund_item = $original_basket[$product_data['sku']];
                 $basket_item = new WirecardCEE_Stdlib_Basket_Item( $product_data['sku'] );
 
