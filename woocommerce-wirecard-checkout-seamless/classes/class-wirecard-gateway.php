@@ -397,10 +397,13 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @param  float $amount
 	 * @param  string $reason
 	 *
-	 * @return bool True or false based on success, or a WP_Error object
+	 * @return bool|WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
+        if( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
+	       return new WP_Error( 'refund_error', 'No password for backend operations (Toolkit) provided. Please visit your settings!' );
+	    }
 		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
 
 		return $backend_operations->refund( $order_id, $amount, $reason );
@@ -996,12 +999,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function wirecard_transaction_do_page() {
 
-		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
-
 		echo "<div class='wrap'>";
 
 		$this->_admin->include_backend_header( $this );
 
+	    if( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
+	        $this->wirecard_transactions_error_page( 'No password for backend operations (Toolkit) provided. Please visit your settings!' );
+	        return false;
+	    }
+		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
@@ -1071,6 +1077,15 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 		$transaction_start = ! isset( $_GET['transaction_start'] ) ? 1 : $_GET['transaction_start'];
 		$this->_admin->print_transaction_table( $this->_transaction, $transaction_start );
 		unset( $_GET['transaction_start'] );
+		echo "</div>";
+	}
+
+	/**
+	 * Handles transaction error overview
+	 */
+	public function wirecard_transactions_error_page( $error_msg ) {
+		echo "<div class='wrap woocommerce'>";
+		echo htmlentities( $error_msg );
 		echo "</div>";
 	}
 
