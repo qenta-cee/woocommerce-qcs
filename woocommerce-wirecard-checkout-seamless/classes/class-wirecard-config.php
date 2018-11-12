@@ -383,7 +383,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 	 * @since 1.0.0
 	 * @return WirecardCEE_Stdlib_Basket
 	 */
-	public function get_shopping_basket($order_amount = 0) {
+	public function get_shopping_basket( $order_amount = 0 ) {
 		global $woocommerce;
 
 		$cart = $woocommerce->cart;
@@ -436,7 +436,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
 		}
 
 		if ( $order_amount > 0 ) {
-            $rounding_difference = $this->get_rounding_difference($basket, $order_amount);
+            $rounding_difference = $this->get_rounding_difference( $basket, $order_amount );
             if ( $rounding_difference != 0 ) {
                 $item = new WirecardCEE_Stdlib_Basket_Item( 'rounding' );
                 $item->setUnitGrossAmount( wc_format_decimal( $rounding_difference, wc_get_price_decimals() ) )
@@ -458,7 +458,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
      * @param float $total_amount
      * @return float
      */
-	public function get_rounding_difference(WirecardCEE_Stdlib_Basket $basket, $total_amount) {
+	public function get_rounding_difference( WirecardCEE_Stdlib_Basket $basket, $total_amount ) {
         $total_amount_rounded = 0;
         $amount_difference    = 0;
         $basket_data          = $basket->getData();

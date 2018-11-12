@@ -126,7 +126,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
 		// get transaction informations
 		$tx_query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wirecard_checkout_seamless_tx WHERE id_order = %d", $order_id );
 		$tx_data  = $wpdb->get_row( $tx_query );
-		$tx_original = unserialize($tx_data->request);
+		$tx_original = unserialize( $tx_data->request );
 
 		$basket = null;
 
@@ -155,7 +155,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations {
                     }
                 }
 
-                $basket = $this->create_basket( $refund_items, $wc_order, $tx_original);
+                $basket = $this->create_basket( $refund_items, $wc_order, $tx_original );
                 $response_with_basket = $this->get_client()->refund( $wcs_order_number, $refund_amount, $order->getCurrency(), $basket );
                 if ( $response_with_basket->hasFailed() ) {
                     $this->logResponseErrors( __METHOD__, $response_with_basket->getErrors() );

@@ -401,7 +401,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
-        if( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
+        if ( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
 	       return new WP_Error( 'refund_error', 'No password for backend operations (Toolkit) provided. Please visit your settings!' );
 	    }
 		$backend_operations = new WC_Gateway_Wirecard_Checkout_Seamless_Backend_Operations( $this->settings );
@@ -570,7 +570,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 			if ( $this->get_option( 'woo_wcs_forwardbasketdata' )
 			|| ( $this->_config->force_basket_data( $checkout_data['wcs_payment_method'], $this ) ) ) {
-				$client->setBasket( $this->_config->get_shopping_basket($order->get_total()) );
+				$client->setBasket( $this->_config->get_shopping_basket( $order->get_total() ) );
 			}
 
 			$client->wooOrderId    = $order->get_id();
@@ -1003,7 +1003,7 @@ class WC_Gateway_Wirecard_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$this->_admin->include_backend_header( $this );
 
-	    if( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
+	    if ( empty( $this->settings['woo_wcs_backendpassword'] ) ) {
 	        $this->wirecard_transactions_error_page( 'No password for backend operations (Toolkit) provided. Please visit your settings!' );
 	        return false;
 	    }
