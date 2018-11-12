@@ -473,6 +473,6 @@ class WC_Gateway_Wirecard_Checkout_Seamless_Config {
             $amount_difference = $total_amount - $total_amount_rounded;
         }
 
-        return $amount_difference;
+        return wc_format_decimal( $amount_difference, wc_get_price_decimals() );
     }
 }
