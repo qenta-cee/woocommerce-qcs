@@ -30,6 +30,11 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+// Compatibility for newer wordpress versions where the includes are different
+if ( ! function_exists( 'get_editable_roles' ) ) {
+    require_once( ABSPATH . '/wp-admin/includes/user.php' );
+}
+
 $user_roles = array();
 foreach ( get_editable_roles() as $role => $details ) {
 	$user_roles[ $role ] = translate_user_role( $details['name'] );
