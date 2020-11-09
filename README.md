@@ -6,12 +6,6 @@
 [![PHP v7.4](https://img.shields.io/badge/php-v7.4-yellow.svg)](http://www.php.net)
 
 ----
-**IMPORTANT INFORMATION**  
-You are visiting a shop extension which will become obsolete in the near future. It has been replaced by a new one with new features and enhanced functionality.   
-Please use our new shop extension available on [woocommerce.wirecard.com](https://woocommerce.wirecard.com), which will be maintained, updated and supported on a regular basis.  
-If you have any questions, please contact shop-systems-support@wirecard.com
-
-----
 
 Wirecard Checkout Seamless plugin for WooCommerce.
 
