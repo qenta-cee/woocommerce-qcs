@@ -1,20 +1,16 @@
-# Qenta Checkout Seamless plugin for WooCommerce
+=== Qenta Checkout Seamless ===
+Contributors:
+Tags: ecommerce, e-commerce, sales, checkout, paypal, credit card, woocommerce, payment, gateway
+Requires at least: 4.4
+Tested up to: 4.8.1
+Stable tag: 1.0.19
+License: GPLv2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-[![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/qenta-cee/woocommerce-qcs/master/LICENSE)
-[![WooCommerce](https://img.shields.io/badge/WooCommerce-v4.6-green.svg)](https://woocommerce.com/)
-[![WordPress](https://img.shields.io/badge/WordPress-v5.5-green.svg)](https://wordpress.org/)
-[![PHP v7.4](https://img.shields.io/badge/php-v7.4-green.svg)](http://www.php.net)
+Qenta Checkout Seamless payment gateway for WooCommerce.
 
-----
+== Description ==
 
-Qenta Checkout Seamless plugin for WooCommerce.
-
-Our [Online Guides](https://guides.wirecard.com/) provide further information on payment methods and additional features. Please observe our [terms of use](https://guides.wirecard.com/shop_plugins:info#terms_of_use) regarding plugins.
-
-## Installation
-Our [Online Guides](https://guides.wirecard.com/shop_plugins:wcs:woocommerce:start "Installation details") also provide technical documentation, installation and configuration instructions for the plugin.
-
-## Qenta Checkout Seamless
 Qenta Checkout Seamless is designed to meet the ambitious demands of merchants offering a wide range of payment methods while at the same time fulfilling PCI DSS compliance. The interface is integrated seamlessly into the online shop and allows a customized configuration of the payment process (cross-selling and up-selling) based on your business.
 
 Qenta Checkout Seamless offers:
@@ -28,3 +24,16 @@ Qenta Checkout Seamless offers:
 - PCI DSS 3 SAQ A or SAQ A-EP compliant.
 - Easy to add new payment methods, additional features, languages and currencies, etc.
 - Web interface for managing payments (approvals, cancelations, credits, etc.).
+
+== Installation ==
+
+= Minimum Requirements =
+
+* PHP version 5.6 or greater is recommended
+* MySQL version 5.6 or greater is recommended
+* WordPress 4.4+
+* WooCommerce 3.0+
+
+1. Upload the plugin files to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
+2. Execute `composer install` in the plugin directory. This should create a directory named vendor.
+3. Activate the plugin through the 'Plugins' screen in WordPress.
