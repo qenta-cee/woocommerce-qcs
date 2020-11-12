@@ -103,7 +103,7 @@ jQuery(function ($) {
             return false;
         },
         data: {},
-        data_storage: new QentaCEE_DataStorage(),
+        data_storage: new WirecardCEE_DataStorage(),
         prepare_data: function (serializedArray) {
             for (var i = 0; i < serializedArray.length; i++) {
                 this.data[serializedArray[i].name] = serializedArray[i].value

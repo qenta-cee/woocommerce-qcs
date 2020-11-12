@@ -224,9 +224,9 @@ function init_config_values() {
 function add_qenta_storage_check() {
     ?>
     <script type="text/javascript">
-        if ( 'undefined' != typeof QentaCEE_DataStorage ) {
-            const originalMethod = QentaCEE_DataStorage.prototype.storePaymentInformation;
-            QentaCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
+        if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
+            const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
+            WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
                 if ( 'undefined' != typeof this.iframes && this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
                     this.iframes.CCARD = $('iframe')[0];
                 }
