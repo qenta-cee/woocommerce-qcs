@@ -1,0 +1,812 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: QentaCheckoutSeamless 2.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/qenta-cee/woocommerce-qcs/issues\n"
+"POT-Creation-Date: 2017-05-05 10:52+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: class-qenta-gateway.php:374
+msgid "Service URL is invalid"
+msgstr "Service URL ist invalid"
+
+#: class-qenta-gateway.php:583
+msgid "Awaiting payment notification from 3rd party."
+msgstr "Warte auf die Zahlungsbestätigung des Finanzinstituts."
+
+#: class-qenta-gateway.php:596
+msgid "Payment cancelled."
+msgstr "Die Zahlung wurde abgebrochen."
+
+#: class-qenta-gateway.php:676
+msgid "Order-Id missing"
+msgstr "Order-Id fehlt"
+
+#: class-qenta-gateway.php:691
+msgid "Payment has been cancelled."
+msgstr "Die Zahlung wurde abgebrochen."
+
+#: class-qenta-gateway.php:696
+msgid "Payment has failed."
+msgstr "Die Zahlung ist fehlgeschlagen."
+
+#: class-qenta-gateway.php:717
+msgid "Payment verification is pending"
+msgstr "Die Zahlungsbestätigung ist ausständig"
+
+#: class-qenta-gateway.php:719
+msgid "Your order will be processed as soon as we receive the payment confirmation from your bank."
+msgstr "Ihre Bestellung wir verarbeitet, sobald wir die Bestätigung Ihres Finanzinstitutes erhalten haben."
+
+#: woocommerce-qenta-checkout-seamless.php:149
+msgid "Qenta Support Request"
+msgstr "Qenta Support Anfrage"
+
+#: form_fields.php:45
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#: form_fields.php:48
+msgid "For integration, select predefined configuration settings or 'Production' for live systems "
+msgstr "Zum Testen der Integration eine vordefinierte Konfiguration auswählen. Für Produktivsysteme \"Production\" auswählen."
+
+#: form_fields.php:52
+msgid "Production"
+msgstr "Produktion"
+
+#: form_fields.php:53
+msgid "Demo"
+msgstr "Demo"
+
+#: form_fields.php:54
+msgid "Test"
+msgstr "Test"
+
+#: form_fields.php:55
+msgid "Test 3D"
+msgstr "Test 3D"
+
+#: form_fields.php:59
+msgid "Customer ID"
+msgstr "Customer ID"
+
+#: form_fields.php:62
+msgid "Customer number you received from Qenta (customerId, i.e. D2#####)."
+msgstr "Ihre Qenta-Kundennummer (customerId, im Format D2#####). <a target=\"_blank\" href=\"https://guides.wirecard.com/request_parameters#customerid\">Weitere Informationen</a>"
+
+#: form_fields.php:67
+msgid "Shop ID"
+msgstr "Shop ID"
+
+#: form_fields.php:70
+msgid "Shop identifier in case of more than one shop."
+msgstr "Shop-Kennung bei mehreren Onlineshops. <a target=\"_blank\" href=\"https://guides.wirecard.com/request_parameters#shopid\">Weitere Informationen</a>"
+
+#: form_fields.php:74
+msgid "Secret"
+msgstr "Secret"
+
+#: form_fields.php:77
+msgid "String which you received from Qenta for signing and validating data to prove their authenticity."
+msgstr "Geheime Zeichenfolge, die Sie von Qenta erhalten haben, zum Signieren und Validieren von Daten zur Prüfung der Authentizität. <a target=\"_blank\" href=\"https://guides.wirecard.com/security:start#secret_and_fingerprint\">Weitere Informationen</a>"
+
+#: form_fields.php:82
+msgid "URL to contact page"
+msgstr "URL zur Kontakt-Seite"
+
+#: form_fields.php:85
+msgid "URL to web page containing your contact information (imprint)."
+msgstr "URL der Kontakt-Seite (Impressum) des Onlineshops."
+
+#: form_fields.php:90
+msgid "Back-end password"
+msgstr "Back-end-Passwort"
+
+#: form_fields.php:93
+msgid "Password for back-end operations (Toolkit)."
+msgstr "Passwort für Back-end-Operationen (Toolkit). <a target=\"_blank\" href=\"https://guides.wirecard.com/doku.php/back-end_operations:technical_wcs:start#required_request_parameters_for_all_operations\">Weitere Informationen</a>"
+
+#: form_fields.php:100
+msgid "Create orders"
+msgstr "Bestellung anlegen"
+
+#: form_fields.php:102
+msgid "Selecting 'Always', orders are created even if the payment process leads to failed payment.<br>Selecting 'Only for successful payments', orders are created if the payment process was successful. "
+msgstr "Falls 'Immer' gesetzt ist, werden Bestellungen auch bei fehlgeschlagener Zahlung angelegt.<br>Falls 'Nur für erfolgreiche Zahlungen' gesetzt ist, werden Bestellungen nur für erfolgreiche und ausstehende Zahlungen angelegt."
+
+#: form_fields.php:107
+msgid "Always"
+msgstr "Immer"
+
+#: form_fields.php:109
+msgid "Only for successful payments"
+msgstr "Nur für erfolgreiche Zahlungen"
+
+#: form_fields.php:114
+msgid "Transaction ID"
+msgstr "Transaction ID"
+
+#: class-qenta-admin.php:298
+msgid "Qenta order number"
+msgstr "Qenta Bestellnummer"
+
+#: class-qenta-admin.php:294
+msgid "Gateway reference number"
+msgstr "Gateway Referenznummer"
+
+#: form_fields.php:125
+msgid "Qenta order number: Unique number defined by Qenta identifying the payment.<br>Gateway reference number: Reference number defined by the processor or acquirer. "
+msgstr "Qenta Auftragsnummer: Eindeutige, von Qenta definierte Nummer zur Identifikation der Zahlung.<br>Gateway Referenznummer: Vom Prozessor oder Acquirer definierte Referenznummer."
+
+#: form_fields.php:130
+msgid "Shop reference in posting text"
+msgstr "Shop-Referenz im Buchungstext"
+
+#: form_fields.php:132
+msgid "Reference to your online shop on your consumer's bank statement, limited to 9 characters."
+msgstr "Referenz zu Ihrem Onlineshop im Bankauszug für Ihren Kunden, max. 9 Zeichen."
+
+#: form_fields.php:138
+msgid "Forward consumer shipping data"
+msgstr "Versanddaten des Konsumenten mitsenden"
+
+#: form_fields.php:140
+msgid "Forwarding shipping data about your consumer to the respective financial service provider."
+msgstr "Weiterleitung der Versanddaten des Kunden an den Finanzdienstleister."
+
+#: form_fields.php:146
+msgid "Forward consumer billing data"
+msgstr "Verrechnungsdaten des Konsumenten mitsenden"
+
+#: form_fields.php:148
+msgid "Forwarding billing data about your consumer to the respective financial service provider."
+msgstr "Weiterleitung der Rechnungsdaten des Kunden an den Finanzdienstleister."
+
+#: form_fields.php:154
+msgid "Forward basket data"
+msgstr "Warenkorbdaten des Konsumenten mitsenden"
+
+#: form_fields.php:156
+msgid "Forwarding basket data to the respective financial service provider. "
+msgstr "Weiterleitung des Warenkorbs des Kunden an den Finanzdienstleister."
+
+#: form_fields.php:162
+msgid "Notification e-mail"
+msgstr "Benachrichtigungsemail"
+
+#: form_fields.php:164
+msgid "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Qenta and your online shop.<br>Please contact our sales teams to activate this feature."
+msgstr "Benachrichtigung per E-Mail über Zahlungen Ihrer Kunden, falls ein Kommunikationsproblem zwischen Qenta und Ihrem Onlineshop aufgetreten ist.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">Weitere Informationen</a>"
+
+#: form_fields.php:170
+msgid "Automated deposit"
+msgstr "Automatisches Abbuchen"
+
+#: form_fields.php:172
+msgid "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature."
+msgstr "Automatisches Abbuchen der Zahlungen.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">Weitere Informationen</a>"
+
+#: form_fields.php:178
+msgid "payolution terms"
+msgstr "Payolution Nutzungsbedingungen"
+
+#: form_fields.php:180
+msgid "Consumer must accept payolution terms during the checkout process."
+msgstr "Kunden müssen die Nutzungsbedingungen von payolution während des Bezahlprozesses akzeptieren. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:invoice:payolution\">Weitere Informationen</a>"
+
+#: form_fields.php:186
+msgid "payolution mID"
+msgstr "payolution mID"
+
+#: form_fields.php:187
+msgid "Your payolution merchant ID, non-base64-encoded."
+msgstr "payolution-Händler-ID, Nicht base64 kodiert."
+
+#: form_fields.php:194
+msgid "Display BIC field"
+msgstr "BIC Feld anzeigen"
+
+#: form_fields.php:195
+msgid "Display input field to enter the BIC. Note that this field is not mandatory for your consumer even if it is enabled."
+msgstr "Anzeigen des Feldes für BIC. Beachten Sie dass dieses Feld verpflichtend sein kann, auch wenn es deaktiviert ist."
+
+#: form_fields.php:202
+msgid "SAQ A compliance"
+msgstr "SAQ A konform"
+
+#: form_fields.php:203
+msgid "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Qenta Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable."
+msgstr "Falls 'Nein' gesetzt ist, gilt der strengere SAQ A-EP. Falls 'Ja' gesetzt ist, wird in Qenta Checkout Seamless das 'PCI DSS SAQ A Compliance'-Feature verwendet und es gilt der SAQ A. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start\">Weitere Informationen</a>"
+
+#: form_fields.php:208
+msgid "Allowing MoTo for roles"
+msgstr "MoTo erlauben für Gruppe"
+
+#: form_fields.php:209
+msgid "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop."
+msgstr "Kreditkarte - Post / Telefonbestellung (MoTo) darf niemals den Kunden in Ihrem Onlineshop angeboten werden. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:ccard_moto:start\">Weitere Informationen</a>"
+
+#: form_fields.php:214
+msgid "Iframe CSS-URL"
+msgstr "Iframe CSS-URL"
+
+#: form_fields.php:215
+msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css."
+msgstr "Eingabe des CSS-Dateinamens, um die iFrame-Eingabefelder anzupassen, wenn das \"PCI DSS SAQ A Compliance\"-Feature verwendet wird. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start#customization_via_css\">Weitere Informationen</a>"
+
+#: form_fields.php:219
+msgid "Credit card number placeholder text"
+msgstr "Kartennummer Platzhalter-Text"
+
+#: form_fields.php:220
+msgid "Placeholder text for the credit card number field."
+msgstr "Platzhalter-Text für Kartennummer-Feld."
+
+#: form_fields.php:224
+msgid "Card holder placeholder text"
+msgstr "Karteninhaber Platzhalter-Text"
+
+#: form_fields.php:225
+msgid "Placeholder text for the card holder field."
+msgstr "Platzhalter-Text für Karteninhaber-Feld anzeigen."
+
+#: form_fields.php:229
+msgid "CVC placeholder text"
+msgstr "CVC-Feld Platzhalter-Text."
+
+#: form_fields.php:230
+msgid "Placeholder text for the CVC field."
+msgstr "Platzhalter-Text für das CVC-Feld anzeigen."
+
+#: form_fields.php:233
+msgid "Issue number placeholder text"
+msgstr "Ausgabenummer Platzhalter-Text"
+
+#: form_fields.php:234
+msgid "Placeholder text for the issue number field."
+msgstr "Platzhalter-Text für das Ausgabenummer-Feld anzeigen."
+
+#: form_fields.php:239
+msgid "Display issue date placeholder text"
+msgstr "Ausgabedatum Platzhalter-Text anzeigen"
+
+#: form_fields.php:240
+msgid "Display placeholder text for the issue date field. Only applicable if the 'PCI DSS SAQ A Compliance' feature is enabled."
+msgstr "Anzeige des Platzhalter-Textes für das Ausgabedatum-Feld. Nur zutreffend, wenn  'PCI DSS SAQ A Compliance'-Feature verwendet wird."
+
+#: form_fields.php:245
+msgid "Display expiration date field"
+msgstr "Feld für Ablaufdatum anzeigen"
+
+#: form_fields.php:246
+msgid "Display input field to enter the expiration date in your credit card form during the checkout process."
+msgstr "Anzeige des Feldes zur Eingabe des Kreditkarten-Ablaufdatums im Formular während des Bezahlprozesses."
+
+#: form_fields.php:251
+msgid "Display card holder field"
+msgstr "Feld für Karteninhaber anzeigen"
+
+#: form_fields.php:252
+msgid "Display input field to enter the card holder name in your credit card form during the checkout process."
+msgstr "Anzeige des Feldes zur Eingabe des Kreditkarten-Karteninhabers im Formular während des Bezahlprozesses."
+
+#: form_fields.php:257
+msgid "Display CVC field"
+msgstr "CVC-Feld anzeigen"
+
+#: form_fields.php:258
+msgid "Display input field to enter the CVC in your credit card form during the checkout process."
+msgstr "Anzeige des Feldes zur Eingabe der Kreditkartenprüfnummer (CVC) im Formular während des Bezahlprozesses."
+
+#: form_fields.php:263
+msgid "Display issue date field"
+msgstr "Feld für Ausgabedatum anzeigen"
+
+#: form_fields.php:264
+msgid "Display input field to enter the credit card issue date in your credit card form during the checkout process. Some credit cards do not have an issue date."
+msgstr "Anzeige des Feldes zur Eingabe des Kreditkarten-Ausgabedatums im Formular während des Bezahlprozesses."
+
+#: form_fields.php:269
+msgid "Display issue number field"
+msgstr "Feld für Ausgabennummer anzeigen"
+
+#: form_fields.php:270
+msgid "Display input field to enter the credit card issue number in your credit card form during the checkout process. Some credit cards do not have an issue number."
+msgstr "Anzeige des Feldes zur Eingabe der Kreditkarten-Ausgabenummer im Formular während des Bezahlprozesses."
+
+#: form_fields.php:277
+msgid "Invoice provider"
+msgstr "Provider für Kauf auf Rechnung"
+
+#: form_fields.php:282
+msgid "Billing/shipping address must be identical"
+msgstr "Rechnungsadresse und Versandadresse müssen übereinstimmen"
+
+#: form_fields.php:283
+msgid "Only applicable for payolution."
+msgstr "Nur einstellbar für payolution"
+
+#: form_fields.php:287
+msgid "Allowed billing countries"
+msgstr "Erlaubte Länder für Rechnungsadresse"
+
+#: form_fields.php:294
+msgid "Allowed shipping countries"
+msgstr "Erlaubte Länder für Versandadresse"
+
+#: form_fields.php:301
+msgid "Accepted currencies"
+msgstr "Akzeptierte Währungen"
+
+#: form_fields.php:307
+msgid "Minimum amount"
+msgstr "Mindestbetrag"
+
+#: form_fields.php:310
+msgid "Maximum amount"
+msgstr "Höchstbetrag"
+
+#: form_fields.php:313
+msgid "Minimum basket size"
+msgstr "Minimale Warenkorbgröße"
+
+#: form_fields.php:316
+msgid "Maximum basket size"
+msgstr "Maximale Warenkorbgröße"
+
+#: form_fields.php:322
+msgid "Installment provider"
+msgstr "Provider für Kauf auf Rechnung"
+
+#: form_fields.php:365
+msgid "Credit Card"
+msgstr "Kreditkarte"
+
+#: form_fields.php:369
+msgid "Credit Card - Mail Order and Telephone Order"
+msgstr "Kreditkarte - Post / Telefonbestellung"
+
+#: form_fields.php:373
+msgid "Maestro SecureCode"
+msgstr "Maestro SecureCode"
+
+#: form_fields.php:377
+msgid "SOFORT Banking"
+msgstr "Sofort."
+
+#: form_fields.php:381
+msgid "PayPal"
+msgstr "PayPal"
+
+#: form_fields.php:385
+msgid "SEPA Direct Debit"
+msgstr "SEPA Lastschrift"
+
+#: form_fields.php:389
+msgid "Invoice"
+msgstr "Kauf auf Rechnung"
+
+#: form_fields.php:393
+msgid "Invoice B2B"
+msgstr "Kauf auf Rechnung B2B"
+
+#: form_fields.php:399
+msgid "eps-Überweisung"
+msgstr "eps-Überweisung"
+
+#: form_fields.php:403
+msgid "iDEAL"
+msgstr "iDEAL"
+
+#: form_fields.php:407
+msgid "giropay"
+msgstr "giropay"
+
+#: form_fields.php:411
+msgid "TatraPay"
+msgstr "TatraPay"
+
+#: form_fields.php:415
+msgid "TrustPay"
+msgstr "TrustPay"
+
+#: form_fields.php:419
+msgid "Bancontact"
+msgstr "Bancontact"
+
+#: form_fields.php:423
+msgid "POLi"
+msgstr "POLi"
+
+#: form_fields.php:427
+msgid "Przelewy24"
+msgstr "Przelewy24"
+
+#: form_fields.php:431
+msgid "eKonto"
+msgstr "eKonto"
+
+#: form_fields.php:435
+msgid "Trustly"
+msgstr "Trustly"
+
+#: form_fields.php:439
+msgid "Skrill Direct"
+msgstr "Skrill Direct"
+
+#: form_fields.php:445
+msgid "paysafecard"
+msgstr "paysafecard"
+
+#: form_fields.php:449
+msgid "ePay.bg"
+msgstr "ePay.bg"
+
+#: form_fields.php:453
+msgid "Installment"
+msgstr "Kauf auf Raten"
+
+#: form_fields.php:457
+msgid "moneta.ru"
+msgstr "moneta.ru"
+
+#: form_fields.php:461
+msgid "Skrill Digital Wallet"
+msgstr "Skrill Digital Wallet"
+
+#: form_fields.php:467
+msgid "paybox"
+msgstr "paybox"
+
+#: class-qenta-admin.php:60
+msgid "Access data"
+msgstr "Zugangsdaten"
+
+#: class-qenta-admin.php:62
+msgid "General settings"
+msgstr "Allgemeine Einstellungen"
+
+#: class-qenta-admin.php:66
+msgid "SEPA"
+msgstr "SEPA"
+
+#: class-qenta-admin.php:72
+msgid "Standard payments"
+msgstr "Standard Zahlungsmittel"
+
+#: class-qenta-admin.php:74
+msgid "Banking payments"
+msgstr "Zahlungsmittel von Banken"
+
+#: class-qenta-admin.php:77
+msgid "Alternative payments"
+msgstr "Alternative Zahlungsmittel"
+
+#: class-qenta-admin.php:78
+msgid "Mobile payments"
+msgstr "Handy Zahlungsmittel"
+
+#: class-qenta-admin.php:164
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: class-qenta-admin.php:169
+msgid "Qenta - Your Full Service Payment Provider - Comprehensive solutions from one single source"
+msgstr "Qenta - Ihr Full Service Payment Provider - Umfangreiche Lösungen aus einer Hand"
+
+#: class-qenta-admin.php:172
+msgid "Qenta is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions."
+msgstr "Qenta ist einer der weltweit führenden unabhängigen Anbieter von Outsourcing- und White-Label-Lösungen für den elektronischen Zahlungsverkehr."
+
+#: class-qenta-admin.php:175
+msgid "As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made\tus Austria´s leading payment service provider. Customization, competence, and commitment."
+msgstr "Als unabhängiger Payment-Anbieter begleiten wir unsere Kunden in allen Phasen der Geschäftsentwicklung. Mit maßgeschneiderten Bezahllösungen setzt unser Unternehmen im E-Payment Akzente und ist Österreichs marktführender Payment Service Provider. Persönlich, kompetent und engagiert."
+
+#: class-qenta-admin.php:183
+msgid "Transaction overview"
+msgstr "Transaktionen"
+
+#: class-qenta-admin.php:187
+msgid "Contact support"
+msgstr "Support kontaktieren"
+
+#: class-qenta-admin.php:190
+msgid "Qenta settings"
+msgstr "Einstellungen"
+
+#: class-qenta-admin.php:221
+msgid "Backend Operations"
+msgstr "Back-end Operationen"
+
+#: class-qenta-admin.php:223
+msgid "Fund Transfer"
+msgstr ""
+
+#: class-qenta-admin.php:233
+msgid "< Back"
+msgstr "< Zurück"
+
+#: class-qenta-admin.php:240
+msgid "Next >"
+msgstr "Weiter >"
+
+#: class-qenta-admin.php:253
+msgid "Get transactions starting at "
+msgstr "Hole Transaktionen ab "
+
+#: class-qenta-admin.php:270
+msgid "Transaction details"
+msgstr "Transaktionsdetails"
+
+#: class-qenta-admin.php:274
+msgid "Order"
+msgstr "Bestellung"
+
+#: class-qenta-admin.php:278
+msgid "Payment method"
+msgstr "Zahlungsmethode"
+
+#: class-qenta-admin.php:282
+msgid "Payment state"
+msgstr "Zahlungsstatus"
+
+#: class-qenta-admin.php:286
+msgid "Amount"
+msgstr "Summe"
+
+#: class-qenta-admin.php:290
+msgid "Currency"
+msgstr "Währung"
+
+#: class-qenta-admin.php:307
+msgid "Qenta order details"
+msgstr "Qenta Bestelldetails"
+
+#: class-qenta-admin.php:321
+msgid "Payments"
+msgstr "Zahlungen"
+
+#: class-qenta-admin.php:325
+msgid "Number"
+msgstr "Nummer"
+
+#: class-qenta-admin.php:326
+msgid "Date"
+msgstr "Datum"
+
+#: class-qenta-admin.php:327
+msgid "Gateway reference"
+msgstr "Gateway Referenz"
+
+msgid "Approved"
+msgstr "Genehmigt"
+
+msgid "Deposited"
+msgstr "Abgebucht"
+
+#: class-qenta-admin.php:332
+msgid "Operations"
+msgstr "Operationen"
+
+#: class-qenta-admin.php:339
+msgid "No payments available"
+msgstr "Keine Zahlungen verfügbar"
+
+#: class-qenta-admin.php:467
+msgid "To:"
+msgstr "An:"
+
+#: class-qenta-admin.php:479
+msgid "Your e-mail address:"
+msgstr "Ihre E-Mail Adresse:"
+
+#: class-qenta-admin.php:485
+msgid "Your message:"
+msgstr "Ihre Nachricht:"
+
+#: class-qenta-admin.php:493
+msgid "Send your request"
+msgstr "Anfrage senden"
+
+#: class-qenta-admin.php:534
+msgid "Your e-mail address must not be empty."
+msgstr "Bitte geben Sie eine E-Mail Adresse an."
+
+#: class-qenta-admin.php:539
+msgid "Your request has been sent"
+msgstr "Ihre Anfrage wurde versand"
+
+#: class-qenta-admin.php:541
+msgid "Your request could not be sent"
+msgstr "Ihre Anfrage konnte nicht gesendet werden"
+
+#  #############################################
+#: class-qenta-trustpay.php:99
+msgid "This payment method is not available. Please contact the administrator."
+msgstr "Diese Zahlungmethode ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+
+#: class-qenta-trustpay.php:124
+msgid "Financial institution:"
+msgstr "Finanzinstitut:"
+
+#: class-qenta-trustpay.php:127
+msgid "Choose your bank"
+msgstr "Wählen Sie Ihre Bank"
+
+#: class-qenta-trustpay.php:160
+msgid "Financial institution must not be empty."
+msgstr "Finanzinstitut muss ausgefüllt sein."
+
+#: class-qenta-invoice.php:94
+msgid "Date of Birth:"
+msgstr "Geburtsdatum:"
+
+#: class-qenta-invoice.php:122
+msgid "consent"
+msgstr "Einwilligung"
+
+#: class-qenta-invoice.php:132
+msgid "I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My "
+msgstr "Mit der Übermittlung jener Daten an payolution, die für die Abwicklung von Zahlungen mit Kauf auf Rechnung und die Identitäts- und Bonitätsprüfung erforderlich sind, bin ich einverstanden. Meine "
+
+#: class-qenta-invoice.php:132
+msgid " can be revoked at any time with effect for the future."
+msgstr " kann ich jederzeit mit Wirkung für die Zukunft widerrufen."
+
+#: class-qenta-invoice.php:305
+msgid "Please accept the consent terms!"
+msgstr "Bitte stimmen Sie den Bedingungen von payolution zu!"
+
+#: class-qenta-invoice.php:314
+msgid "You have to be 18 years or older to use this payment."
+msgstr "Sie müssen mindestens 18 Jahre alt sein, um dieses Zahlungsmittel nutzen zu können."
+
+#: class-qenta-sepa_dd.php:94
+msgid "Account owner:"
+msgstr "Kontoinhaber:"
+
+#: class-qenta-sepa_dd.php:102
+msgid "BIC:"
+msgstr "BIC:"
+
+#: class-qenta-sepa_dd.php:102
+msgid "IBAN:"
+msgstr "IBAN:"
+
+#: class-qenta-sepa_dd.php:145
+msgid "IBAN must not be empty."
+msgstr "IBAN muss ausgefüllt sein."
+
+#: class-qenta-invoiceb2b.php:306
+msgid "For Invoice B2B, <a href='#billing_company'>Company name</a> must not be empty."
+msgstr "Für Kauf auf Rechnung B2B, <a href='#billing_company'>Firmenname</a> muss ausgefüllt sein."
+
+#: class-qenta-ccard.php:114
+msgid "Card holder:"
+msgstr "Karteninhaber"
+
+#: class-qenta-ccard.php:121
+msgid "Credit card number:"
+msgstr "Kartennummer"
+
+#: class-qenta-ccard.php:129
+msgid "Expiration date"
+msgstr "Ablaufdatum"
+
+#: class-qenta-ccard.php:144
+msgid "Card verification code"
+msgstr "CVC"
+
+#: class-qenta-ccard.php:160
+msgid "Issue date"
+msgstr "Ausgabedatum"
+
+#: class-qenta-ccard.php:175
+msgid "Issue number:"
+msgstr "Ausgabenummer:"
+
+#: class-qenta-ccard.php:208
+msgid "Card verification code is missing"
+msgstr "CVC fehlt"
+
+#: class-qenta-giropay.php:91
+msgid "Account number:"
+msgstr "Kontonummber"
+
+#: class-qenta-giropay.php:97
+msgid "Bank number:"
+msgstr "Bankleitzahl"
+
+#: class-qenta-giropay.php:128
+msgid "Account number must not be empty."
+msgstr "Kontonummer darf nicht leer sein."
+
+#: class-qenta-giropay.php:133
+msgid "Bank number must not be empty."
+msgstr "Bankleitzahl darf nicht leer sein."
+
+#: class-qenta-pbx.php:93
+msgid "paybox number:"
+msgstr "Paybox Nummer:"
+
+#: class-qenta-pbx.php:124
+msgid "Paybox number must not be empty."
+msgstr "Paybox Nummer darf nicht leer sein."
+
+#  ###########################################
+#: class-qenta-backend-operations.php:58
+msgid "Refund amount must be greater than zero."
+msgstr "Summe muss größer 0 sein."
+
+#: class-qenta-backend-operations.php:392
+msgid "Refund reversal finished, but no corresponing refund found in the order. You might need to update the order manually."
+msgstr ""
+
+#: class-qenta-transaction.php:52
+msgid "ID"
+msgstr "ID"
+
+#: class-qenta-transaction.php:55
+msgid "Status"
+msgstr "Status"
+
+#: class-qenta-transaction.php:187
+msgid "View"
+msgstr "Details"
+
+#: back.php:6
+msgid "You will be redirected shortly"
+msgstr "Sie werden in Kürze weitergeleitet."
+
+#: back.php:7
+msgid "If not, please click "
+msgstr "Falls dies nicht der Fall sein sollte, klicken Sie "
+
+#: back.php:7
+msgid "here"
+msgstr "hier."
+
+#: additional
+msgid "Credit card"
+msgstr "Kreditkarte"
+
+#: class-qenta-admin.php
+msgid "Support Request"
+msgstr "Support Anfrage"
+
+#: additional
+msgid "Qenta Transactions"
+msgstr "Qenta Transaktionen"
+
+#: additional
+msgid "Approval"
+msgstr "Genehmigung"
+
+#: additional
+msgid "DEPOSIT"
+msgstr "Abbuchen"
+
+#: additional
+msgid "Credits"
+msgstr "Gutschriften"
+
+#: additional
+msgid "APPROVEREVERSAL"
+msgstr "Gehnemigung stonieren"
+
+#: additional
+msgid "DEPOSITREVERSAL"
+msgstr "Buchung stornieren"
+
+#: additional
+msgid "Credit state"
+msgstr "Gutschriftstatus"
+
+#: additional
+msgid "REFUNDREVERSAL"
+msgstr "Rückerstattung stornieren"
