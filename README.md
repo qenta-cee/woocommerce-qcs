@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/qenta-cee/woocommerce-qcs/master/LICENSE)
 [![WooCommerce](https://img.shields.io/badge/WooCommerce-v4.6-green.svg)](https://woocommerce.com/)
 [![WordPress](https://img.shields.io/badge/WordPress-v5.5-green.svg)](https://wordpress.org/)
-[![PHP v7.4](https://img.shields.io/badge/php-v7.4-green.svg)](http://www.php.net)
+[![PHP >=v7.2](https://img.shields.io/badge/php->=v7.2-green.svg)](http://www.php.net)
 
 ----
 
