@@ -139,7 +139,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Invoiceb2b {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::INVOICE . "b2b";
+		return QentaCEE\QMore\PaymentType::INVOICE . "b2b";
 	}
 
 	/**

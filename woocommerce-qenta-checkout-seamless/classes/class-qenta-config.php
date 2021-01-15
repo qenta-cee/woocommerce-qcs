@@ -202,7 +202,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 	 * @return string
 	 */
 	public function get_plugin_version() {
-		return QentaCEE_QMore_FrontendClient::generatePluginVersion(
+		return QentaCEE\QMore\FrontendClient::generatePluginVersion(
 			'woocommerce',
 			WC()->version,
 			WOOCOMMERCE_GATEWAY_WCS_NAME,
@@ -229,10 +229,10 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 	 * @param $gateway
 	 *
 	 * @since 1.0.0
-	 * @return QentaCEE_Stdlib_ConsumerData
+	 * @return QentaCEE\Stdlib\ConsumerData
 	 */
 	public function get_consumer_data( $order, $gateway, $checkout_data ) {
-		$consumerData = new QentaCEE_Stdlib_ConsumerData();
+		$consumerData = new QentaCEE\Stdlib\ConsumerData();
 
 		$consumerData->setIpAddress( $order->get_customer_ip_address() );
 		$consumerData->setUserAgent( $_SERVER['HTTP_USER_AGENT'] );
@@ -252,8 +252,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 			$shipping_address = $this->get_address_data( $order, 'shipping' );
 			$consumerData->addAddressInformation( $shipping_address );
 		}
-		if ($checkout_data['wcs_payment_method'] == QentaCEE_Stdlib_PaymentTypeAbstract::INVOICE ||
-            $checkout_data['wcs_payment_method'] == QentaCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT) {
+		if ($checkout_data['wcs_payment_method'] == QentaCEE\Stdlib\PaymentTypeAbstract::INVOICE ||
+            $checkout_data['wcs_payment_method'] == QentaCEE\Stdlib\PaymentTypeAbstract::INSTALLMENT) {
 			$birth_date = new DateTime( $checkout_data['dob_year'] . '-' . $checkout_data['dob_month'] . '-' . $checkout_data['dob_day'] );
 			$consumerData->setBirthDate($birth_date);
 		}
@@ -272,8 +272,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
      */
 	public function force_consumer_data( $payment_method ) {
 	    switch ( $payment_method ) {
-            case QentaCEE_Stdlib_PaymentTypeAbstract::INVOICE:
-            case QentaCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+            case QentaCEE\Stdlib\PaymentTypeAbstract::INVOICE:
+            case QentaCEE\Stdlib\PaymentTypeAbstract::INSTALLMENT:
                 return true;
             default:
                 return false;
@@ -291,12 +291,12 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
      */
     public function force_basket_data( $payment_method, $gateway ) {
 	    switch ( $payment_method ) {
-            case QentaCEE_Stdlib_PaymentTypeAbstract::INVOICE:
+            case QentaCEE\Stdlib\PaymentTypeAbstract::INVOICE:
                 if ( 'payolution' != $gateway->get_option('woo_wcs_invoiceprovider') ) {
                     return true;
                 }
                 return false;
-            case QentaCEE_Stdlib_PaymentTypeAbstract::INSTALLMENT:
+            case QentaCEE\Stdlib\PaymentTypeAbstract::INSTALLMENT:
                 if ( 'payolution' != $gateway->get_option('woo_wcs_installmentprovider') ) {
                     return true;
                 }
@@ -313,12 +313,12 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 	 * @param string $type
 	 *
 	 * @since 1.0.0
-	 * @return QentaCEE_Stdlib_ConsumerData_Address
+	 * @return QentaCEE\Stdlib\ConsumerData\Address
 	 */
 	public function get_address_data( $order, $type = 'billing' ) {
 		switch ( $type ) {
 			case 'shipping':
-				$address = new QentaCEE_Stdlib_ConsumerData_Address( QentaCEE_Stdlib_ConsumerData_Address::TYPE_SHIPPING );
+				$address = new QentaCEE\Stdlib\ConsumerData\Address( QentaCEE\Stdlib\ConsumerData\Address::TYPE_SHIPPING );
 				$address->setFirstname( $order->get_shipping_first_name() )
 				        ->setLastname( $order->get_shipping_last_name() )
 				        ->setAddress1( $order->get_shipping_address_1() )
@@ -330,7 +330,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 				break;
 			case 'billing':
 			default:
-				$address = new QentaCEE_Stdlib_ConsumerData_Address( QentaCEE_Stdlib_ConsumerData_Address::TYPE_BILLING );
+				$address = new QentaCEE\Stdlib\ConsumerData\Address( QentaCEE\Stdlib\ConsumerData\Address::TYPE_BILLING );
 				$address->setFirstname( $order->get_billing_first_name() )
 				        ->setLastname( $order->get_billing_last_name() )
 				        ->setAddress1( $order->get_billing_address_1() )
@@ -360,7 +360,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 	    $shop_name = get_bloginfo('name');
         $order_reference = strval( intval( $this->get_order_reference( $order ) ) );
 
-        if ( $payment_type == QentaCEE_QMore_PaymentType::POLI ) {
+        if ( $payment_type == QentaCEE\QMore\PaymentType::POLI ) {
             return sprintf( '%9s', substr( get_bloginfo( 'name' ), 0, 9 ) );
         }
 
@@ -381,14 +381,14 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 	 * Generate shopping basket
 	 *
 	 * @since 1.0.0
-	 * @return QentaCEE_Stdlib_Basket
+	 * @return QentaCEE\Stdlib\Basket
 	 */
 	public function get_shopping_basket( $order_amount = 0 ) {
 		global $woocommerce;
 
 		$cart = $woocommerce->cart;
 
-		$basket = new QentaCEE_Stdlib_Basket();
+		$basket = new QentaCEE\Stdlib\Basket();
 
 		foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
 			$article_nr = $cart_item['product_id'];
@@ -401,7 +401,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 				$image_url = wp_get_attachment_image_url( $attachment_id );
 			}
 
-			$item            = new QentaCEE_Stdlib_Basket_Item( $article_nr );
+			$item            = new QentaCEE\Stdlib\Basket\Item( $article_nr );
 			$item_net_amount = $cart_item['line_total'];
 			$item_tax_amount = $cart_item['line_tax'];
 			$item_quantity   = $cart_item['quantity'];
@@ -424,7 +424,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 
 		// Add shipping to the basket
 		if ( isset( $cart->shipping_total ) && $cart->shipping_total > 0 ) {
-			$item = new QentaCEE_Stdlib_Basket_Item( 'shipping' );
+			$item = new QentaCEE\Stdlib\Basket\Item( 'shipping' );
 			$item->setUnitGrossAmount( wc_format_decimal( $cart->shipping_total + $cart->shipping_tax_total,
 			                                              wc_get_price_decimals() ) )
 			     ->setUnitNetAmount( wc_format_decimal( $cart->shipping_total, wc_get_price_decimals() ) )
@@ -438,7 +438,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 		if ( $order_amount > 0 ) {
             $rounding_difference = $this->get_rounding_difference( $basket, $order_amount );
             if ( $rounding_difference != 0 ) {
-                $item = new QentaCEE_Stdlib_Basket_Item( 'rounding' );
+                $item = new QentaCEE\Stdlib\Baskt\Item( 'rounding' );
                 $item->setUnitGrossAmount( wc_format_decimal( $rounding_difference, wc_get_price_decimals() ) )
                     ->setUnitNetAmount( wc_format_decimal( $rounding_difference, wc_get_price_decimals() ) )
                     ->setUnitTaxAmount( 0 )
@@ -454,11 +454,11 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 
     /**
      * Calculate rounding differences
-     * @param QentaCEE_Stdlib_Basket $basket
+     * @param QentaCEE\Stdlib\Basket $basket
      * @param float $total_amount
      * @return float
      */
-	public function get_rounding_difference( QentaCEE_Stdlib_Basket $basket, $total_amount ) {
+	public function get_rounding_difference( QentaCEE\Stdlib\Basket $basket, $total_amount ) {
         $total_amount_rounded = 0;
         $amount_difference    = 0;
         $basket_data          = $basket->getData();

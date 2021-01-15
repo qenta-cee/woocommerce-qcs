@@ -111,7 +111,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Idl {
 		                         'woocommerce-qenta-checkout-seamless' ) . " <span class='required'>*</span></label>";
 		$html .= "<select name='woo_wcs_idl_financialInstitution' autocomplete='off'>";
 		$html .= "<option value=''>" . __( 'Choose your bank', 'woocommerce-qenta-checkout-seamless' ) . "</option>";
-		foreach ( QentaCEE_Stdlib_PaymentTypeAbstract::getFinancialInstitutions( QentaCEE_Stdlib_PaymentTypeAbstract::IDL ) as $key => $value ) {
+		foreach ( QentaCEE\Stdlib\PaymentTypeAbstract::getFinancialInstitutions( QentaCEE\Stdlib\PaymentTypeAbstract::IDL ) as $key => $value ) {
 			$html .= "<option value='$key'>$value</option>";
 		}
 
@@ -132,7 +132,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Idl {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::IDL;
+		return QentaCEE\QMore\PaymentType::IDL;
 	}
 
 	/**

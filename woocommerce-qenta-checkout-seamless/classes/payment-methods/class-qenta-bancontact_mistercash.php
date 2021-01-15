@@ -102,7 +102,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Bancontact_mistercash{
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::BMC;
+		return QentaCEE\QMore\PaymentType::BMC;
 	}
 
 }

@@ -102,7 +102,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Przelewy24 {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::P24;
+		return QentaCEE\QMore\PaymentType::P24;
 	}
 
 }

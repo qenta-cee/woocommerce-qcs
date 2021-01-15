@@ -102,7 +102,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Poli {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::POLI;
+		return QentaCEE\QMore\PaymentType::POLI;
 	}
 
 }

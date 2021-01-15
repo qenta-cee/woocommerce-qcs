@@ -102,7 +102,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Epay_bg {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::EPAYBG;
+		return QentaCEE\QMore\PaymentType::EPAYBG;
 	}
 
 }

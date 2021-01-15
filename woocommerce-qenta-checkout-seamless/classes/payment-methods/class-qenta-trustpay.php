@@ -119,8 +119,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 		$config_array['PASSWORD'] = $config->get_backend_password();
 
 		try {
-			$backend_client = new QentaCEE_QMore_BackendClient( $config_array );
-		} catch ( QentaCEE_QMore_Exception_InvalidArgumentException $e ) {
+			$backend_client = new QentaCEE\QMore\BackendClient( $config_array );
+		} catch ( QentaCEE\QMore\Exception\InvalidArgumentException $e ) {
 			$this->_logger->error( __METHOD__ . ':' . print_r( $e, true ) );
 
 			return __( 'This payment method is not available. Please contact the administrator.',
@@ -177,7 +177,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::TRUSTPAY;
+		return QentaCEE\QMore\PaymentType::TRUSTPAY;
 	}
 
 	/**

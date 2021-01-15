@@ -85,7 +85,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Data_Storage {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return QentaCEE_QMore_DataStorage_Response_Initiation
+	 * @return QentaCEE\QMore\DataStorage\Response\Initiation
 	 */
 	public function init() {
 		global $woocommerce;
@@ -97,7 +97,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Data_Storage {
 		} else {
 			$woocommerce->session->set( 'wcs_session_order_ident', $order_ident );
 		}
-		$data_storage_init = new QentaCEE_QMore_DataStorageClient(
+		$data_storage_init = new QentaCEE\QMore\DataStorageClient(
 			$this->_config->get_client_config()
 		);
 

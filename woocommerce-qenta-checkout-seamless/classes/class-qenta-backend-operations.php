@@ -133,12 +133,12 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
         if ( in_array( 'REFUND', $order->getOperationsAllowed() ) ) {
             if (
                 (
-                    $tx_data->payment_method == QentaCEE_Stdlib_PaymentTypeAbstract::INVOICE
+                    $tx_data->payment_method == QentaCEE\Stdlib\PaymentTypeAbstract::INVOICE
                     && $this->_settings['woo_wcs_invoiceprovider'] != 'payolution'
                 )
                 or
                 (
-                    $tx_data->payment_method == QentaCEE_QMore_PaymentType::INSTALLMENT
+                    $tx_data->payment_method == QentaCEE\QMore\PaymentType::INSTALLMENT
                     && $this->_settings['woo_wcs_installmentprovider'] != 'payolution'
                 )
             ) {
@@ -180,10 +180,10 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
         } else {
 			// the following have allowed transferFund command
 			$allowed_payment_methods = array(
-				QentaCEE_QMore_PaymentType::IDL,
-				QentaCEE_QMore_PaymentType::SKRILLWALLET,
-				QentaCEE_QMore_PaymentType::SOFORTUEBERWEISUNG,
-				QentaCEE_QMore_PaymentType::SEPADD
+				QentaCEE\QMore\PaymentType::IDL,
+				QentaCEE\QMore\PaymentType::SKRILLWALLET,
+				QentaCEE\QMore\PaymentType::SOFORTUEBERWEISUNG,
+				QentaCEE\QMore\PaymentType::SEPADD
 			);
 
 			if ( in_array( $tx_data->payment_method, $allowed_payment_methods ) ) {
@@ -202,11 +202,11 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
      * @param $refund_items
      * @param $wc_order
      * @param $tx_original
-     * @return QentaCEE_Stdlib_Basket
+     * @return QentaCEE\Stdlib\Basket
      */
 	public function create_basket( $refund_items, $wc_order, $tx_original ) {
         $wc_order_items = $wc_order->get_items();
-        $basket         = new QentaCEE_Stdlib_Basket();
+        $basket         = new QentaCEE\Stdlib\Basket();
 
         $basket_items = 0;
         if ( isset( $tx_original['basketItems'] ) ) {
@@ -237,7 +237,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 
             if ( key_exists( $product_data['sku'], $original_basket ) ) {
                 $refund_item = $original_basket[$product_data['sku']];
-                $basket_item = new QentaCEE_Stdlib_Basket_Item( $product_data['sku'] );
+                $basket_item = new QentaCEE\Stdlib\Basket\Item( $product_data['sku'] );
 
                 $basket_item->setName( $refund_item['name'] )
                     ->setDescription( $refund_item['description'] )
@@ -261,13 +261,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
      *
      * @param $refund_items
      * @param $wc_order
-     * @return QentaCEE_Stdlib_Basket
+     * @return QentaCEE\Stdlib\Basket
      */
     public function create_basket_without_items( $refund_amount, $wc_order ) {
         $order_data = $wc_order->get_data();
 
-        $basket = new QentaCEE_Stdlib_Basket();
-        $basket_item = new QentaCEE_Stdlib_Basket_Item( 'Total refund ratepay' , 1);
+        $basket = new QentaCEE\Stdlib\Basket();
+        $basket_item = new QentaCEE\Stdlib\Basket\Item( 'Total refund ratepay' , 1);
 
         $tax = $order_data['total_tax'];
         $net = $order_data['total'] - $order_data['total_tax'];
@@ -299,7 +299,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @param int $wcs_order_number
 	 *
-	 * @return QentaCEE_QMore_Response_Backend_GetOrderDetails
+	 * @return QentaCEE\QMore\Response\Backend\GetOrderDetails
 	 */
 	public function get_order_details( $wcs_order_number ) {
 		return $this->get_client()->getOrderDetails( $wcs_order_number );
@@ -310,10 +310,10 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return QentaCEE_QMore_BackendClient
+	 * @return QentaCEE\QMore\BackendClient
 	 */
 	public function get_client() {
-		return new QentaCEE_QMore_BackendClient(
+		return new QentaCEE\QMore\BackendClient(
 			array_merge( $this->_config->get_client_config(),
 			             array( 'PASSWORD' => $this->_config->get_backend_password() )
 			) );
@@ -324,7 +324,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param QentaCEE_QMore_Error $errors
+	 * @param QentaCEE\QMore\Error $errors
 	 */
 	private function logResponseErrors( $method, $errors ) {
 		$_errors = array();
@@ -350,8 +350,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	public function transfer_fund_refund( $amount, $currency, $order_number, $woocommerce_order, $payment_method ) {
 		global $wpdb;
 
-		/** @var QentaCEE_QMore_Request_Backend_TransferFund_Existing $client */
-		$client = $this->get_client()->transferFund( QentaCEE_QMore_BackendClient::$TRANSFER_FUND_TYPE_EXISTING );
+		/** @var QentaCEE\QMore\Request\Backend\TransferFund\Existing $client */
+		$client = $this->get_client()->transferFund( QentaCEE\QMore\BackendClient::$TRANSFER_FUND_TYPE_EXISTING );
 
 		// collect data of the order
 		$refundable_sum = $wpdb->prepare( "SELECT SUM(amount) as sum FROM {$wpdb->prefix}qenta_checkout_seamless_tx WHERE id_order = %d", $woocommerce_order->get_id() );
@@ -382,7 +382,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 
 			return false;
 		} else {
-			/** @var QentaCEE_QMore_Response_Backend_TransferFund $response */
+			/** @var QentaCEE\QMore\Response\Backend\TransferFund $response */
 			$response = $ret->getResponse();
 
 			$transaction->create( $woocommerce_order->get_id(), - $amount, $currency, 'TRANSFERFUND::' . $payment_method );
@@ -399,7 +399,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @param $wcs_order_number
 	 *
-	 * @return QentaCEE_QMore_Response_Backend_Order_PaymentIterator
+	 * @return QentaCEE\QMore\Response\Backend\Order\PaymentIterator
 	 */
 	public function get_payments( $wcs_order_number ) {
 		return $this->get_order_details( $wcs_order_number )->getOrder()->getPayments();
@@ -412,7 +412,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 *
 	 * @param $wcs_order_number
 	 *
-	 * @return QentaCEE_QMore_Response_Backend_Order_CreditIterator
+	 * @return QentaCEE\QMore\Response\Backend\Order\CreditIterator
 	 */
 	public function get_credits( $wcs_order_number ) {
 		return $this->get_order_details( $wcs_order_number )->getOrder()->getCredits();

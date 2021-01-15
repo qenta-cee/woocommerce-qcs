@@ -62,7 +62,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Maestro extends WC_Gateway_Qenta_Checko
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::MAESTRO;
+		return QentaCEE\QMore\PaymentType::MAESTRO;
 	}
 
 	/**

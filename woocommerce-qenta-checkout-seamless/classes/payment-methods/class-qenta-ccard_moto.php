@@ -62,7 +62,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard_Moto extends WC_Gateway_Qenta_Che
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::CCARD_MOTO;
+		return QentaCEE\QMore\PaymentType::CCARD_MOTO;
 	}
 
 	/**

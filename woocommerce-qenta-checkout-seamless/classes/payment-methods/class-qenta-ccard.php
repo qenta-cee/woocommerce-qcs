@@ -160,7 +160,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard {
 				$html .= '<label>' . __( 'Card verification code',
 						'woocommerce-qenta-checkout-seamless' );
 				// cvc is not required for credit card mail order / telephone order
-				if ( $this->get_payment_type() != QentaCEE_QMore_PaymentType::CCARD_MOTO ) {
+				if ( $this->get_payment_type() != QentaCEE\QMore\PaymentType::CCARD_MOTO ) {
 					$html .= ' <span class="required">*</span>';
 				}
 				$html .= '</label>';
@@ -208,7 +208,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::CCARD;
+		return QentaCEE\QMore\PaymentType::CCARD;
 	}
 
 	/**
@@ -226,7 +226,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard {
 
 		$payment_type = str_replace( "-", "_", $data['wcs_payment_method'] );
 
-		if ( $this->_settings['woo_wcs_cc_display_cvc_field'] && $data['wcs_payment_method'] != QentaCEE_QMore_PaymentType::CCARD_MOTO && empty( $data[ $payment_type . 'cvc' ] ) ) {
+		if ( $this->_settings['woo_wcs_cc_display_cvc_field'] && $data['wcs_payment_method'] != QentaCEE\QMore\PaymentType::CCARD_MOTO && empty( $data[ $payment_type . 'cvc' ] ) ) {
 			$errors[] = __( 'Card verification code is missing',
 					'woocommerce-qenta-checkout-seamless' );
 		}

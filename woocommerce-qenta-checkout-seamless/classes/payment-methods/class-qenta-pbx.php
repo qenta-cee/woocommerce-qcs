@@ -126,7 +126,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Pbx {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::PBX;
+		return QentaCEE\QMore\PaymentType::PBX;
 	}
 
 	/**

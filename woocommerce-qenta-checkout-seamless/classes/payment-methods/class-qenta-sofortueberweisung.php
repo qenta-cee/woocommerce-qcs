@@ -103,7 +103,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Sofortueberweisung {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::SOFORTUEBERWEISUNG;
+		return QentaCEE\QMore\PaymentType::SOFORTUEBERWEISUNG;
 	}
 
 }

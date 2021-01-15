@@ -102,7 +102,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Paypal {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::PAYPAL;
+		return QentaCEE\QMore\PaymentType::PAYPAL;
 	}
 
 }

@@ -455,7 +455,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$data['iframeUrl'] = $order->get_cancel_endpoint();
 			header( 'Location: ' . $data['iframeUrl'] );
 			die();
-		} else if ( $data['wcs_payment_method'] == QentaCEE_Stdlib_PaymentTypeAbstract::SOFORTUEBERWEISUNG ) {
+		} else if ( $data['wcs_payment_method'] == QentaCEE\Stdlib\PaymentTypeAbstract::SOFORTUEBERWEISUNG ) {
 		    header( 'Location: ' . $data['iframeUrl'] );
 			die();
 		}
@@ -484,7 +484,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 		try {
 			$config_array = $this->_config->get_client_config();
-			$client       = new QentaCEE_QMore_FrontendClient( $config_array );
+			$client       = new QentaCEE\QMore\FrontendClient( $config_array );
 
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Qenta_Checkout_Seamless',
@@ -554,11 +554,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			switch ( $checkout_data['wcs_payment_method'] ){
-				case QentaCEE_QMore_PaymentType::EPS : $client->setFinancialInstitution($checkout_data['woo_wcs_eps_financialInstitution']);
+				case QentaCEE\QMore\PaymentType::EPS : $client->setFinancialInstitution($checkout_data['woo_wcs_eps_financialInstitution']);
 				break;
-				case QentaCEE_QMore_PaymentType::IDL : $client->setFinancialInstitution($checkout_data['woo_wcs_idl_financialInstitution']);
+				case QentaCEE\QMore\PaymentType::IDL : $client->setFinancialInstitution($checkout_data['woo_wcs_idl_financialInstitution']);
 				break;
-				case QentaCEE_QMore_PaymentType::TRUSTPAY : $client->setFinancialInstitution($checkout_data['woo_wcs_trustpay_financialInstitution']);
+				case QentaCEE\QMore\PaymentType::TRUSTPAY : $client->setFinancialInstitution($checkout_data['woo_wcs_trustpay_financialInstitution']);
 				break;
 			}
 
@@ -672,7 +672,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$message = 'order-id missing';
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
-			print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 			die();
 		}
 
@@ -685,7 +685,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
 
-			print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 			die();
 		}
 
@@ -694,7 +694,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$this->_logger->error( __METHOD__ . ':' . $message );
 
 
-			print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 			die();
 		}
 
@@ -707,7 +707,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$message = null;
 		try {
-			$return = QentaCEE_QMore_ReturnFactory::getInstance(
+			$return = QentaCEE\QMore\ReturnFactory::getInstance(
 				$_POST,
 				$this->_config->get_client_secret( $this )
 			);
@@ -717,7 +717,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 				$this->_logger->error( __METHOD__ . ':' . $message );
 				$order->update_status( 'failed', $message );
 
-				print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+				print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 				die();
 			}
 
@@ -731,7 +731,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			switch ( $return->getPaymentState() ) {
-				case QentaCEE_QMore_ReturnFactory::STATE_SUCCESS:
+				case QentaCEE\QMore\ReturnFactory::STATE_SUCCESS:
 					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
 					                  $return->getGatewayReferenceNumber() );
 					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
@@ -744,10 +744,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
 					$order->payment_complete();
-					print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 					die();
 
-				case QentaCEE_QMore_ReturnFactory::STATE_PENDING:
+				case QentaCEE\QMore\ReturnFactory::STATE_PENDING:
 					$order->update_status(
 						'on-hold',
 						__( 'Awaiting payment notification from 3rd party.', 'woocommerce-qenta-checkout-seamless' )
@@ -759,10 +759,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
 
-					print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 					die();
 
-				case QentaCEE_QMore_ReturnFactory::STATE_CANCEL:
+				case QentaCEE\QMore\ReturnFactory::STATE_CANCEL:
 					$order->update_status( 'cancelled',
 					                       __( 'Payment cancelled.', 'woocommerce-qenta-checkout-seamless' ) );
 					$this->_transaction->update( array(
@@ -772,10 +772,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
 
-					print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 					die();
 
-				case QentaCEE_QMore_ReturnFactory::STATE_FAILURE:
+				case QentaCEE\QMore\ReturnFactory::STATE_FAILURE:
 					$errors = array();
 					foreach ( $return->getErrors() as $error ) {
 						$errors[] = $error->getConsumerMessage();
@@ -792,7 +792,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					                             ),
 					                             array( 'id_tx' => $transaction_id ) );
 
-					print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 					die();
 
 				default:
@@ -810,7 +810,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			                             array( 'id_tx' => $transaction_id ) );
 		}
 
-		print QentaCEE_QMore_ReturnFactory::generateConfirmResponseString( $message );
+		print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 		die();
 	}
 
@@ -880,17 +880,17 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
         $consumerMessage = '';
 
 		switch ( $_REQUEST['paymentState'] ) {
-			case QentaCEE_QMore_ReturnFactory::STATE_SUCCESS:
-			case QentaCEE_QMore_ReturnFactory::STATE_PENDING:
+			case QentaCEE\QMore\ReturnFactory::STATE_SUCCESS:
+			case QentaCEE\QMore\ReturnFactory::STATE_PENDING:
 				$redirectUrl = $this->get_return_url( $order );
 				break;
 
-			case QentaCEE_QMore_ReturnFactory::STATE_CANCEL:
+			case QentaCEE\QMore\ReturnFactory::STATE_CANCEL:
 				wc_add_notice( __( 'Payment has been cancelled.', 'woocommerce-qenta-checkout-seamless' ), 'error' );
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
 
-			case QentaCEE_QMore_ReturnFactory::STATE_FAILURE:
+			case QentaCEE\QMore\ReturnFactory::STATE_FAILURE:
 			    // get error messages from order
 			    if ( get_post_meta( $order_id, 'wcs_data', true ) ) {
 			        $errors = get_post_meta( $order_id, 'wcs_data', true );

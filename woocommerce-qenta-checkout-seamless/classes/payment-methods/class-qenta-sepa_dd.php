@@ -141,7 +141,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Sepa_dd {
 	 * @return string
 	 */
 	public function get_payment_type() {
-		return QentaCEE_QMore_PaymentType::SEPADD;
+		return QentaCEE\QMore\PaymentType::SEPADD;
 	}
 
 	/**
