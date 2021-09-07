@@ -5,7 +5,7 @@
 
 function read_log() {
   #docker exec -it woocommerce cat /tmp/shop.log
-  #docker exec -it woocommerce "tail -f /path/to/file.log | sed '/^ready/ q'"
+  docker exec -it woocommerce "tail -f /path/to/file.log | sed '/^ready/ q'"
 }
 
 # LOG_CONTENT=$(read_log)
