@@ -2,7 +2,7 @@
 
 # entrypoint of shop now puts 'ready' in a file after installation of
 # wordpress, woocommerce and plugin
-touch /tmp/shop.log
+docker exec woocommerce touch /tmp/shop.log
 docker exec woocommerce cat /tmp/shop.log
 docker exec woocommerce cat /tmp/debug.log
 docker exec woocommerce tail -f /tmp/shop.log | sed '/^ready/ q'
