@@ -26,23 +26,23 @@ ENTRYPOINT [ "init.sh" ]
 RUN echo 'APT::Acquire::Retries "30";' > /etc/apt/apt.conf.d/80-retries
 
 # upgrade package list and default packages
-RUN apt-get update
-RUN apt-get -y upgrade
+RUN apt-get update &> /dev/null
+RUN apt-get -y upgrade &> /dev/null
 
 # install npm nodesource repo
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - &> /dev/null
 
 # install php extension dependencies
-RUN apt-get -y install libmemcached-dev zlib1g-dev libpng-dev libonig-dev libtidy-dev
+RUN apt-get -y install libmemcached-dev zlib1g-dev libpng-dev libonig-dev libtidy-dev &> /dev/null
 
 # install dependencies for WP-CLI aand tools
-RUN apt-get -y install git unzip vim bat mariadb-client zip jq nodejs
+RUN apt-get -y install git unzip vim bat mariadb-client zip jq nodejs &> /dev/null
 
 # clean up to reduce docker image size
-RUN apt-get -y autoremove
+RUN apt-get -y autoremove &> /dev/null
 
 # install PHP extensions required
-RUN pecl install xdebug memcached
+RUN pecl install xdebug memcached &> /dev/null
 RUN docker-php-ext-install -j5 gd mbstring mysqli pdo pdo_mysql tidy bcmath
 RUN docker-php-ext-enable  memcached xdebug gd mbstring mysqli pdo pdo_mysql tidy bcmath
 
