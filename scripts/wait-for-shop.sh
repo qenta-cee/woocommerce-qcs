@@ -15,6 +15,6 @@ function read_log() {
 # done
 
 echo "Waiting for webserver"
-while ! curl --fail -k https://woocommerce:443; do 
+while ! curl --fail -k https://localhost:443; do 
   sleep 10
 done

@@ -25,6 +25,10 @@ jobs:
            WORDPRESS_HOST: ${{ steps.ngrok.outputs.host }}
            PORT_HTTP: 80
            PORT_SSL: 443
+      - name: Debug sleep
+        run: sleep 10m
+      - name: Debug Docker
+        run: docker ps -a
       - name: Wait for Shop Setup
         run: bash scripts/wait-for-shop.sh
       - name: Test Step (dummy)
