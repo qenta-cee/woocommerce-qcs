@@ -43,7 +43,7 @@ RUN bash -c "apt-get -y autoremove &> /dev/null"
 
 # install PHP extensions required
 RUN bash -c "pecl install xdebug memcached &> /dev/null"
-RUN docker-php-ext-install -j5 gd mbstring mysqli pdo pdo_mysql tidy bcmath
+RUN bash -c "docker-php-ext-install -j5 gd mbstring mysqli pdo pdo_mysql tidy bcmath &> /dev/null"
 RUN docker-php-ext-enable  memcached xdebug gd mbstring mysqli pdo pdo_mysql tidy bcmath
 
 # enable apache modules

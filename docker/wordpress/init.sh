@@ -109,7 +109,7 @@ else
     log "plugin installed"
   fi
 fi
-if [[ ${CI} == 'true' ]]; then
+if [[ ${CI} != 'true' ]]; then
   print_info
 fi
 
