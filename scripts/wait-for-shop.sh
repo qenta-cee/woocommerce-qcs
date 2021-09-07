@@ -4,8 +4,8 @@
 # wordpress, woocommerce and plugin
 
 function read_log() {
-  #docker exec -it woocommerce cat /tmp/shop.log
-  docker exec -it woocommerce "tail -f /path/to/file.log | sed '/^ready/ q'"
+  docker exec -it woocommerce cat /tmp/shop.log
+  #docker exec -it woocommerce "tail -f /path/to/file.log | sed '/^ready/ q'"
 }
 
 # LOG_CONTENT=$(read_log)
@@ -15,4 +15,7 @@ function read_log() {
 # done
 
 echo "Waiting for webserver"
-while ! curl --fail -sk https://localhost:443; do sleep 1; done
+while ! curl --fail -sk https://woocommerce:443; do 
+  read_log
+  sleep 10
+done
