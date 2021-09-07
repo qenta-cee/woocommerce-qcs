@@ -3,6 +3,9 @@ FROM php:7-apache
 # set PATH for Wordpress CLI
 ENV PATH="~/.composer/vendor/bin:${PATH}"
 
+# reduce APT noise
+ENV DEBIAN_FRONTEND=noninteractive
+
 # use proper shell
 SHELL ["/bin/bash", "-c"]
 
@@ -26,20 +29,20 @@ ENTRYPOINT [ "init.sh" ]
 RUN echo 'APT::Acquire::Retries "30";' > /etc/apt/apt.conf.d/80-retries
 
 # upgrade package list and default packages
-RUN bash -c "apt-get update &> /dev/null"
-RUN bash -c "apt-get -y upgrade &> /dev/null"
+RUN apt-get -qq update
+RUN apt-get -qq upgrade
 
 # install npm nodesource repo
-RUN bash -c "curl -sL https://deb.nodesource.com/setup_12.x | bash -"
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 # install php extension dependencies
-RUN apt-get -y install libmemcached-dev zlib1g-dev libpng-dev libonig-dev libtidy-dev &> /dev/null
+RUN apt-get -qq install libmemcached-dev zlib1g-dev libpng-dev libonig-dev libtidy-dev
 
 # install dependencies for WP-CLI aand tools
-RUN apt-get -y install git unzip vim bat mariadb-client zip jq nodejs
+RUN apt-get -qq install git unzip vim bat mariadb-client zip jq nodejs
 
 # clean up to reduce docker image size
-RUN bash -c "apt-get -y autoremove &> /dev/null"
+RUN apt-get -qq autoremove
 
 # install PHP extensions required
 RUN bash -c "pecl install xdebug memcached &> /dev/null"
