@@ -5,8 +5,8 @@
 docker exec woocommerce touch /tmp/shop.log
 docker exec woocommerce cat /tmp/shop.log
 docker exec woocommerce cat /tmp/debug.log
-docker exec woocommerce tail -f /tmp/shop.log | sed '/^ready/ q'
-
+timeout 15m docker exec woocommerce tail -f /tmp/shop.log | sed '/^ready/ q'
+docker exec woocommerce cat /tmp/shop.log
 # function read_log() {
 #   docker exec -it woocommerce cat /tmp/shop.log
 #   #docker exec -it woocommerce "tail -f /path/to/file.log | sed '/^ready/ q'"
