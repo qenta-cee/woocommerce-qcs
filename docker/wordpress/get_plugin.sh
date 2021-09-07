@@ -25,7 +25,8 @@ function clone() {
 
 function create_package() {
   cd ${REPO_WS}
-  PLUGIN_NAME=$(ls -d */ | head -n 1 | sed 's,/$,,')
+  # if no plugin name given via ENV, use first directory starting with woocommerce-
+  [[ -z ${PLUGIN_NAME} ]] && PLUGIN_NAME=$(ls -d woocommerce-*/ | head -n 1 | sed 's,/$,,')
   >&2 composer install
   zip -9r ${REPO_WS}/${PLUGIN_NAME}.zip ${PLUGIN_NAME} &>/dev/null
   PATH_TO_ZIP=${REPO_WS}/${PLUGIN_NAME}.zip
