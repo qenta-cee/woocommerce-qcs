@@ -15,10 +15,10 @@ jobs:
         id: branch
       - name: Start NGROK
         shell: bash
-        run: echo "::set-output name=host::$(timeout 1m bash docker/ngrok.sh)"
+        run: echo "::set-output name=host::$(timeout 1m bash docker/wordpress/ngrok.sh)"
         id: ngrok
         env:
-          GH_TOKEN: ${{ secrets.NGROK_TOKEN }}
+          NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
       - name: Launch Shop
         run: docker-compose up -d
         env:
