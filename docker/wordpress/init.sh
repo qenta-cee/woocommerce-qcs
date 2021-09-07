@@ -88,19 +88,32 @@ function print_info() {
   echo
 }
 
+function log() {
+  echo "${@}" >> /tmp/shop.log
+}
+
 if [[ -e wp-config.php ]]; then
   echo "Wordpress detected. Skipping installations"
   WORDPRESS_URL=$(wp option get siteurl | sed 's/http:/https:/')
 else
   create_db
+  log "db created"
   install_core
+  log "wp installed"
   install_woocommerce
+  log "db created"
   setup_store
+  log "store set up"
   if [[ -n ${PLUGIN_URL} ]]; then
     install_plugin
+    log "plugin installed"
   fi
 fi
 if [[ -n ${CI} == 'true' ]]; then
   print_info
 fi
+
+log "url=https://${WORDPRESS_URL}"
+log "ready"
+
 apache2-foreground "$@"
