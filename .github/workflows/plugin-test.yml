@@ -28,4 +28,8 @@ jobs:
       - name: Wait for Shop Setup
         run: bash scripts/wait-for-shop.sh
       - name: Test Step (dummy)
-        run: curl https://${{ steps.ngrok.outputs.host }}
+        run: |
+          docker ps -a
+          curl https://${{ steps.ngrok.outputs.host }}
+          curl -k https://localhost
+          curl -k https://woocommerce
