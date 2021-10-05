@@ -16,13 +16,14 @@ if [[ -z ${WORDPRESS_URL} && ! -e wp-config.php ]]; then
     WORDPRESS_URL=$(ngrok.sh ${NGROK_TOKEN})
   else
     echo "No NGROK_TOKEN specified. Using localhost as URL"
+    WORDPRESS_URL=localhost
   fi
 fi
 
 echo "Waiting for DB host ${WORDPRESS_DB_HOST}"
 
 while ! mysqladmin ping -h"${WORDPRESS_DB_HOST}" --silent; do
-  sleep 1
+  sleep 10
 done
 
 function create_db() {
@@ -37,8 +38,6 @@ function create_db() {
 }
 
 function install_core() {
-  echo "Installing Wordpress"
-
   wp core install \
     --url=${WORDPRESS_URL} \
     --title=${WORDPRESS_TITLE} \
@@ -49,12 +48,19 @@ function install_core() {
 }
 
 function install_woocommerce() {
-  echo "Installing WooCommerce"
   wp plugin install woocommerce --activate
 
   echo "Install Sample Data"
   wp plugin install wordpress-importer --activate
   wp import wp-content/plugins/woocommerce/sample-data/sample_products.xml --authors=create
+}
+
+function wp_set_array() {
+  option_name=${1}
+  option_key=${2}
+  option_value=${3}
+  #wp option get ${option_name} --format=json
+  #wp option get ${option_name} --format=json | php -r '$option = json_decode( fgets(STDIN) ); $option->'${option_key}' = '${option_value}'; print json_encode($option);' | wp option set ${option_name} --format=json
 }
 
 function install_plugin() {
@@ -72,6 +78,7 @@ function setup_store() {
   wp option set woocommerce_store_city "Graz"
   wp option set woocommerce_store_postcode "8020"
   wp option set woocommerce_default_country "AT"
+  wp_set_array woocommerce_onboarding_profile skipped 1
   wp wc --user=admin tool run install_pages
 }
 
@@ -80,7 +87,9 @@ function print_info() {
   echo '####################################'
   echo
   echo "URL: https://${WORDPRESS_URL}"
+  echo "Shop: https://${WORDPRESS_URL}/?post_type=product"
   echo "Panel: https://${WORDPRESS_URL}/wp-admin/"
+  echo "Plugin Config: https://${WORDPRESS_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout"
   echo "User: ${WORDPRESS_ADMIN_USER}"
   echo "Password: ${WORDPRESS_ADMIN_PASS}"
   echo
@@ -94,8 +103,9 @@ function _log() {
 
 if [[ -e wp-config.php ]]; then
   echo "Wordpress detected. Skipping installations"
-  WORDPRESS_URL=$(wp option get siteurl | sed 's/http:/https:/')
+  WORDPRESS_URL=$(wp option get siteurl | sed 's,^https\?://,,')
 else
+  cp -r /tmp/wp-data/* /var/www/html/
   create_db
   _log "db created"
   install_core
@@ -116,8 +126,6 @@ fi
 _log "url=https://${WORDPRESS_URL}"
 _log "ready"
 
-
 echo "ready" > /tmp/debug.log
-cat /tmp/debug.log
 
 apache2-foreground "$@"

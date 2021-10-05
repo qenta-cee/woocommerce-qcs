@@ -64,15 +64,22 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN useradd -u 431 -r -g www-data -s /sbin/nologin -c "Wordpress user" wp
 RUN mkdir -p /home/wp && chown -R wp:www-data /home/wp /etc/ssl
 USER wp
+WORKDIR /home/wp
 
-WORKDIR /var/www/html
+# install ngrok
+COPY --from=ngrok/ngrok:debian /bin/ngrok /usr/bin/ngrok
 
 # install WP-CLI and recommended packages
 RUN composer global require wp-cli/wp-cli-bundle
 RUN composer global require --dev $(composer suggests --by-package | awk '/wp-cli\/wp-cli-bundle/' RS= | grep -o -P '(?<=- ).*(?=:)')
 
+RUN mkdir /tmp/wp-data
+WORKDIR /tmp/wp-data
+
 # download latest stable Wordpress
 RUN wp core download
+
+WORKDIR /var/www/html
 
 EXPOSE 80
 EXPOSE 443

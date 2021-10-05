@@ -2,11 +2,14 @@
 
 set -e
 
-NGROK_BINARY="./node_modules/ngrok/bin/ngrok"
-
-if [[ ! -x ${NGROK_BINARY} ]]; then
+which ngrok >/dev/null
+if [[ $? == 0 ]]; then
+  NGROK_BINARY="$(which ngrok)"
+else
   >&2 echo "Installing NGROK"
-  npm install ngrok &>/dev/null
+  cd ~/
+  npm install ngrok
+  NGROK_BINARY="~/node_modules/ngrok/bin/ngrok"
 fi
 
 function get_ngrok_url() {
@@ -16,7 +19,7 @@ function get_ngrok_url() {
 function wait_for_ngrok() {
   while [[ -z ${RESPONSE} || ${RESPONSE} == 'null' ]]; do
     RESPONSE=$(get_ngrok_url)
-    sleep 3;
+    sleep 1;
   done
 }
 
@@ -30,6 +33,6 @@ fi
 ${NGROK_BINARY} authtoken ${NGROK_TOKEN} >&/dev/null
 ${NGROK_BINARY} http https://localhost:443 >&/dev/null &
 wait_for_ngrok
-export NGROK_URL=$(get_ngrok_url)
-export NGROK_HOST=$(sed 's,^https\?://,,' <<< ${NGROK_URL})
+NGROK_URL=$(get_ngrok_url)
+NGROK_HOST=$(sed 's,^https\?://,,' <<< ${NGROK_URL})
 echo ${NGROK_HOST}

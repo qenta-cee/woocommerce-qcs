@@ -7,8 +7,8 @@ services:
       MYSQL_DATABASE: ${WORDPRESS_DB_NAME:-wordpress}
       MYSQL_USER: ${WORDPRESS_DB_USER:-wordpress}
       MYSQL_PASSWORD: ${WORDPRESS_DB_PASS:-wordpress}
-    # volumes:
-    #   - ./data/wc_db:/var/lib/mysql
+    volumes:
+      - ./data/wc_db:/var/lib/mysql
   woocommerce:
     container_name: woocommerce
     build:
@@ -21,7 +21,7 @@ services:
       - ${PORT_SSL:-8443}:443
     volumes:
       - ./:/tmp/plugin:ro
-    #   - ./data/woocommerce:/var/www/html
+      - ./data/woocommerce:/var/www/html
     environment:
       WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST:-wc_db}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
@@ -36,7 +36,7 @@ services:
       WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL:-admin@admin.com}
       WORDPRESS_URL: ${WORDPRESS_HOST}
       PLUGIN_VERSION: ${PLUGIN_VERSION}
-      PLUGIN_URL: ${PLUGIN_URL:-local}
+      PLUGIN_URL: ${PLUGIN_URL}
       NGROK_TOKEN: ${NGROK_TOKEN}
       GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}
       GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
