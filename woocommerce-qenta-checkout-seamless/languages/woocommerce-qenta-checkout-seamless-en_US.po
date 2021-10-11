@@ -77,7 +77,7 @@ msgstr ""
 
 #: form_fields.php:62
 msgid "Customer number you received from Qenta (customerId, i.e. D2#####)."
-msgstr "Customer number you received from Qenta (customerId, i.e. D2#####). <a target=\"_blank\" href=\"https://guides.wirecard.com/request_parameters#customerid\">More information</a>"
+msgstr "Customer number you received from Qenta (customerId, i.e. D2#####). <a target=\"_blank\" href=\"https://guides.qenta.com/request_parameters/#Customerid\">More information</a>"
 
 #: form_fields.php:67
 msgid "Shop ID"
@@ -85,7 +85,7 @@ msgstr ""
 
 #: form_fields.php:70
 msgid "Shop identifier in case of more than one shop."
-msgstr "Shop identifier in case of more than one shop. <a target=\"_blank\" href=\"https://guides.wirecard.com/request_parameters#shopid\">More information</a>"
+msgstr "Shop identifier in case of more than one shop. <a target=\"_blank\" href=\"https://guides.qenta.com/request_parameters/#Shopid\">More information</a>"
 
 #: form_fields.php:74
 msgid "Secret"
@@ -109,7 +109,7 @@ msgstr ""
 
 #: form_fields.php:93
 msgid "Password for back-end operations (Toolkit)."
-msgstr "Password for back-end operations (Toolkit). <a target=\"_blank\" href=\"https://guides.wirecard.com/doku.php/back-end_operations:technical_wcs:start#required_request_parameters_for_all_operations\">More information</a>"
+msgstr "Password for back-end operations (Toolkit). <a target=\"_blank\" href=\"https://guides.qenta.com/back-end_operations/technical_qcs/start/\">More information</a>"
 
 #: form_fields.php:100
 msgid "Create orders"
