@@ -305,7 +305,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				<table>
 					<tr>
 						<th>' . __( 'Order', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td><a href="' . admin_url( "post.php?post=" . absint( $data->id_order ) ) . '&action=edit">' . esc_html($data->id_order) . '</a></td>
+						<td><a href="' . esc_url(admin_url( "post.php?post=" . absint( $data->id_order ) )) . '&action=edit">' . esc_html($data->id_order) . '</a></td>
 					</tr>
 					<tr>
 						<th>' . __( 'Payment method', 'woocommerce-qenta-checkout-seamless' ) . '</th>
