@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 which ngrok >/dev/null
 if [[ $? == 0 ]]; then
   NGROK_BINARY="$(which ngrok)"
@@ -11,6 +9,8 @@ else
   npm install ngrok
   NGROK_BINARY="~/node_modules/ngrok/bin/ngrok"
 fi
+
+set -e
 
 function get_ngrok_url() {
   curl --fail -s localhost:4040/api/tunnels | jq -r .tunnels\[0\].public_url | sed 's/^http:/https:/'
