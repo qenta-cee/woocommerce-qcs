@@ -6,9 +6,11 @@ if [[ $? == 0 ]]; then
 else
   >&2 echo "Installing NGROK"
   cd ~/
-  npm install ngrok
+  npm install ngrok >&2
   NGROK_BINARY="~/node_modules/ngrok/bin/ngrok"
 fi
+
+ls -l ${NGROK_BINARY}
 
 function get_ngrok_url() {
   curl --fail -s localhost:4040/api/tunnels | jq -r .tunnels\[0\].public_url | sed 's/^http:/https:/'
