@@ -31,7 +31,7 @@
  */
 
 define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'QentaCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '2.0.2' );
+define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '2.0.3' );
 
 /**
  * Config class
