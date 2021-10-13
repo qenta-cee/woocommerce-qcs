@@ -305,31 +305,31 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				<table>
 					<tr>
 						<th>' . __( 'Order', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td><a href="' . admin_url( "post.php?post=" . absint( $data->id_order ) ) . '&action=edit">' . $data->id_order . '</a></td>
+						<td><a href="' . admin_url( "post.php?post=" . absint( $data->id_order ) ) . '&action=edit">' . esc_html($data->id_order) . '</a></td>
 					</tr>
 					<tr>
 						<th>' . __( 'Payment method', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->payment_method . '</td>
+						<td>' . esc_html($data->payment_method) . '</td>
 					</tr>
 					<tr>
 						<th>' . __( 'Payment state', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->payment_state . '</td>
+						<td>' . esc_html($data->payment_state) . '</td>
 					</tr>
 					<tr>
 						<th>' . __( 'Amount', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->amount . '</td>
+						<td>' . esc_html($data->amount) . '</td>
 					</tr>
 					<tr>
 						<th>' . __( 'Currency', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->currency . '</td>
+						<td>' . esc_html($data->currency) . '</td>
 					</tr>
 					<tr>
 						<th>' . __( 'Gateway reference number', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->gateway_reference . '</td>
+						<td>' . esc_html($data->gateway_reference) . '</td>
 					</tr>
 					<tr>
 						<th>' . __( 'Qenta order number', 'woocommerce-qenta-checkout-seamless' ) . '</th>
-						<td>' . $data->order_number . '</td>
+						<td>' . esc_html($data->order_number) . '</td>
 					</tr>
 				</table>
 				</div>
@@ -343,7 +343,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				<table>';
 
 			foreach ( $data->order_details as $key => $value ) {
-				echo "<tr><th>$key</th><td>$value</td></tr>";
+				echo "<tr><th>" . esc_html($key) . "</th><td>" . esc_html($value) . "</td></tr>";
 			}
 
 			echo '</table></div></div>';
@@ -374,7 +374,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 		}
 
 		foreach ( $data->payments as $payment ) {
-			$payment = $payment->getData();
+			$payment = array_map( 'esc_html', $payment->getData() );
 
 			echo "<td> {$payment['paymentNumber']}</td>
 				  <td>{$payment['timeCreated']}</td>
@@ -389,7 +389,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='paymentNumber' value='{$payment['paymentNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$payment['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$payment['currency']}'>";
-			echo "<input type='hidden' name='id_tx' value='{$data->id_tx}'>";
+			echo "<input type='hidden' name='id_tx' value='" . esc_html($data->id_tx) . "'>";
 
 			// suppres notices for transferFund transactions, otherwise no notices are raised
 			$operations_allowed = explode( ",", @$payment['operationsAllowed'] );
@@ -406,12 +406,12 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				echo "<div class='wcs-op-group'>";
 
 				if ( $brand == 'Invoice' ) {
-					echo "<input type='hidden' value='".$data->amount."' name='amount'>";
+					echo "<input type='hidden' value='" . esc_html($data->amount) . "' name='amount'>";
 				} elseif ( $operation == 'DEPOSIT' or $operation == 'REFUND' ) {
 					echo "<input type='text' autocomplete='off' value='' name='amount'>";
 				}
 
-				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>" . __( $operation,
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='" . esc_attr($operation) . "'>" . __( $operation,
 				                                                                                                               'woocommerce-qenta-checkout-seamless' ) . "</button>";
 				echo "</div>";
 			}
@@ -449,7 +449,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 		}
 
 		foreach ( $data->credits as $credit ) {
-			$credit = $credit->getData();
+			$credit = array_map( 'esc_html', $credit->getData() );
 
 			echo "<td>{$credit['creditNumber']}</td>
 				  <td>{$credit['timeCreated']}</td>
@@ -462,13 +462,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 			echo "<input type='hidden' name='creditNumber' value='{$credit['creditNumber']}'>";
 			echo "<input type='hidden' name='orderNumber' value='{$credit['orderNumber']}'>";
 			echo "<input type='hidden' name='currency' value='{$credit['currency']}'>";
-			echo "<input type='hidden' name='wcOrder' value='{$data->id_order}'>";
+			echo "<input type='hidden' name='wcOrder' value='" . esc_html($data->id_order) . "'>";
 
 			foreach ( explode( ",", $credit['operationsAllowed'] ) as $operation ) {
 				if ( empty( $operation ) ) {
 					continue;
 				}
-				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='$operation'>" . __( $operation,
+				echo "<button class='button-primary' type='submit' name='submitWcsBackendOperation' value='" . esc_attr($operation) . "'>" . __( $operation,
 				                                                                                                               'woocommerce-qenta-checkout-seamless' ) . "</button>";
 			}
 
@@ -555,7 +555,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	 */
 	public function create_support_request() {
 		global $wp_version;
-		$postdata = $_POST;
+		$postdata = array_map( 'sanitize_text_field', $_POST );
 
 		$message = "WordPress: " . $wp_version . "\n";
 		$message .= "WooCommerce: " . WC()->version . "\n";
@@ -577,8 +577,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				$message .= $this->_settings[ $key ] . "\n";
 			}
 		}
-		$send_to = $postdata['support-mail'];
-		$from    = $postdata['customer-mail'];
+		$send_to = sanitize_email($postdata['support-mail']);
+		$from    = sanitize_email($postdata['customer-mail']);
 		$headers = 'From: <' . $from . '>';
 		$subject = 'WooCommerce Support Request';
 

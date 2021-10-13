@@ -29,7 +29,7 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
-$response = isset( $_POST['response'] ) ? $_POST['response'] : '';
+$response = isset( $_POST['response'] ) ? esc_attr($_POST['response']) : '';
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -46,6 +46,6 @@ $response = isset( $_POST['response'] ) ? $_POST['response'] : '';
 		}
 	</script>
 </head>
-<body onload='setResponse("<?php echo addslashes( $response ); ?>");'>
+<body onload='setResponse("<?php echo $response; ?>");'>
 </body>
 </html>
