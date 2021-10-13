@@ -29,7 +29,7 @@ if [[ -z ${NGROK_TOKEN} ]]; then
 fi
 
 ${NGROK_BINARY} authtoken ${NGROK_TOKEN} >&/dev/null
-${NGROK_BINARY} http https://localhost:8443 >&/dev/null &
+${NGROK_BINARY} http https://localhost:443 >&/dev/null &
 wait_for_ngrok
 NGROK_URL=$(get_ngrok_url)
 NGROK_HOST=$(sed 's,^https\?://,,' <<< ${NGROK_URL})

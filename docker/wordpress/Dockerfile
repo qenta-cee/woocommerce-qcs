@@ -60,16 +60,14 @@ RUN a2enmod ssl
 # get composer binary from composer docker image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# install ngrok
-RUN npm install ngrok -g
-
 # add user and dir for executing composer
 RUN useradd -u 431 -r -g www-data -s /sbin/nologin -c "Wordpress user" wp
 RUN mkdir -p /home/wp && chown -R wp:www-data /home/wp /etc/ssl
 USER wp
 WORKDIR /home/wp
 
-
+# install ngrok
+COPY --from=ngrok/ngrok:debian /bin/ngrok /usr/bin/ngrok
 
 # install WP-CLI and recommended packages
 RUN composer global require wp-cli/wp-cli-bundle
