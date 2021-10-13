@@ -15,7 +15,10 @@ jobs:
         id: branch
       - name: Start NGROK
         shell: bash
-        run: echo "::set-output name=host::$(timeout 1m bash docker/wordpress/ngrok.sh)"
+        run: |
+          NGROK_HOST=$(timeout 1m bash docker/wordpress/ngrok.sh)
+          echo "ngrok hostname: ${NGROK_HOST}"
+          echo "::set-output name=host::${NRGOK_HOST}"
         id: ngrok
         env:
           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}

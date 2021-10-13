@@ -2,6 +2,8 @@
 
 set -e
 
+touch /tmp/shop.log
+
 # If we are in Github plugin repo CI environment
 CI_REPO_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}
 if [[ ${CI_REPO_URL} == ${PLUGIN_URL//.git/} ]]; then

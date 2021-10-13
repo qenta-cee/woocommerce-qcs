@@ -130,6 +130,7 @@ $fields = array(
 				'Forwarding basket data to the respective financial service provider. ',
 				'woocommerce-qenta-checkout-seamless'
 			),
+      'default'     => 1,
 			'type'        => 'switch'
 		),
 		'woo_wcs_notificationemail'             => array(
@@ -220,6 +221,7 @@ $fields = array(
 		),
 		'woo_wcs_cc_display_exp_date_field'              => array(
 			'type'        => 'switch',
+      'default'     => 1,
 			'title'       => __( 'Display expiration date field', 'woocommerce-qenta-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the expiration date in your credit card form during the checkout process.',
 			                     'woocommerce-qenta-checkout-seamless' )
@@ -345,6 +347,7 @@ $fields = array(
 	'standardpayments'    => array(
 		'wcs_ccard_enable'              => array(
 			'title' => __( 'Credit Card', 'woocommerce-qenta-checkout-seamless' ),
+      'default'     => 1,
 			'type'  => 'switch'
 		),
 		'wcs_ccard-moto_enable'         => array(
