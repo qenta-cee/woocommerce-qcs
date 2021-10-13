@@ -23,7 +23,7 @@ jobs:
         env:
           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
       - name: Launch Shop
-        run: docker-compose up -d --build
+        run: docker-compose up -d
         env:
            WORDPRESS_HOST: ${{ steps.ngrok.outputs.host }}
            PORT_HTTP: 80
