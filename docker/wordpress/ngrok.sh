@@ -7,7 +7,7 @@ else
   >&2 echo "Installing NGROK"
   cd ~/
   npm install ngrok >&2
-  NGROK_BINARY="~/node_modules/ngrok/bin/ngrok"
+  NGROK_BINARY="./node_modules/ngrok/bin/ngrok"
 fi
 
 ls -l ${NGROK_BINARY}
