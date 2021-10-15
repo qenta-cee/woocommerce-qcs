@@ -42,9 +42,8 @@ jobs:
       - name: Prepare Artifact
         run: |
           mkdir -p /tmp/artifact
-          cp -r woocommerce-qenta-checkout-seamless /tmp/artifact/
-          cd /tmp/artifact/woocommerce-qenta-checkout-seamless
-          composer install
+          cp -r woocommerce-qenta-checkout-seamless composer.* /tmp/artifact/
+          cd /tmp/artifact && composer install
       - name: Upload Artifact
         id: upload_artifact
         uses: actions/upload-artifact@v2
