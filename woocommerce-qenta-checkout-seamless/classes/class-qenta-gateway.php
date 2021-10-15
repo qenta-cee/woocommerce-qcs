@@ -487,6 +487,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$config_array = $this->_config->get_client_config();
 			$client       = new QentaCEE\QMore\FrontendClient( $config_array );
 
+      // get customerId to determine if we are Test customer
+      $customerId  = $this->_config->get_client_customer_id( $this );
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Qenta_Checkout_Seamless',
 			                             home_url( '/', is_ssl() ? 'https' : 'http' ) );
@@ -531,9 +533,15 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
-			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
-			$client->setAmount( $order->get_total() )
+      // If Test Mode customer randomize orderReference to avoid issues with duplicate references per customerId
+      if (strtolower($customerId) == 'd200411') {
+        $orderReference = md5(random_int(0, 999999) . $this->_config->get_order_reference($order));
+      } else {
+        $orderReference = $this->_config->get_order_reference($order);
+      }
+      $client->setOrderReference($orderReference);
+      $client->setAmount( $order->get_total() )
 			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $checkout_data['wcs_payment_method'] )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
