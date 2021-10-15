@@ -80,7 +80,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Bancontact_mistercash{
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/Bancontact_h32.png';
+		return WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/Bancontact_h32.png';
 	}
 
 	/**

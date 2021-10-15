@@ -560,8 +560,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 		$message = "WordPress: " . $wp_version . "\n";
 		$message .= "WooCommerce: " . WC()->version . "\n";
 		$message .= "PHP: " . phpversion() . "\n";
-		$message .= "Pluginname: " . WOOCOMMERCE_GATEWAY_WCS_NAME . "\n";
-		$message .= "Pluginversion: " . WOOCOMMERCE_GATEWAY_WCS_VERSION . "\n";
+		$message .= "Pluginname: " . WOOCOMMERCE_GATEWAY_QMORE_NAME . "\n";
+		$message .= "Pluginversion: " . WOOCOMMERCE_GATEWAY_QMORE_VERSION . "\n";
 		$message .= "-----------------------------------------\n";
 		$message .= "Message: \n" . strip_tags( $postdata['support-message'] ) . "\n";
 		$message .= "-----------------------------------------\n";

@@ -45,8 +45,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-define( 'WOOCOMMERCE_GATEWAY_WCS_BASEDIR', plugin_dir_path( __FILE__ ) );
-define( 'WOOCOMMERCE_GATEWAY_WCS_URL', plugin_dir_url( __FILE__ ) );
+define( 'WOOCOMMERCE_GATEWAY_QMORE_BASEDIR', plugin_dir_path( __FILE__ ) );
+define( 'WOOCOMMERCE_GATEWAY_QMORE_URL', plugin_dir_url( __FILE__ ) );
 
 register_activation_hook( __FILE__, 'woocommerce_install_qenta_checkout_seamless' );
 
@@ -72,15 +72,15 @@ function init_woocommerce_wcs_gateway() {
 		return;
 	}
 
-	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-gateway.php' );
-	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'vendor/autoload.php' );
+	require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-gateway.php' );
+	require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'vendor/autoload.php' );
 
 	spl_autoload_register(
 		function ( $class_name ) {
 			if ( strpos( $class_name, "Qenta_Checkout_Seamless" ) ) {
 				$method = str_replace( "WC_Gateway_Qenta_Checkout_Seamless_", "", $class_name );
-				if ( file_exists( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-qenta-' . strtolower( $method ) . ".php" ) ) {
-					require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/payment-methods/class-qenta-' . strtolower( $method ) . ".php" );
+				if ( file_exists( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/payment-methods/class-qenta-' . strtolower( $method ) . ".php" ) ) {
+					require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/payment-methods/class-qenta-' . strtolower( $method ) . ".php" );
 				}
 			}
 		} );
@@ -157,7 +157,7 @@ function qenta_transactions_add_page() {
 		$parent_slug = 'options-general.php';
 	}
 
-	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-gateway.php' );
+	require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-gateway.php' );
 
 	$gateway = new WC_Gateway_Qenta_Checkout_Seamless();
 
@@ -188,7 +188,7 @@ function qenta_transactions_add_page() {
  * @since 1.0.0
  */
 function add_qenta_support_request_page() {
-	require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-gateway.php' );
+	require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-gateway.php' );
 
 	add_submenu_page(
 		null,
@@ -206,7 +206,7 @@ function add_qenta_support_request_page() {
  * @since 1.0.0
  */
 function init_config_values() {
-	require_once WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/includes/form_fields.php';
+	require_once WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/includes/form_fields.php';
 
 	$settings = array();
 

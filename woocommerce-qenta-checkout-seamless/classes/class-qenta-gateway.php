@@ -30,11 +30,11 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-admin.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-config.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-datastorage.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-transaction.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-backend-operations.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-admin.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-config.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-datastorage.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-transaction.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-backend-operations.php' );
 
 /**
  * Basic gateway class
@@ -349,8 +349,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 				}
 			</script>
 			<script type="text/javascript" src="<?= $response->getJavascriptUrl() ?>"></script>
-			<script type="text/javascript" src="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/scripts/payment.js"></script>
-			<link rel="stylesheet" type="text/css" href="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/styles/payment.css">
+			<script type="text/javascript" src="<?= WOOCOMMERCE_GATEWAY_QMORE_URL ?>assets/scripts/payment.js"></script>
+			<link rel="stylesheet" type="text/css" href="<?= WOOCOMMERCE_GATEWAY_QMORE_URL ?>assets/styles/payment.css">
 			<?php
 			foreach ( $this->get_enabled_payment_types() as $type ) {
 				?>
@@ -884,8 +884,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
         			array(
         				'url' => $url
         			),
-        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR,
-        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR
+        			WOOCOMMERCE_GATEWAY_QMORE_BASEDIR,
+        			WOOCOMMERCE_GATEWAY_QMORE_BASEDIR
         		);
         		exit();
         }

@@ -30,8 +30,8 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-define( 'WOOCOMMERCE_GATEWAY_WCS_NAME', 'QentaCheckoutSeamless' );
-define( 'WOOCOMMERCE_GATEWAY_WCS_VERSION', '2.0.3' );
+define( 'WOOCOMMERCE_GATEWAY_QMORE_NAME', 'QentaCheckoutSeamless' );
+define( 'WOOCOMMERCE_GATEWAY_QMORE_VERSION', '2.0.3' );
 
 /**
  * Config class
@@ -205,8 +205,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Config {
 		return QentaCEE\QMore\FrontendClient::generatePluginVersion(
 			'woocommerce',
 			WC()->version,
-			WOOCOMMERCE_GATEWAY_WCS_NAME,
-			WOOCOMMERCE_GATEWAY_WCS_VERSION
+			WOOCOMMERCE_GATEWAY_QMORE_NAME,
+			WOOCOMMERCE_GATEWAY_QMORE_VERSION
 		);
 	}
 

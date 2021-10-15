@@ -80,7 +80,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Sofortueberweisung {
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL . __( 'assets/images/sofort_h32.png',
+		return WOOCOMMERCE_GATEWAY_QMORE_URL . __( 'assets/images/sofort_h32.png',
 		                                         'woocommerce-qenta-checkout-seamless' );
 	}
 

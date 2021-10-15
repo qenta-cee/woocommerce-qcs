@@ -90,7 +90,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 	 * @return string
 	 */
 	public function get_icon() {
-		return WOOCOMMERCE_GATEWAY_WCS_URL . 'assets/images/TrustPay_h32.png';
+		return WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/TrustPay_h32.png';
 	}
 
 	/**
