@@ -121,7 +121,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 		try {
 			$backend_client = new QentaCEE\QMore\BackendClient( $config_array );
 		} catch ( QentaCEE\QMore\Exception\InvalidArgumentException $e ) {
-			$this->_logger->error( __METHOD__ . ':' . print_r( $e, true ) );
+			$this->_logger->error( __METHOD__ . ':' . print_r( esc_html( $e ), true ) );
 
 			return __( 'This payment method is not available. Please contact the administrator.',
 			           'woocommerce-qenta-checkout-seamless' );
@@ -132,7 +132,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 			$response = $backend_client->getFinancialInstitutions( 'TRUSTPAY' );
 		} catch ( Exception $e ) {
 
-			$this->_logger->error( __METHOD__ . ':' . print_r( $e, true ) );
+			$this->_logger->error( __METHOD__ . ':' . print_r( esc_html( $e ), true ) );
 
 			return __( 'This payment method is not available. Please contact the administrator.',
 			           'woocommerce-qenta-checkout-seamless' );
@@ -145,17 +145,17 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 				return strcmp( $a['id'], $b['id'] );
 			} );
 		} else {
-			$this->_logger->error( __METHOD__ . ':' . print_r( $response->getErrors(), true ) );
+			$this->_logger->error( __METHOD__ . ':' . print_r( esc_html( $response->getErrors() ), true ) );
 		}
 
 		$html = '<fieldset  class="wc-credit-card-form wc-payment-form">';
 
 		// dropdown for financial institution
 		$html .= "<p class='form-row'>";
-		$html .= "<label>" . __( 'Financial institution:',
-		                         'woocommerce-qenta-checkout-seamless' ) . " <span class='required'>*</span></label>";
+		$html .= "<label>" . esc_html( __( 'Financial institution:',
+		                         'woocommerce-qenta-checkout-seamless' ) ) . " <span class='required'>*</span></label>";
 		$html .= "<select name='woo_wcs_trustpay_financialInstitution' autocomplete='off'>";
-		$html .= "<option value=''>" . __( 'Choose your bank', 'woocommerce-qenta-checkout-seamless' ) . "</option>";
+		$html .= "<option value=''>" . esc_html( __( 'Choose your bank', 'woocommerce-qenta-checkout-seamless' ) ) . "</option>";
 		foreach ( $financial_institutions as $institution ) {
 			$html .= "<option value='" . $institution['id'] . "'>" . $institution['name'] . "</option>";
 		}
@@ -194,8 +194,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Trustpay {
 		$errors = [ ];
 
 		if ( empty( $data['woo_wcs_trustpay_financialInstitution'] ) ) {
-			$errors[] = "&bull; " . __( 'Financial institution must not be empty.',
-			                            'woocommerce-qenta-checkout-seamless' );
+			$errors[] = "&bull; " . esc_html( __( 'Financial institution must not be empty.',
+			                            'woocommerce-qenta-checkout-seamless' ) );
 		}
 
 		return count( $errors ) == 0 ? true : join( "<br>", $errors );

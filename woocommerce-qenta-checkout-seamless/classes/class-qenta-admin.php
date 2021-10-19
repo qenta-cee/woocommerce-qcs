@@ -70,25 +70,25 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 		?>
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper wcs-tabs">
 			<a href="javascript:void(0);" data-target="#basicdata" class="nav-tab nav-tab-active"><?php echo esc_html(__( 'Access data',
-			                                                                                              'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                              'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#options" class="nav-tab "><?php echo esc_html(__( 'General settings',
-			                                                                              'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                              'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#creditcardoptions" class="nav-tab "><?php echo esc_html(__( 'Credit card',
-			                                                                                        'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                        'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#sepaoptions" class="nav-tab "><?php echo esc_html(__( 'SEPA',
-			                                                                                  'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                  'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#invoiceoptions" class="nav-tab "><?php echo esc_html(__( 'Invoice',
-			                                                                                     'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                     'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#installmentoptions" class="nav-tab "><?php echo esc_html(__( 'Installment',
-			                                                                                         'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                         'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#standardpayments" class="nav-tab "><?php echo esc_html(__( 'Standard payments',
-			                                                                                       'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                       'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#bankingpayments" class="nav-tab "><?php echo esc_html(__( 'Banking payments',
-			                                                                                      'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                      'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#alternativepayments"
-			   class="nav-tab "><?php echo esc_html(__( 'Alternative payments', 'woocommerce-qenta-checkout-seamless' )) ?></a>
+			   class="nav-tab "><?php echo esc_html(__( 'Alternative payments', 'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?php echo esc_html(__( 'Mobile payments',
-			                                                                                     'woocommerce-qenta-checkout-seamless' )) ?></a>
+			                                                                                     'woocommerce-qenta-checkout-seamless' )); ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
@@ -172,37 +172,37 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	public function include_backend_header( $gateway ) {
 		?>
 		<link rel='stylesheet'
-		      href='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/styles/admin.css' )) ?>'>
-		<script src='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/scripts/admin.js' )) ?>'></script>
+		      href='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/styles/admin.css' )); ?>'>
+		<script src='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/scripts/admin.js' )); ?>'></script>
 		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? esc_html($gateway->method_title) : esc_html(__( 'Settings',
 		                                                                                    'woocommerce-qenta-checkout-seamless' )); ?></h3>
 
 		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/images/qenta-logo.png' )) ?>">
+			<img src="<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/images/qenta-logo.png' )); ?>">
 			<p><?php echo esc_html(__( 'Qenta - Your Full Service Payment Provider - Comprehensive solutions from one single source',
-			           'woocommerce-qenta-checkout-seamless' )) ?></p>
+			           'woocommerce-qenta-checkout-seamless' )); ?></p>
 
 			<p><?php echo esc_html(__( 'Qenta is one of the world´s leading providers of outsourcing and white label solutions for electronic payment transactions.',
-			           'woocommerce-qenta-checkout-seamless' )) ?></p>
+			           'woocommerce-qenta-checkout-seamless' )); ?></p>
 
 			<p><?php echo esc_html(__( 'As independent provider of payment solutions, we accompany our customers along the entire business development. Our payment solutions are perfectly tailored to suit e-Commerce requirements and have made	us Austria´s leading payment service provider. Customization, competence, and commitment.',
-			           'woocommerce-qenta-checkout-seamless' )) ?></p>
+			           'woocommerce-qenta-checkout-seamless' )); ?></p>
 
 		</div>
 		<div class="woo-wcs-settings-header-wrapper">
 			<div class="woo-wcs-backend-links">
 				<a class="button-primary" id="wcs-transaction-button"
 				   href="?page=qenta_transactions_page&transaction_start=1" <?php echo ( $_GET['page'] == 'qenta_transactions_page' ) ? 'disabled="disabled"' : '' ?>>
-					<?php echo esc_html(__( 'Transaction overview', 'woocommerce-qenta-checkout-seamless' )) ?>
+					<?php echo esc_html(__( 'Transaction overview', 'woocommerce-qenta-checkout-seamless' )); ?>
 				</a>
 
 				<a class="button-primary" id="wcs-support-button"
 				   href="?page=qenta_support_request" <?php echo ( $_GET['page'] == 'qenta_support_request' ) ? 'disabled="disabled"' : '' ?>>
-					<?php echo esc_html(__( 'Contact support', 'woocommerce-qenta-checkout-seamless' )) ?>
+					<?php echo esc_html(__( 'Contact support', 'woocommerce-qenta-checkout-seamless' )); ?>
 				</a>
 				<a class="button-primary" id="wcs-settings-button"
 				   href="?page=wc-settings&tab=checkout&section=woocommerce_wcs" <?php echo ( $_GET['page'] == 'wc-settings' ) ? 'disabled="disabled"' : '' ?>>
-					<?php echo esc_html(__( 'Qenta settings', 'woocommerce-qenta-checkout-seamless' )) ?>
+					<?php echo esc_html(__( 'Qenta settings', 'woocommerce-qenta-checkout-seamless' )); ?>
 				</a>
 			</div>
 		</div>
@@ -493,7 +493,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 			<div class="postbox">
 				<h2 class="wcs-transaction-h2">
 					<span>
-						<?php echo esc_html(__( 'Support Request', 'woocommerce-qenta-checkout-seamless' )) ?>
+						<?php echo esc_html(__( 'Support Request', 'woocommerce-qenta-checkout-seamless' )); ?>
 					</span>
 				</h2>
 				<div class="inside">
@@ -510,13 +510,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 							<tr>
 								<td class="titledesc support-label">
 									<label for="support-mail">
-										<?php echo esc_html(__( 'To:', 'woocommerce-qenta-checkout-seamless' )) ?>
+										<?php echo esc_html(__( 'To:', 'woocommerce-qenta-checkout-seamless' )); ?>
 									</label>
 								</td>
 								<td class="forminp"><select name="support-mail">
 										<option value="support@qenta.com">
 											<?php echo esc_html(__( 'Support Team Qenta CEE, Austria',
-											        'woocommerce-qenta-checkout-seamless' )) ?>
+											        'woocommerce-qenta-checkout-seamless' )); ?>
 										</option>
 									</select>
 								</td>
@@ -524,7 +524,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 							<tr>
 								<td class="titledesc support-label">
 									<label for="customer-mail">
-										<?php echo esc_html(__( 'Your e-mail address:', 'woocommerce-qenta-checkout-seamless' )) ?>
+										<?php echo esc_html(__( 'Your e-mail address:', 'woocommerce-qenta-checkout-seamless' )); ?>
 									</label>
 								</td>
 								<td class="forminp"><input type="email" name="customer-mail"/></td>
@@ -532,7 +532,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 							<tr>
 								<td class="titledesc support-label">
 									<label for="support-message">
-										<?php echo esc_html(__( 'Your message:', 'woocommerce-qenta-checkout-seamless' )) ?>
+										<?php echo esc_html(__( 'Your message:', 'woocommerce-qenta-checkout-seamless' )); ?>
 									</label>
 								</td>
 								<td class="forminp"><textarea rows="5" cols="70" name="support-message"></textarea></td>
@@ -540,7 +540,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 						</table>
 						<br/>
 						<input type="submit" class="button-primary" name="send-request"
-						       value="<?php echo esc_attr(__( 'Send your request', 'woocommerce-qenta-checkout-seamless' )) ?>"/>
+						       value="<?php echo esc_attr(__( 'Send your request', 'woocommerce-qenta-checkout-seamless' )); ?>"/>
 					</form>
 				</div>
 			</div>

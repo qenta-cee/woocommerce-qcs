@@ -93,7 +93,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 		$order_id      = $params_post['order_id'];
 		$refund_amount = $params_post['refund_amount'];
 		if ( $refund_amount <= 0 ) {
-			$this->_logger->error( __( 'Refund amount must be greater than zero.', 'woocommerce-qenta-checkout-seamless' ) );
+			$this->_logger->error( esc_html( __( 'Refund amount must be greater than zero.', 'woocommerce-qenta-checkout-seamless' ) ) );
 
 			return false;
 		}
@@ -332,7 +332,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 		foreach ( $errors as $error ) {
 			$_errors[] = $error->getConsumerMessage();
 		}
-		$this->_logger->error( "$method : processing refund failed with error(s): " . join( '|', $_errors ) );
+		$this->_logger->error( esc_html( "$method : processing refund failed with error(s): " . join( '|', $_errors ) ) );
 	}
 
 	/**
@@ -359,7 +359,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 		$refundable_sum = $wpdb->get_row( $refundable_sum );
 
 		if ( $refundable_sum !== null && $amount > $refundable_sum->sum ) {
-			$this->_logger->error( __METHOD__ . ":" . __( 'The refunded amount must be less than deposited amount.', 'woocommerce-qenta-checkout-seamless' ) );
+			$this->_logger->error( __METHOD__ . ":" . esc_html( __( 'The refunded amount must be less than deposited amount.', 'woocommerce-qenta-checkout-seamless' ) ) );
 
 			return false;
 		}
