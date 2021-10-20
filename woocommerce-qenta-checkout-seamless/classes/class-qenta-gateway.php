@@ -276,7 +276,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 							value="1" <?php esc_attr( checked( $this->get_option( $key ), '1' ) ); ?> <?php echo esc_attr( $this->get_custom_attribute_html( $data ) ); ?> />
 						<div class="wcs-chkbx-switch-slider"></div>
 					</label><br/>
-					<?php echo esc_html( $this->get_description_html( $data ) ); ?>
+					<?php echo $this->get_description_html( $data ); ?>
 				</fieldset>
 			</td>
 		</tr>
@@ -362,7 +362,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					class="input-radio"
 					value="woocommerce_wcs"
 					name="payment_method"
-					onclick="changeWCSPayment('<?php echo esc_html( $type->get_payment_type() ); ?>');"
+					onclick="changeWCSPayment('<?php echo esc_attr( $type->get_payment_type() ); ?>');"
 					data-order_button_text>
 				<label for="payment_method_wcs_<?php echo esc_attr( $type->get_payment_type() ); ?>">
 					<?php echo $type->get_label();
@@ -378,7 +378,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 				class="payment_box payment_method_wcs_<?php echo ( $type->has_payment_fields() ) ? esc_attr( $type->get_payment_type() ) : "" ?>"
 				style="display:none;">
 				<?php
-				echo $type->has_payment_fields() ? esc_html( $type->get_payment_fields( $response->getStorageId() ) ) : null;
+				echo $type->has_payment_fields() ? $type->get_payment_fields( $response->getStorageId() ) : null;
 			}
 
 		} catch ( Exception $e ) {
@@ -694,7 +694,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$message = "order with id `" . $order->get_id() . "` not found";
 			$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
 
-			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( esc_html( $message ) );
+			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
 			exit();
 		}
 

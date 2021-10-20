@@ -56,7 +56,6 @@ $fields = array(
 			'options'     => array(
 				'production' => __( 'Production', 'woocommerce-qenta-checkout-seamless' ),
 				'demo'       => __( 'Demo', 'woocommerce-qenta-checkout-seamless' ),
-				'test'       => __( 'Test', 'woocommerce-qenta-checkout-seamless' ),
 				'test3d'     => __( 'Test 3D', 'woocommerce-qenta-checkout-seamless' )
 			)
 		),

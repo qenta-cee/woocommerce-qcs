@@ -93,52 +93,52 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'basicdata' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="options">
-				<table class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'options' ),
-				                                                                false )); ?></table>
+				<table class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'options' ),
+				                                                                false ); ?></table>
 			</div>
 			<div class="tab-pane" id="creditcardoptions">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'creditcardoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="sepaoptions">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'sepaoptions' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'sepaoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="invoiceoptions">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'invoiceoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="installmentoptions">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'installmentoptions' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="standardpayments">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'standardpayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="bankingpayments">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'bankingpayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="alternativepayments">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'alternativepayments' ),
+				                                                             false ); ?></table>
 			</div>
 			<div class="tab-pane" id="mobilepayments">
 				<table
-					class="form-table"><?php echo esc_html($gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
-				                                                             false )); ?></table>
+					class="form-table"><?php echo $gateway->generate_settings_html( $this->get_settings_fields( 'mobilepayments' ),
+				                                                             false ); ?></table>
 			</div>
 		</div>
 		<?php
