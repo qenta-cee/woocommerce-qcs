@@ -93,7 +93,7 @@ msgstr "Secret"
 
 #: form_fields.php:77
 msgid "String which you received from Qenta for signing and validating data to prove their authenticity."
-msgstr "Geheime Zeichenfolge, die Sie von Qenta erhalten haben, zum Signieren und Validieren von Daten zur Prüfung der Authentizität. <a target=\"_blank\" href=\"https://guides.wirecard.com/security:start#secret_and_fingerprint\">Weitere Informationen</a>"
+msgstr "Geheime Zeichenfolge, die Sie von Qenta erhalten haben, zum Signieren und Validieren von Daten zur Prüfung der Authentizität. <a target=\"_blank\" href=\"https://guides.qenta.com/secret_and_fingerprint/\">Weitere Informationen</a>"
 
 #: form_fields.php:82
 msgid "URL to contact page"
@@ -181,7 +181,7 @@ msgstr "Benachrichtigungsemail"
 
 #: form_fields.php:164
 msgid "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Qenta and your online shop.<br>Please contact our sales teams to activate this feature."
-msgstr "Benachrichtigung per E-Mail über Zahlungen Ihrer Kunden, falls ein Kommunikationsproblem zwischen Qenta und Ihrem Onlineshop aufgetreten ist.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">Weitere Informationen</a>"
+msgstr "Benachrichtigung per E-Mail über Zahlungen Ihrer Kunden, falls ein Kommunikationsproblem zwischen Qenta und Ihrem Onlineshop aufgetreten ist.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.qenta.com/contact/\">Weitere Informationen</a>"
 
 #: form_fields.php:170
 msgid "Automated deposit"
@@ -189,7 +189,7 @@ msgstr "Automatisches Abbuchen"
 
 #: form_fields.php:172
 msgid "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature."
-msgstr "Automatisches Abbuchen der Zahlungen.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">Weitere Informationen</a>"
+msgstr "Automatisches Abbuchen der Zahlungen.<br>Bitte kontaktieren Sie unsere Sales-Teams um dieses Feature freizuschalten. <a target=\"_blank\" href=\"https://guides.qenta.com/contact/\">Weitere Informationen</a>"
 
 #: form_fields.php:178
 msgid "payolution terms"
@@ -197,7 +197,7 @@ msgstr "Payolution Nutzungsbedingungen"
 
 #: form_fields.php:180
 msgid "Consumer must accept payolution terms during the checkout process."
-msgstr "Kunden müssen die Nutzungsbedingungen von payolution während des Bezahlprozesses akzeptieren. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:invoice:payolution\">Weitere Informationen</a>"
+msgstr "Kunden müssen die Nutzungsbedingungen von payolution während des Bezahlprozesses akzeptieren. <a target=\"_blank\" href=\"https://guides.qenta.com/payment_methods/invoice/payolution/\">Weitere Informationen</a>"
 
 #: form_fields.php:186
 msgid "payolution mID"
@@ -221,7 +221,7 @@ msgstr "SAQ A konform"
 
 #: form_fields.php:203
 msgid "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Qenta Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable."
-msgstr "Falls 'Nein' gesetzt ist, gilt der strengere SAQ A-EP. Falls 'Ja' gesetzt ist, wird in Qenta Checkout Seamless das 'PCI DSS SAQ A Compliance'-Feature verwendet und es gilt der SAQ A. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start\">Weitere Informationen</a>"
+msgstr "Falls 'Nein' gesetzt ist, gilt der strengere SAQ A-EP. Falls 'Ja' gesetzt ist, wird in Qenta Checkout Seamless das 'PCI DSS SAQ A Compliance'-Feature verwendet und es gilt der SAQ A. <a target=\"_blank\" href=\"https://guides.qenta.com/qmore/pci3_fallback/\">Weitere Informationen</a>"
 
 #: form_fields.php:208
 msgid "Allowing MoTo for roles"
@@ -229,7 +229,7 @@ msgstr "MoTo erlauben für Gruppe"
 
 #: form_fields.php:209
 msgid "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop."
-msgstr "Kreditkarte - Post / Telefonbestellung (MoTo) darf niemals den Kunden in Ihrem Onlineshop angeboten werden. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:ccard_moto:start\">Weitere Informationen</a>"
+msgstr "Kreditkarte - Post / Telefonbestellung (MoTo) darf niemals den Kunden in Ihrem Onlineshop angeboten werden. <a target=\"_blank\" href=\"https://guides.qenta.com/payment_methods/ccard_moto/start/\">Weitere Informationen</a>"
 
 #: form_fields.php:214
 msgid "Iframe CSS-URL"
@@ -237,7 +237,7 @@ msgstr "Iframe CSS-URL"
 
 #: form_fields.php:215
 msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css."
-msgstr "Eingabe des CSS-Dateinamens, um die iFrame-Eingabefelder anzupassen, wenn das \"PCI DSS SAQ A Compliance\"-Feature verwendet wird. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start#customization_via_css\">Weitere Informationen</a>"
+msgstr "Eingabe des CSS-Dateinamens, um die iFrame-Eingabefelder anzupassen, wenn das \"PCI DSS SAQ A Compliance\"-Feature verwendet wird. <a target=\"_blank\" href=\"https://guides.qenta.com/qmore/pci3_fallback/\">Weitere Informationen</a>"
 
 #: form_fields.php:219
 msgid "Credit card number placeholder text"

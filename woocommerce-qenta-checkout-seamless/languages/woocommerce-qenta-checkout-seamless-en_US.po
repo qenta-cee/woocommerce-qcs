@@ -93,7 +93,7 @@ msgstr ""
 
 #: form_fields.php:77
 msgid "String which you received from Qenta for signing and validating data to prove their authenticity."
-msgstr "String which you received from Qenta for signing and validating data to prove their authenticity. <a target=\"_blank\" href=\"https://guides.wirecard.com/security:start#secret_and_fingerprint\">More information</a>"
+msgstr "String which you received from Qenta for signing and validating data to prove their authenticity. <a target=\"_blank\" href=\"https://guides.qenta.com/secret_and_fingerprint/\">More information</a>"
 
 #: form_fields.php:82
 msgid "URL to contact page"
@@ -181,7 +181,7 @@ msgstr ""
 
 #: form_fields.php:164
 msgid "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Qenta and your online shop.<br>Please contact our sales teams to activate this feature."
-msgstr "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Qenta and your online shop.<br>Please contact our sales teams to activate this feature. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">More information</a>"
+msgstr "Receiving notification by e-mail regarding the orders of your consumers if an error occurred in the communication between Qenta and your online shop.<br>Please contact our sales teams to activate this feature. <a target=\"_blank\" href=\"https://guides.qenta.com/contact/\">More information</a>"
 
 #: form_fields.php:170
 msgid "Automated deposit"
@@ -189,7 +189,7 @@ msgstr ""
 
 #: form_fields.php:172
 msgid "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature."
-msgstr "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature. <a target=\"_blank\" href=\"https://guides.wirecard.com/sales\">More information</a>"
+msgstr "Enabling an automated deposit of payments.<br>Please contact our sales teams to activate this feature. <a target=\"_blank\" href=\"https://guides.qenta.com/contact/\">More information</a>"
 
 #: form_fields.php:178
 msgid "payolution terms"
@@ -197,7 +197,7 @@ msgstr ""
 
 #: form_fields.php:180
 msgid "Consumer must accept payolution terms during the checkout process."
-msgstr "Consumer must accept payolution terms during the checkout process. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:invoice:payolution\">More information</a>"
+msgstr "Consumer must accept payolution terms during the checkout process. <a target=\"_blank\" href=\"https://guides.qenta.com/payment_methods/invoice/payolution/\">More information</a>"
 
 #: form_fields.php:186
 msgid "payolution mID"
@@ -221,7 +221,7 @@ msgstr ""
 
 #: form_fields.php:203
 msgid "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Qenta Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable."
-msgstr "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Qenta Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start\">More information</a>"
+msgstr "Selecting 'NO', the stringent SAQ A-EP is applicable. Selecting 'YES', Qenta Checkout Seamless is integrated with the 'PCI DSS SAQ A Compliance' feature and SAQ A is applicable. <a target=\"_blank\" href=\"https://guides.qenta.com/qmore/pci3_fallback/\">More information</a>"
 
 #: form_fields.php:208
 msgid "Allowing MoTo for roles"
@@ -229,7 +229,7 @@ msgstr ""
 
 #: form_fields.php:209
 msgid "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop."
-msgstr "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop. <a target=\"_blank\" href=\"https://guides.wirecard.com/payment_methods:ccard_moto:start\">More information</a>"
+msgstr "Credit Card - Mail Order and Telephone Order (MoTo) must never be offered to any consumer in your online shop. <a target=\"_blank\" href=\"https://guides.qenta.com/payment_methods/ccard_moto/start/\">More information</a>"
 
 #: form_fields.php:214
 msgid "Iframe CSS-URL"
@@ -237,7 +237,7 @@ msgstr ""
 
 #: form_fields.php:215
 msgid "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css."
-msgstr "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css. <a target=\"_blank\" href=\"https://guides.wirecard.com/wcs:pci3_fallback?redirect=1id=wcs:pci3_fallback:start#customization_via_css\">More information</a>"
+msgstr "Entry of a name for the CSS file in order to customize the iframe input fields when using the 'PCI DSS SAQ A Compliance' feature. File must be placed in the 'view/css' directory of the plugin. Complete URL is required e.g. https://www.servername.com/iframe.css. <a target=\"_blank\" href=\"https://guides.qenta.com/qmore/pci3_fallback/\">More information</a>"
 
 #: form_fields.php:219
 msgid "Credit card number placeholder text"

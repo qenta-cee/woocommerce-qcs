@@ -35,4 +35,5 @@ Qenta Checkout Seamless offers:
 * WooCommerce 5
 
 1. Download woocommerce-qenta-checkout-seamless.zip from https://github.com/qenta-cee/woocommerce-qcs/releases
-2. Upload the plugin (Plugins → Installed Plugins → Add New)
+2. Remove any older Version of Qenta Checkout Seamless. Your settings will stay safe!. (Plugins → Qenta Checkout Seamless → Deactivate → Delete)
+3. Upload the plugin (Plugins → Add New → Upload Plugin). Choose the downloaded .zip file and click Install Now.
