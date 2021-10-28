@@ -172,13 +172,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	public function include_backend_header( $gateway ) {
 		?>
 		<link rel='stylesheet'
-		      href='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/styles/admin.css' )); ?>'>
-		<script src='<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/scripts/admin.js' )); ?>'></script>
+		      href='<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/styles/admin.css'); ?>'>
+		<script src='<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/scripts/admin.js'); ?>'></script>
 		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? esc_html($gateway->method_title) : esc_html(__( 'Settings',
 		                                                                                    'woocommerce-qenta-checkout-seamless' )); ?></h3>
 
 		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?php echo esc_url(plugins_url( 'woocommerce-qenta-checkout-seamless/assets/images/qenta-logo.png' )); ?>">
+			<img src="<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/qenta-logo.png' ); ?>">
 			<p><?php echo esc_html(__( 'Qenta - Your Full Service Payment Provider - Comprehensive solutions from one single source',
 			           'woocommerce-qenta-checkout-seamless' )); ?></p>
 

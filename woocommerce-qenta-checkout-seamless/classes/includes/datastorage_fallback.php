@@ -46,6 +46,6 @@ $response = isset( $_POST['response'] ) ? esc_attr($_POST['response']) : '';
 		}
 	</script>
 </head>
-<body onload='setResponse("<?php echo $response; ?>");'>
+<body onload='setResponse("<?php echo esc_attr($response); ?>");'>
 </body>
 </html>

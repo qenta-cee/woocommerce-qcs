@@ -34,13 +34,19 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+  <style>
+    body {
+      color: rgb(60, 67, 74);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+  </style>
 </head>
 <body>
-<h3><?php echo __( 'You will be redirected shortly', 'woocommerce-qenta-checkout-seamless' ); ?></h3>
-<p><?php echo __( 'If not, please click ', 'woocommerce-qenta-checkout-seamless' ); ?>
-	<a href="#" onclick="iframeBreakout()"><?php echo __( 'here', 'woocommerce-qenta-checkout-seamless' ); ?></a>
+<h3><?php echo esc_html(__( 'You will be redirected shortly', 'woocommerce-qenta-checkout-seamless' )); ?></h3>
+<p><?php echo esc_html(__( 'If not, please click ', 'woocommerce-qenta-checkout-seamless' )); ?>
+	<a href="#" onclick="iframeBreakout()"><?php echo esc_html(__( 'here', 'woocommerce-qenta-checkout-seamless' )); ?></a>
 </p>
-<form method="POST" name="redirectForm" action="<?php echo $url; ?>" target="_parent">
+<form method="POST" name="redirectForm" action="<?php echo esc_url($url); ?>" target="_parent">
 	<input type="hidden" name="redirected" value="1"/>
 	<?php
 	foreach ( $_REQUEST as $k => $v ) {

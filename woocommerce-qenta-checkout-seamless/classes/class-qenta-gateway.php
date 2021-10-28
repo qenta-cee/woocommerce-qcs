@@ -365,7 +365,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					onclick="changeWCSPayment('<?php echo esc_attr( $type->get_payment_type() ); ?>');"
 					data-order_button_text>
 				<label for="payment_method_wcs_<?php echo esc_attr( $type->get_payment_type() ); ?>">
-					<?php echo $type->get_label();
+					<?php echo esc_html($type->get_label());
 					if ( is_array( $type->get_icon() ) ) {
 						foreach ( $type->get_icon() as $icon ) {
 							echo "<img src='" . esc_url( $icon ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
@@ -498,7 +498,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 			// Check if service url is valid
 			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
-				wc_add_notice( __( "Service URL is invalid", 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				wc_add_notice( esc_html(__( "Service URL is invalid", 'woocommerce-qenta-checkout-seamless' )), 'error' );
 
 				return;
 			}
@@ -523,7 +523,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			if ( $transaction_id == 0 ) {
-				wc_add_notice( __( "Creating transaction entry failed!", 'woocommerce-qenta-checkout-seamless' ),
+				wc_add_notice( esc_html(__( "Creating transaction entry failed!", 'woocommerce-qenta-checkout-seamless' )),
 					               'error' );
 
 				$this->_logger->error( __METHOD__ . ': Creating transaction entry failed before initializing.' );
@@ -596,8 +596,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 
 				foreach ( $initResponse->getErrors() as $error ) {
-					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
-					                   'woocommerce-qenta-checkout-seamless' ),
+					wc_add_notice( esc_html(__( "Response failed! Error: {$error->getConsumerMessage()}",
+					                   'woocommerce-qenta-checkout-seamless' )),
 					               'error' );
 
 					$this->_logger->error( __METHOD__ . ': ' . esc_html( $error->getConsumerMessage() ) );
@@ -890,7 +890,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
         }
 
         if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $params_request['order-id'] ) ) {
-			wc_add_notice( __( 'Order-Id missing', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+			wc_add_notice( esc_html(__( 'Order-Id missing', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
 
 			header( 'Location: ' . esc_url_raw($redirectUrl) );
@@ -911,7 +911,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 				break;
 
 			case QentaCEE\QMore\ReturnFactory::STATE_CANCEL:
-				wc_add_notice( __( 'Payment has been cancelled.', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				wc_add_notice( esc_html(__( 'Payment has been cancelled.', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
 
@@ -926,9 +926,9 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			        }
 		        }
 		        if( strlen( $consumerMessage ) ) {
-			        wc_add_notice( __( $consumerMessage, 'woocommerce-qenta-checkout-seamless' ), 'error' );
+			        wc_add_notice( esc_html(__( $consumerMessage, 'woocommerce-qenta-checkout-seamless' )), 'error' );
 		        } else {
-				    wc_add_notice( __( 'Payment has failed.', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				    wc_add_notice( esc_html(__( 'Payment has failed.', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 				}
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
@@ -967,11 +967,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
                 }
             }
             if ( $order->get_status() == 'on-hold' ) {
-                $var = '<h3>' . __( 'Payment verification is pending',
-                                    'woocommerce-qenta-checkout-seamless' ) . '</h3>' . __(
+                $var = '<h3>' . esc_html(__( 'Payment verification is pending',
+                                    'woocommerce-qenta-checkout-seamless' )) . '</h3>' . esc_html(__(
                            'Your order will be processed as soon as we receive the payment confirmation from your bank.',
                            'woocommerce-qenta-checkout-seamless'
-                       );
+                       ));
             }
 
             return $var;
@@ -1113,7 +1113,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function qenta_transactions_error_page( $error_msg ) {
 		echo "<div class='wrap woocommerce'>";
-		echo htmlentities( $error_msg );
+		echo esc_html( $error_msg );
 		echo "</div>";
 	}
 
