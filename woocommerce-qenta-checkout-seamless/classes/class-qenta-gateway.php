@@ -341,15 +341,18 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 			?>
 			<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
-			<script type="text/javascript">
-				function changeWCSPayment(code) {
-					var changer = document.getElementById('wcs_payment_method_changer');
-					changer.value = code;
-				}
-			</script>
-			<script type="text/javascript" src="<?php echo esc_url( $response->getJavascriptUrl() ); ?>"></script>
-			<script type="text/javascript" src="<?php echo esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ); ?>"></script>
-			<link rel="stylesheet" type="text/css" href="<?php echo esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ); ?>">
+			<?php
+      $jsChangeWCSPayment = <<<JSCODE
+      function changeWCSPayment(code) {
+        var changer = document.getElementById('wcs_payment_method_changer');
+        changer.value = code;
+      }
+      JSCODE;
+      wp_add_inline_script('javascriptUrlJS', $jsChangeWCSPayment, 'before');
+      wp_enqueue_script('javascriptUrlJS', esc_url( $response->getJavascriptUrl() ));
+      wp_enqueue_script('paymentJS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
+      wp_enqueue_style('paymentCSS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
+      ?>
 			<?php
 			foreach ( $this->get_enabled_payment_types() as $type ) {
 				?>
