@@ -114,8 +114,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard {
 
 			return $html;
 		} else {
-			$html .= '
-			<script>
+			$jsParse = '
 				function parse' . $payment_type . 'date(value,issexp){
 					var month_field = document.getElementById("' . $payment_type . '-" + issexp + "-month"),
 					year_field = document.getElementById("' . $payment_type . '-" + issexp + "-year");
@@ -125,7 +124,10 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard {
 						year_field.value = year.toString().length <= 2 ? 2000 + parseInt(year) : year;
 					}
 				}
-			</script>';
+        ';
+        wp_register_script( 'parse' . $payment_type . 'JS', '', [], '', true );
+        wp_enqueue_script( 'parse' . $payment_type . 'JS' );
+        wp_add_inline_script( 'parse' . $payment_type . 'JS', $jsParse );
 			if ( $this->_settings['woo_wcs_cc_display_cardholder_field'] ) {
 				$html .= "<p class='form-row form-row-wide'>";
 				$html .= "<label>" . __( 'Card holder:', 'woocommerce-qenta-checkout-seamless' ) . "</label>";

@@ -87,6 +87,7 @@ function setup_store() {
   wp option update blogdescription "QENTA Plugin DEMO"
   wp theme install twentytwenty --activate
   wp post delete 2 --force
+  wp post delete 1 --force
 }
 
 function print_info() {
@@ -95,7 +96,7 @@ function print_info() {
   echo
   echo "Shop: https://${WORDPRESS_URL}"
   echo "Admin Panel: https://${WORDPRESS_URL}/wp-admin/"
-  echo "Plugin Config: https://${WORDPRESS_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout"
+  echo "Plugin Config: https://${WORDPRESS_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout&section=woocommerce_wcs"
   echo "User: ${WORDPRESS_ADMIN_USER}"
   echo "Password: ${WORDPRESS_ADMIN_PASS}"
   echo

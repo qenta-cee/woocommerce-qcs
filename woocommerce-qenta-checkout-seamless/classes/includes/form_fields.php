@@ -48,7 +48,7 @@ $fields = array(
 		'woo_wcs_configuration'   => array(
 			'title'       => __( 'Configuration', 'woocommerce-qenta-checkout-seamless' ),
 			'type'        => 'select',
-			'default'     => 'production',
+			'default'     => 'demo',
 			'description' => __(
 				'For integration, select predefined configuration settings or \'Production\' for live systems ',
 				'woocommerce-qenta-checkout-seamless'

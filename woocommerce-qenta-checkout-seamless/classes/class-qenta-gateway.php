@@ -329,10 +329,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
         changer.value = code;
       }
       JSCODE;
-      wp_enqueue_script('javascriptUrlJS', esc_url( $response->getJavascriptUrl() ));
+      wp_enqueue_script('javascriptUrlJS', esc_url_raw( $response->getJavascriptUrl() ));
       wp_add_inline_script('javascriptUrlJS', $jsChangeWCSPayment, 'before');
-      wp_enqueue_script('paymentJS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
-      wp_enqueue_style('paymentCSS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
+      wp_enqueue_script('paymentJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
+      wp_enqueue_style('paymentCSS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
       ?>
 			<?php
 			foreach ( $this->get_enabled_payment_types() as $type ) {
@@ -352,10 +352,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					<?php echo esc_html($type->get_label());
 					if ( is_array( $type->get_icon() ) ) {
 						foreach ( $type->get_icon() as $icon ) {
-							echo "<img src='" . esc_url( $icon ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
+							echo "<img src='" . esc_url_raw( $icon ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
 						}
 					} else {
-						echo "<img src='" . esc_url( $type->get_icon() ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
+						echo "<img src='" . esc_url_raw( $type->get_icon() ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
 					} ?>
 				</label>
 			<div
@@ -437,10 +437,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		$data = $this->initiate_payment( $order );
 		if( ! $data['iframeUrl'] ) {
 			$data['iframeUrl'] = $order->get_cancel_endpoint();
-			header( 'Location: ' . esc_url( $data['iframeUrl'] ) );
+			header( 'Location: ' . esc_url_raw( $data['iframeUrl'] ) );
 			exit();
 		} else if ( $data['wcs_payment_method'] == QentaCEE\Stdlib\PaymentTypeAbstract::SOFORTUEBERWEISUNG ) {
-		    header( 'Location: ' . esc_url ( $data['iframeUrl'] ) );
+		    header( 'Location: ' . esc_url_raw( $data['iframeUrl'] ) );
 			exit();
 		}
 		?>

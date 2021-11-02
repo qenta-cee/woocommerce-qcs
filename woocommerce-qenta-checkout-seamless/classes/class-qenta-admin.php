@@ -168,13 +168,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	 * @param $gateway
 	 */
 	public function include_backend_header( $gateway ) {
-    wp_enqueue_style('paymentCSS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/admin.css" ));
-    wp_enqueue_script('adminJS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/admin.js" ));
+    wp_enqueue_style('paymentCSS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/admin.css" ));
+    wp_enqueue_script('adminJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/admin.js" ));
 		?>
 		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? esc_html($gateway->method_title) : esc_html(__( 'Settings',
 		                                                                                    'woocommerce-qenta-checkout-seamless' )); ?></h3>
 		<div class="woo-wcs-settings-header-wrapper">
-			<img src="<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/qenta-logo.png' ); ?>">
+			<img src="<?php echo esc_url_raw(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/qenta-logo.png' ); ?>">
 			<p><?php echo esc_html(__( 'Qenta - Your Full Service Payment Provider - Comprehensive solutions from one single source',
 			           'woocommerce-qenta-checkout-seamless' )); ?></p>
 
@@ -230,7 +230,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 
 		if ( $page > 1 ) {
 			$prev_page = $page - 1;
-			echo "<a class='button-primary' href='?page=qenta_transactions_page&transaction_start=" . esc_url($prev_page) . "'>" . esc_html($back) . "</a>";
+			echo "<a class='button-primary' href='?page=qenta_transactions_page&transaction_start=" . esc_url_raw($prev_page) . "'>" . esc_html($back) . "</a>";
 		}
 
 		if ( $pages < 5 ) {
@@ -238,7 +238,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				$pagenr = $i + 1;
 				$active = ( $pagenr == $page ) ? ' active' : '';
 				$href   = ( $pagenr == $page ) ? 'javascript:void(0)' : "?page=qenta_transactions_page&transaction_start=" . esc_html($pagenr);
-				echo "<a class='button-primary" . esc_attr($active) . "' href='" . esc_url($href) . "'>" . esc_html($pagenr) . "</a>";
+				echo "<a class='button-primary" . esc_attr($active) . "' href='" . esc_url_raw($href) . "'>" . esc_html($pagenr) . "</a>";
 			}
 		}
 
@@ -262,7 +262,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 
 		if ( $page < $pages ) {
 			$next_page = $page + 1;
-			echo "<a class='button-primary' href='?page=qenta_transactions_page&transaction_start=" . esc_url($next_page) . "'>$next</a>";
+			echo "<a class='button-primary' href='?page=qenta_transactions_page&transaction_start=" . esc_url_raw($next_page) . "'>$next</a>";
 		}
 		?>
 		</div></div></div>
@@ -289,7 +289,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				<table>
 					<tr>
 						<th>' . esc_html(__( 'Order', 'woocommerce-qenta-checkout-seamless' )) . '</th>
-						<td><a href="' . esc_url(admin_url( "post.php?post=" . absint( $data->id_order ) )) . '&action=edit">' . esc_html($data->id_order) . '</a></td>
+						<td><a href="' . esc_url_raw(admin_url( "post.php?post=" . absint( $data->id_order ) )) . '&action=edit">' . esc_html($data->id_order) . '</a></td>
 					</tr>
 					<tr>
 						<th>' . esc_html(__( 'Payment method', 'woocommerce-qenta-checkout-seamless' )) . '</th>
