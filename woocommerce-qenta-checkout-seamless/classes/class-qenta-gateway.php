@@ -312,25 +312,6 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	        WC()->session->set( 'consumerDeviceId', $consumerDeviceId );
 	    }
 
-
-	    if( ($this->settings['wcs_invoice_enable'] == "1" && $this->settings['woo_wcs_invoiceprovider'] == "ratepay") ||
-		    ($this->settings['wcs_installment_enable'] == "1" && $this->settings['woo_wcs_installmentprovider'] == "ratepay") )
-		    {
-            echo "<script language='JavaScript'>
-                    var di = {t:'" . esc_attr( $consumerDeviceId ) . "',v:'WDWL',l:'Checkout'};
-                  </script>
-                  <script type='text/javascript' src='//d.ratepay.com/" . esc_attr( $consumerDeviceId ) . "/di.js'></script>
-                  <noscript>
-                    <link rel='stylesheet' type='text/css' href='//d.ratepay.com/di.css?t=" . esc_attr( $consumerDeviceId ) . "&v=WDWL&l=Checkout'>
-                  </noscript>
-                  <object type='application/x-shockwave-flash' data='//d.ratepay.com/WDWL/c.swf' width='0' height='0'>
-                    <param name='movie' value='//d.ratepay.com/WDWL/c.swf' />
-                    <param name='flashvars' value='t=" . esc_attr( $consumerDeviceId ) . "&v=WDWL'/>
-                    <param name='AllowScriptAccess' value='always'/>
-                  </object>";
-            }
-
-
 		try {
 			$response = $dataStorage->init();
 
