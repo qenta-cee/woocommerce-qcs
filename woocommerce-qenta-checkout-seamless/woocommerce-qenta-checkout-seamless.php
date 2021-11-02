@@ -222,18 +222,20 @@ function init_config_values() {
 }
 
 function add_qenta_storage_check() {
-    ?>
-    <script type="text/javascript">
-        if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
-            const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
-            WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
-                if ( 'undefined' != typeof this.iframes && this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
-                    this.iframes.CCARD = $('iframe')[0];
-                }
-
-                return originalMethod.apply( this, arguments );
-            }
+  // this is to be added to the footer, see wp_register_script arguments
+  wp_register_script( 'qentaStorageCheck', '', [], '', true );
+  $jsQentaStorageCheck = <<<JSCODE
+  if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
+    const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
+    WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
+        if ( 'undefined' != typeof this.iframes && this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
+            this.iframes.CCARD = $('iframe')[0];
         }
-    </script>
-    <?php
+
+        return originalMethod.apply( this, arguments );
+    }
+  }
+  JSCODE;
+  wp_enqueue_script( 'qentaStorageCheck' );
+  wp_add_inline_script( 'qentaStorageCheck', $jsQentaStorageCheck );
 }
