@@ -258,18 +258,6 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 				echo "<option value='" . esc_attr($i) . "' " . esc_attr($selected) . ">" . esc_html($i) . "</option>";
 			}
 			echo "</select>";
-			?>
-
-
-			<script language="javascript" type="text/javascript">
-				var start = 1;
-				function goToWctPage(page) {
-					start = "?page=qenta_transactions_page&transaction_start=" + page;
-					window.location.href = start;
-				}
-			</script>
-
-			<?php
 		}
 
 		if ( $page < $pages ) {
