@@ -93,8 +93,8 @@ function print_info() {
   echo
   echo '####################################'
   echo
-  echo "URL: https://${WORDPRESS_URL}"
-  echo "Panel: https://${WORDPRESS_URL}/wp-admin/"
+  echo "Shop: https://${WORDPRESS_URL}"
+  echo "Admin Panel: https://${WORDPRESS_URL}/wp-admin/"
   echo "Plugin Config: https://${WORDPRESS_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout"
   echo "User: ${WORDPRESS_ADMIN_USER}"
   echo "Password: ${WORDPRESS_ADMIN_PASS}"

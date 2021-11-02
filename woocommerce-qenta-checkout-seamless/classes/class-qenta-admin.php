@@ -87,8 +87,6 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 			                                                                                      'woocommerce-qenta-checkout-seamless' )); ?></a>
 			<a href="javascript:void(0);" data-target="#alternativepayments"
 			   class="nav-tab "><?php echo esc_html(__( 'Alternative payments', 'woocommerce-qenta-checkout-seamless' )); ?></a>
-			<a href="javascript:void(0);" data-target="#mobilepayments" class="nav-tab "><?php echo esc_html(__( 'Mobile payments',
-			                                                                                     'woocommerce-qenta-checkout-seamless' )); ?></a>
 		</nav>
 		<div class="tab-content panel">
 			<div class="tab-pane active" id="basicdata">
@@ -170,13 +168,11 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	 * @param $gateway
 	 */
 	public function include_backend_header( $gateway ) {
+    wp_enqueue_style('paymentCSS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/admin.css" ));
+    wp_enqueue_script('adminJS', esc_url( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/admin.js" ));
 		?>
-		<link rel='stylesheet'
-		      href='<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/styles/admin.css'); ?>'>
-		<script src='<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/scripts/admin.js'); ?>'></script>
 		<h3><?php echo ( ! empty( $gateway->method_title ) ) ? esc_html($gateway->method_title) : esc_html(__( 'Settings',
 		                                                                                    'woocommerce-qenta-checkout-seamless' )); ?></h3>
-
 		<div class="woo-wcs-settings-header-wrapper">
 			<img src="<?php echo esc_url(WOOCOMMERCE_GATEWAY_QMORE_URL . 'assets/images/qenta-logo.png' ); ?>">
 			<p><?php echo esc_html(__( 'Qenta - Your Full Service Payment Provider - Comprehensive solutions from one single source',

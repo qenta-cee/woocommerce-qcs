@@ -391,32 +391,8 @@ $fields = array(
 			'title' => __( 'giropay', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		),
-		'wcs_tatrapay_enable'              => array(
-			'title' => __( 'TatraPay', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_trustpay_enable'              => array(
-			'title' => __( 'TrustPay', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_bancontact_mistercash_enable' => array(
-			'title' => __( 'Bancontact', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_poli_enable'                  => array(
-			'title' => __( 'POLi', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
 		'wcs_przelewy24_enable'            => array(
 			'title' => __( 'Przelewy24', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_ekonto_enable'                => array(
-			'title' => __( 'eKonto', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_trustly_enable'               => array(
-			'title' => __( 'Trustly', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		)
 	),
@@ -425,26 +401,8 @@ $fields = array(
 			'title' => __( 'paysafecard', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		),
-		'wcs_epay_bg_enable'      => array(
-			'title' => __( 'ePay.bg', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
 		'wcs_installment_enable'  => array(
 			'title' => __( 'Installment', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_moneta_enable'       => array(
-			'title' => __( 'moneta.ru', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_skrillwallet_enable' => array(
-			'title' => __( 'Skrill Digital Wallet', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		)
-	),
-	'mobilepayments'      => array(
-		'wcs_pbx_enable' => array(
-			'title' => __( 'paybox', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		)
 	)
