@@ -29,23 +29,26 @@
  * By installing the plugin into the shop system the customer agrees to these terms of use.
  * Please do not use the plugin if you do not agree to these terms of use!
  */
-$response = isset( $_POST['response'] ) ? $_POST['response'] : '';
-
+$response = isset( $_POST['response'] ) ? sanitize_text_field($_POST['response']) : '';
+// arguments for wp_register_script to allow a no-dependency inline script and add it to the header
+wp_register_script( 'setResponseJS', '' );
+$jsSetReponse = <<<JSCODE
+function setResponse(response) {
+  if (typeof parent.QentaCEE_Fallback_Request_Object == 'object') {
+    parent.QentaCEE_Fallback_Request_Object.setResponseText(response);
+  }
+  else {
+    console.log('Not a valid fallback call.');
+  }
+}
+JSCODE;
+wp_enqueue_script( 'setResponseJS' );
+wp_add_inline_script( 'setResponseJS', $jsSetReponse );
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<script type="text/javascript">
-		function setResponse(response) {
-			if (typeof parent.QentaCEE_Fallback_Request_Object == 'object') {
-				parent.QentaCEE_Fallback_Request_Object.setResponseText(response);
-			}
-			else {
-				console.log('Not a valid fallback call.');
-			}
-		}
-	</script>
 </head>
-<body onload='setResponse("<?php echo addslashes( $response ); ?>");'>
+<body onload='setResponse("<?php echo esc_attr($response); ?>");'>
 </body>
 </html>

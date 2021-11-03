@@ -48,7 +48,7 @@ $fields = array(
 		'woo_wcs_configuration'   => array(
 			'title'       => __( 'Configuration', 'woocommerce-qenta-checkout-seamless' ),
 			'type'        => 'select',
-			'default'     => 'production',
+			'default'     => 'demo',
 			'description' => __(
 				'For integration, select predefined configuration settings or \'Production\' for live systems ',
 				'woocommerce-qenta-checkout-seamless'
@@ -56,7 +56,6 @@ $fields = array(
 			'options'     => array(
 				'production' => __( 'Production', 'woocommerce-qenta-checkout-seamless' ),
 				'demo'       => __( 'Demo', 'woocommerce-qenta-checkout-seamless' ),
-				'test'       => __( 'Test', 'woocommerce-qenta-checkout-seamless' ),
 				'test3d'     => __( 'Test 3D', 'woocommerce-qenta-checkout-seamless' )
 			)
 		),
@@ -130,6 +129,7 @@ $fields = array(
 				'Forwarding basket data to the respective financial service provider. ',
 				'woocommerce-qenta-checkout-seamless'
 			),
+      'default'     => 1,
 			'type'        => 'switch'
 		),
 		'woo_wcs_notificationemail'             => array(
@@ -220,6 +220,7 @@ $fields = array(
 		),
 		'woo_wcs_cc_display_exp_date_field'              => array(
 			'type'        => 'switch',
+      'default'     => 1,
 			'title'       => __( 'Display expiration date field', 'woocommerce-qenta-checkout-seamless' ),
 			'description' => __( 'Display input field to enter the expiration date in your credit card form during the checkout process.',
 			                     'woocommerce-qenta-checkout-seamless' )
@@ -345,6 +346,7 @@ $fields = array(
 	'standardpayments'    => array(
 		'wcs_ccard_enable'              => array(
 			'title' => __( 'Credit Card', 'woocommerce-qenta-checkout-seamless' ),
+      'default'     => 1,
 			'type'  => 'switch'
 		),
 		'wcs_ccard-moto_enable'         => array(
@@ -389,32 +391,8 @@ $fields = array(
 			'title' => __( 'giropay', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		),
-		'wcs_tatrapay_enable'              => array(
-			'title' => __( 'TatraPay', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_trustpay_enable'              => array(
-			'title' => __( 'TrustPay', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_bancontact_mistercash_enable' => array(
-			'title' => __( 'Bancontact', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_poli_enable'                  => array(
-			'title' => __( 'POLi', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
 		'wcs_przelewy24_enable'            => array(
 			'title' => __( 'Przelewy24', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_ekonto_enable'                => array(
-			'title' => __( 'eKonto', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_trustly_enable'               => array(
-			'title' => __( 'Trustly', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		)
 	),
@@ -423,26 +401,8 @@ $fields = array(
 			'title' => __( 'paysafecard', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		),
-		'wcs_epay_bg_enable'      => array(
-			'title' => __( 'ePay.bg', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
 		'wcs_installment_enable'  => array(
 			'title' => __( 'Installment', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_moneta_enable'       => array(
-			'title' => __( 'moneta.ru', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		),
-		'wcs_skrillwallet_enable' => array(
-			'title' => __( 'Skrill Digital Wallet', 'woocommerce-qenta-checkout-seamless' ),
-			'type'  => 'switch'
-		)
-	),
-	'mobilepayments'      => array(
-		'wcs_pbx_enable' => array(
-			'title' => __( 'paybox', 'woocommerce-qenta-checkout-seamless' ),
 			'type'  => 'switch'
 		)
 	)

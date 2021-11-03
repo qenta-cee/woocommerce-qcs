@@ -254,7 +254,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Transaction {
 		echo "<tr>";
 		foreach ( $this->_fields_list as $field_key => $field_value ) {
 			echo "<th>";
-			echo $field_value['title'];
+			echo esc_html($field_value['title']);
 			echo "</th>";
 		}
 		echo "</tr>";
@@ -265,13 +265,13 @@ class WC_Gateway_Qenta_Checkout_Seamless_Transaction {
 			foreach ( $this->_fields_list as $field_key => $field_value ) {
 				echo "<td>";
 				if ( key_exists( $field_key, $row ) ) {
-					echo $row[ $field_key ];
+					echo esc_html($row[ $field_key ]);
 				}
 				echo "</td>";
 			}
 
-			echo "<td><a href='?page=qenta_transaction_page&id={$row["id_tx"]}' class='button-primary'>";
-			echo __( 'View', 'woocommerce-qenta-checkout-seamless' );
+			echo "<td><a href='?page=qenta_transaction_page&id=" . esc_html($row["id_tx"]) . "' class='button-primary'>";
+			echo esc_html(__( 'View', 'woocommerce-qenta-checkout-seamless' ));
 			echo "</a></td>
 			</tr>";
 		}

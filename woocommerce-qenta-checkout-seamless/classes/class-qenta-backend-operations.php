@@ -89,16 +89,17 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	public function refund( $order_id = 0, $amount = 0, $reason = '' ) {
 		global $wpdb;
 
-		$order_id      = $_POST['order_id'];
-		$refund_amount = $_POST['refund_amount'];
+    $params_post = array_map( 'sanitize_text_field', $_POST );
+		$order_id      = $params_post['order_id'];
+		$refund_amount = $params_post['refund_amount'];
 		if ( $refund_amount <= 0 ) {
-			$this->_logger->error( __( 'Refund amount must be greater than zero.', 'woocommerce-qenta-checkout-seamless' ) );
+			$this->_logger->error( esc_html( __( 'Refund amount must be greater than zero.', 'woocommerce-qenta-checkout-seamless' ) ) );
 
 			return false;
 		}
 
-		$line_item_qtys   = json_decode( str_replace( '\\', "", $_POST['line_item_qtys'] ) );
-		$line_item_totals = (array) json_decode( str_replace( '\\', "", $_POST['line_item_totals'] ) );
+		$line_item_qtys   = json_decode( str_replace( '\\', "", $params_post['line_item_qtys'] ) );
+		$line_item_totals = (array) json_decode( str_replace( '\\', "", $params_post['line_item_totals'] ) );
 		$refund_items     = array();
 		$total_items      = 0;
 
@@ -331,7 +332,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 		foreach ( $errors as $error ) {
 			$_errors[] = $error->getConsumerMessage();
 		}
-		$this->_logger->error( "$method : processing refund failed with error(s): " . join( '|', $_errors ) );
+		$this->_logger->error( esc_html( "$method : processing refund failed with error(s): " . join( '|', $_errors ) ) );
 	}
 
 	/**
@@ -358,7 +359,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 		$refundable_sum = $wpdb->get_row( $refundable_sum );
 
 		if ( $refundable_sum !== null && $amount > $refundable_sum->sum ) {
-			$this->_logger->error( __METHOD__ . ":" . __( 'The refunded amount must be less than deposited amount.', 'woocommerce-qenta-checkout-seamless' ) );
+			$this->_logger->error( __METHOD__ . ":" . esc_html( __( 'The refunded amount must be less than deposited amount.', 'woocommerce-qenta-checkout-seamless' ) ) );
 
 			return false;
 		}
@@ -506,6 +507,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 * @return array
 	 */
 	public function approvereversal( $orderNumber ) {
+    $params_post = array_map( 'sanitize_text_field', $_POST );
 		$response = $this->get_client()->approveReversal( $orderNumber );
 		$transaction = new WC_Gateway_Qenta_Checkout_Seamless_Transaction( $this->_settings );
 
@@ -518,8 +520,8 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 
 			return array( 'type' => 'error', 'message' => join( "<br>", $errors ) );
 		} else {
-			if( isset($_POST['id_tx'])){
-				$transaction->update( array( 'payment_state' => 'CANCELED BY ADMIN' ), array( 'id_tx' => $_POST['id_tx'] ) );
+			if( isset($params_post['id_tx'])){
+				$transaction->update( array( 'payment_state' => 'CANCELED BY ADMIN' ), array( 'id_tx' => $params_post['id_tx'] ) );
 			}
 			return array( 'type' => 'updated', 'message' => __( 'APPROVEREVERSAL', 'woocommerce-qenta-checkout-seamless' ) );
 		}

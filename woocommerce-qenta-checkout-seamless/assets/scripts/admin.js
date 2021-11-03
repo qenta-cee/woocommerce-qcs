@@ -47,3 +47,8 @@ wpOnload = function () {
         });
     }
 }
+
+function goToWctPage(page) {
+  start = "?page=qenta_transactions_page&transaction_start=" + page;
+  window.location.href = start;
+}

@@ -34,13 +34,16 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+  <style>
+    body {
+      color: rgb(60, 67, 74);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+  </style>
 </head>
-<body>
-<h3><?php echo __( 'You will be redirected shortly', 'woocommerce-qenta-checkout-seamless' ); ?></h3>
-<p><?php echo __( 'If not, please click ', 'woocommerce-qenta-checkout-seamless' ); ?>
-	<a href="#" onclick="iframeBreakout()"><?php echo __( 'here', 'woocommerce-qenta-checkout-seamless' ); ?></a>
-</p>
-<form method="POST" name="redirectForm" action="<?php echo $url; ?>" target="_parent">
+<body onload='document.redirectForm.submit()'>
+<h3><?php echo esc_html(__( 'You will be redirected shortly', 'woocommerce-qenta-checkout-seamless' )); ?></h3>
+<form method="POST" name="redirectForm" action="<?php echo sanitize_url($url); ?>" target="_parent">
 	<input type="hidden" name="redirected" value="1"/>
 	<?php
 	foreach ( $_REQUEST as $k => $v ) {
@@ -48,12 +51,5 @@
 	}
 	?>
 </form>
-<script type="text/javascript">
-	function iframeBreakout() {
-		document.redirectForm.submit();
-	}
-
-	iframeBreakout();
-</script>
 </body>
 </html>

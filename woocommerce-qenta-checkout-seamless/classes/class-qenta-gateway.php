@@ -30,11 +30,11 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-admin.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-config.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-datastorage.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-transaction.php' );
-require_once( WOOCOMMERCE_GATEWAY_WCS_BASEDIR . 'classes/class-qenta-backend-operations.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-admin.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-config.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-datastorage.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-transaction.php' );
+require_once( WOOCOMMERCE_GATEWAY_QMORE_BASEDIR . 'classes/class-qenta-backend-operations.php' );
 
 /**
  * Basic gateway class
@@ -269,12 +269,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span>
 					</legend>
 					<label for="<?php echo esc_attr( $field_key ); ?>" class="wcs-chkbx-switch">
-						<input <?php disabled( $data['disabled'], true ); ?>
+						<input <?php esc_attr( disabled( $data['disabled'], true ) ); ?>
 							class="<?php echo esc_attr( $data['css'] ); ?>" type="checkbox"
 							name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>"
 							style="<?php echo esc_attr( $data['css'] ); ?>"
-							value="1" <?php checked( $this->get_option( $key ),
-							                         '1' ); ?> <?php echo $this->get_custom_attribute_html( $data ); ?> />
+							value="1" <?php esc_attr( checked( $this->get_option( $key ), '1' ) ); ?> <?php echo esc_attr( $this->get_custom_attribute_html( $data ) ); ?> />
 						<div class="wcs-chkbx-switch-slider"></div>
 					</label><br/>
 					<?php echo $this->get_description_html( $data ); ?>
@@ -313,25 +312,6 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	        WC()->session->set( 'consumerDeviceId', $consumerDeviceId );
 	    }
 
-
-	    if( ($this->settings['wcs_invoice_enable'] == "1" && $this->settings['woo_wcs_invoiceprovider'] == "ratepay") ||
-		    ($this->settings['wcs_installment_enable'] == "1" && $this->settings['woo_wcs_installmentprovider'] == "ratepay") )
-		    {
-            echo "<script language='JavaScript'>
-                    var di = {t:'" . $consumerDeviceId . "',v:'WDWL',l:'Checkout'};
-                  </script>
-                  <script type='text/javascript' src='//d.ratepay.com/" . $consumerDeviceId . "/di.js'></script>
-                  <noscript>
-                    <link rel='stylesheet' type='text/css' href='//d.ratepay.com/di.css?t=" . $consumerDeviceId . "&v=WDWL&l=Checkout'>
-                  </noscript>
-                  <object type='application/x-shockwave-flash' data='//d.ratepay.com/WDWL/c.swf' width='0' height='0'>
-                    <param name='movie' value='//d.ratepay.com/WDWL/c.swf' />
-                    <param name='flashvars' value='t=" . $consumerDeviceId . "&v=WDWL'/>
-                    <param name='AllowScriptAccess' value='always'/>
-                  </object>";
-            }
-
-
 		try {
 			$response = $dataStorage->init();
 
@@ -342,41 +322,44 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 			?>
 			<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
-			<script type="text/javascript">
-				function changeWCSPayment(code) {
-					var changer = document.getElementById('wcs_payment_method_changer');
-					changer.value = code;
-				}
-			</script>
-			<script type="text/javascript" src="<?= $response->getJavascriptUrl() ?>"></script>
-			<script type="text/javascript" src="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/scripts/payment.js"></script>
-			<link rel="stylesheet" type="text/css" href="<?= WOOCOMMERCE_GATEWAY_WCS_URL ?>assets/styles/payment.css">
+			<?php
+      $jsChangeWCSPayment = <<<JSCODE
+      function changeWCSPayment(code) {
+        var changer = document.getElementById('wcs_payment_method_changer');
+        changer.value = code;
+      }
+      JSCODE;
+      wp_enqueue_script('javascriptUrlJS', esc_url_raw( $response->getJavascriptUrl() ));
+      wp_add_inline_script('javascriptUrlJS', $jsChangeWCSPayment, 'before');
+      wp_enqueue_script('paymentJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
+      wp_enqueue_style('paymentCSS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
+      ?>
 			<?php
 			foreach ( $this->get_enabled_payment_types() as $type ) {
 				?>
 				</div></li>
-				<input type="hidden" name="storageId" value="<?= $response->getStorageId() ?>"/>
+				<input type="hidden" name="storageId" value="<?php echo esc_attr( $response->getStorageId() ); ?>"/>
 				<li class="wc_payment_method payment_method_woocommerce_wcs_payment">
 				<input
-					id="payment_method_wcs_<?php echo $type->get_payment_type() ?>"
+					id="payment_method_wcs_<?php echo esc_attr( $type->get_payment_type() ); ?>"
 					type="radio"
 					class="input-radio"
 					value="woocommerce_wcs"
 					name="payment_method"
-					onclick="changeWCSPayment('<?php echo $type->get_payment_type() ?>');"
+					onclick="changeWCSPayment('<?php echo esc_attr( $type->get_payment_type() ); ?>');"
 					data-order_button_text>
-				<label for="payment_method_wcs_<?php echo $type->get_payment_type() ?>">
-					<?php echo $type->get_label();
+				<label for="payment_method_wcs_<?php echo esc_attr( $type->get_payment_type() ); ?>">
+					<?php echo esc_html($type->get_label());
 					if ( is_array( $type->get_icon() ) ) {
 						foreach ( $type->get_icon() as $icon ) {
-							echo "<img src='{$icon}' alt='Qenta {$type->get_payment_type()}'>";
+							echo "<img src='" . esc_url_raw( $icon ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
 						}
 					} else {
-						echo "<img src='{$type->get_icon()}' alt='Qenta {$type->get_payment_type()}'>";
+						echo "<img src='" . esc_url_raw( $type->get_icon() ) . "' alt='Qenta " . esc_attr( $type->get_payment_type() ) . "'>";
 					} ?>
 				</label>
 			<div
-				class="payment_box payment_method_wcs_<?= ( $type->has_payment_fields() ) ? $type->get_payment_type() : "" ?>"
+				class="payment_box payment_method_wcs_<?php echo ( $type->has_payment_fields() ) ? esc_attr( $type->get_payment_type() ) : "" ?>"
 				style="display:none;">
 				<?php
 				echo $type->has_payment_fields() ? $type->get_payment_fields( $response->getStorageId() ) : null;
@@ -419,9 +402,10 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
+    $params_post = array_map( 'sanitize_text_field', $_POST );
 		$order = wc_get_order( $order_id );
 
-		$payment_type = $_POST['wcs_payment_method'];
+		$payment_type = $params_post['wcs_payment_method'];
 
 		$paymentClass = 'WC_Gateway_Qenta_Checkout_Seamless_'. str_replace('-', '_', ucfirst(strtolower($payment_type)));
 		$paymentClass = new $paymentClass( $this->settings );
@@ -432,7 +416,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		$page_url = add_query_arg( 'key', $order->get_order_key(), $page_url );
 		$page_url = add_query_arg( 'order-pay', $order_id, $page_url );
 
-		WC()->session->set( 'wcs_checkout_data', $_POST );
+		WC()->session->set( 'wcs_checkout_data', $params_post );
 
 		return array(
 			'result'   => 'success',
@@ -453,18 +437,18 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		$data = $this->initiate_payment( $order );
 		if( ! $data['iframeUrl'] ) {
 			$data['iframeUrl'] = $order->get_cancel_endpoint();
-			header( 'Location: ' . $data['iframeUrl'] );
-			die();
+			header( 'Location: ' . esc_url_raw( $data['iframeUrl'] ) );
+			exit();
 		} else if ( $data['wcs_payment_method'] == QentaCEE\Stdlib\PaymentTypeAbstract::SOFORTUEBERWEISUNG ) {
-		    header( 'Location: ' . $data['iframeUrl'] );
-			die();
+		    header( 'Location: ' . esc_url_raw( $data['iframeUrl'] ) );
+			exit();
 		}
 		?>
-			<iframe src="<?php echo $data['iframeUrl'] ?>" width="100%" height="700px" border="0" frameborder="0">
+			<iframe src="<?php echo esc_url( $data['iframeUrl'] ); ?>" width="100%" height="700px" border="0" frameborder="0">
 				<p>Your browser does not support iframes.</p>
 			</iframe>
 		<?php
-		die();
+		exit();
 	}
 
 	/**
@@ -486,6 +470,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$config_array = $this->_config->get_client_config();
 			$client       = new QentaCEE\QMore\FrontendClient( $config_array );
 
+      // get customerId to determine if we are Test customer
+      $customerId  = $this->_config->get_client_customer_id( $this );
 
 			$return_url = add_query_arg( 'wc-api', 'WC_Gateway_Qenta_Checkout_Seamless',
 			                             home_url( '/', is_ssl() ? 'https' : 'http' ) );
@@ -496,7 +482,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 			// Check if service url is valid
 			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
-				wc_add_notice( __( "Service URL is invalid", 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				wc_add_notice( esc_html(__( "Service URL is invalid", 'woocommerce-qenta-checkout-seamless' )), 'error' );
 
 				return;
 			}
@@ -521,7 +507,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			if ( $transaction_id == 0 ) {
-				wc_add_notice( __( "Creating transaction entry failed!", 'woocommerce-qenta-checkout-seamless' ),
+				wc_add_notice( esc_html(__( "Creating transaction entry failed!", 'woocommerce-qenta-checkout-seamless' )),
 					               'error' );
 
 				$this->_logger->error( __METHOD__ . ': Creating transaction entry failed before initializing.' );
@@ -530,9 +516,15 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			}
 
 			$client->setPluginVersion( $this->_config->get_plugin_version() );
-			$client->setOrderReference( $this->_config->get_order_reference( $order ) );
 
-			$client->setAmount( $order->get_total() )
+      // If Test Mode customer randomize orderReference to avoid issues with duplicate references per customerId
+      if (strtolower($customerId) == 'd200411') {
+        $orderReference = md5(random_int(0, 999999) . $this->_config->get_order_reference($order));
+      } else {
+        $orderReference = $this->_config->get_order_reference($order);
+      }
+      $client->setOrderReference($orderReference);
+      $client->setAmount( $order->get_total() )
 			       ->setCurrency( get_woocommerce_currency() )
 			       ->setPaymentType( $checkout_data['wcs_payment_method'] )
 			       ->setOrderDescription( $this->_config->get_order_description( $order ) )
@@ -588,11 +580,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 
 				foreach ( $initResponse->getErrors() as $error ) {
-					wc_add_notice( __( "Response failed! Error: {$error->getConsumerMessage()}",
-					                   'woocommerce-qenta-checkout-seamless' ),
+					wc_add_notice( esc_html(__( "Response failed! Error: {$error->getConsumerMessage()}",
+					                   'woocommerce-qenta-checkout-seamless' )),
 					               'error' );
 
-					$this->_logger->error( __METHOD__ . ': ' . $error->getConsumerMessage() );
+					$this->_logger->error( __METHOD__ . ': ' . esc_html( $error->getConsumerMessage() ) );
 
 					return;
 				}
@@ -616,7 +608,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 			}
 		} catch ( Exception $e ) {
-			$this->_logger->error( __METHOD__ . ': ' . $e->getMessage() );
+			$this->_logger->error( __METHOD__ . ': ' . esc_html( $e->getMessage() ) );
 			$this->_transaction->update( array(
 				                             'payment_state' => 'INITIATED',
 				                             'message'       => 'error',
@@ -659,121 +651,129 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function confirm_request() {
+    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_request = array_map( 'sanitize_text_field', $_REQUEST );
 		$message = null;
 
-        foreach ( $_REQUEST as &$param ) {
-            $param = stripslashes( $param );
-        }
-        foreach ( $_POST as &$param ) {
-            $param = stripslashes( $param );
-        }
+    foreach ( $params_request as &$param ) {
+      $param = stripslashes( $param );
+    }
+    foreach ( $params_post as &$param ) {
+      $param = stripslashes( $param );
+    }
 
-		if ( ! isset( $_REQUEST['wooOrderId'] ) || ! strlen( $_REQUEST['wooOrderId'] ) ) {
+		if ( ! isset( $params_request['wooOrderId'] ) || ! strlen( $params_request['wooOrderId'] ) ) {
 			$message = 'order-id missing';
-			$this->_logger->error( __METHOD__ . ':' . $message );
+			$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
 
 			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-			die();
+			exit();
 		}
 
-		$order_id       = $_REQUEST['wooOrderId'];
-		$transaction_id = $_REQUEST['transactionId'];
+		$order_id       = $params_request['wooOrderId'];
+		$transaction_id = $params_request['transactionId'];
 		$order          = new WC_Order( $order_id );
 
 		if ( ! $order->get_id() ) {
-			$message = "order with id `$order->get_id()` not found";
-			$this->_logger->error( __METHOD__ . ':' . $message );
-
+			$message = "order with id `" . $order->get_id() . "` not found";
+			$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
 
 			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-			die();
+			exit();
 		}
 
 		if ( $order->get_status() == "processing" || $order->get_status() == "completed" ) {
-			$message = "cannot change the order with id `$order->get_id()`";
-			$this->_logger->error( __METHOD__ . ':' . $message );
-
+			$message = "cannot change the order with id `" . $order->get_id() . "`";
+			$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
 
 			print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-			die();
+			exit();
 		}
 
 		//save updated payment data in extra field
 		if ( get_post_meta( $order->get_id(), 'wcs_data', true ) ) {
-			add_post_meta( $order->get_id(), 'wcs_updated_data', $this->create_payment_data(), false );
+			add_post_meta( sanitize_text_field($order->get_id()), 'wcs_updated_data', $this->create_payment_data(), false );
 		} else {
-			add_post_meta( $order->get_id(), 'wcs_data', $this->create_payment_data(), false );
+			add_post_meta( sanitize_text_field($order->get_id()), 'wcs_data', $this->create_payment_data(), false );
 		}
 
 		$message = null;
 		try {
 			$return = QentaCEE\QMore\ReturnFactory::getInstance(
-				$_POST,
+				$params_post,
 				$this->_config->get_client_secret( $this )
 			);
 			if ( ! $return->validate() ) {
 
 				$message = __( 'Validation error: invalid response', 'woocommerce-qenta-checkout-seamless' );
-				$this->_logger->error( __METHOD__ . ':' . $message );
-				$order->update_status( 'failed', $message );
+				$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
+				$order->update_status( 'failed', sanitize_text_field( $message ) );
 
 				print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-				die();
+				exit();
 			}
 
 			$this->_logger->info( __METHOD__ . ':' . print_r( $return->getReturned(), true ) );
 
 			//save new payment state in updated field
 			if ( get_post_meta( $order->get_id(), 'wcs_payment_state', true ) ) {
-				add_post_meta( $order->get_id(), 'wcs_updated_payment_state', $return->getPaymentState(), false );
+				add_post_meta( sanitize_text_field($order->get_id()), 'wcs_updated_payment_state', $return->getPaymentState(), false );
 			} else {
-				add_post_meta( $order->get_id(), 'wcs_payment_state', $return->getPaymentState(), false );
+				add_post_meta( sanitize_text_field($order->get_id()), 'wcs_payment_state', $return->getPaymentState(), false );
 			}
 
 			switch ( $return->getPaymentState() ) {
 				case QentaCEE\QMore\ReturnFactory::STATE_SUCCESS:
-					update_post_meta( $order->get_id(), 'wcs_gateway_reference_number',
+					update_post_meta( sanitize_text_field($order->get_id()), 'wcs_gateway_reference_number',
 					                  $return->getGatewayReferenceNumber() );
-					update_post_meta( $order->get_id(), 'wcs_order_number', $return->getOrderNumber() );
-					$this->_transaction->update( array(
-						                             'payment_state'     => $return->getPaymentState(),
-						                             'message'           => 'ok',
-						                             'response'          => serialize( $return->getReturned() ),
-						                             'gateway_reference' => $return->getGatewayReferenceNumber(),
-						                             'modified'          => current_time( 'mysql', true )
-					                             ),
-					                             array( 'id_tx' => $transaction_id ) );
+					update_post_meta( sanitize_text_field($order->get_id()), 'wcs_order_number', $return->getOrderNumber() );
+					$this->_transaction->update( array_map( 'sanitize_text_field', 
+                                          array(
+                                            'payment_state'     => $return->getPaymentState(),
+                                            'message'           => 'ok',
+                                            'response'          => serialize( $return->getReturned() ),
+                                            'gateway_reference' => $return->getGatewayReferenceNumber(),
+                                            'modified'          => current_time( 'mysql', true )
+                                          )
+                                        ),
+                                        array_map( 'sanitize_text_field', array( 'id_tx' => $transaction_id ) ));
 					$order->payment_complete();
 					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-					die();
+					exit();
 
 				case QentaCEE\QMore\ReturnFactory::STATE_PENDING:
 					$order->update_status(
 						'on-hold',
-						__( 'Awaiting payment notification from 3rd party.', 'woocommerce-qenta-checkout-seamless' )
+						sanitize_text_field( __( 'Awaiting payment notification from 3rd party.', 'woocommerce-qenta-checkout-seamless' ) )
 					);
-					$this->_transaction->update( array(
-						                             'payment_state' => $return->getPaymentState(),
-						                             'message'       => 'ok',
-						                             'modified'      => current_time( 'mysql', true )
-					                             ),
-					                             array( 'id_tx' => $transaction_id ) );
+					$this->_transaction->update( array_map( 'sanitize_text_field',
+                                          array(
+                                            'payment_state' => $return->getPaymentState(),
+                                            'message'       => 'ok',
+                                            'modified'      => current_time( 'mysql', true )
+                                          )
+                                        ),
+                                        array_map( 'sanitize_text_field', array( 'id_tx' => $transaction_id ) )
+                                      );
 
 					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-					die();
+					exit();
 
 				case QentaCEE\QMore\ReturnFactory::STATE_CANCEL:
 					$order->update_status( 'cancelled',
-					                       __( 'Payment cancelled.', 'woocommerce-qenta-checkout-seamless' ) );
-					$this->_transaction->update( array(
-						                             'payment_state'     => $return->getPaymentState(),
-						                             'message'           => 'ok',
-						                             'modified'          => current_time( 'mysql', true )
-					                             ),
-					                             array( 'id_tx' => $transaction_id ) );
+            sanitize_text_field( __( 'Payment cancelled.', 'woocommerce-qenta-checkout-seamless' ) ) );
+          $this->_transaction->update( array_map( 'sanitize_text_field',
+                                          array(
+                                            'payment_state' => $return->getPaymentState(),
+                                            'message'       => 'ok',
+                                            'modified'      => current_time( 'mysql', true )
+                                          )
+                                        ),
+                                        array_map( 'sanitize_text_field', array( 'id_tx' => $transaction_id ) )
+                                      );
 
 					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-					die();
+					exit();
 
 				case QentaCEE\QMore\ReturnFactory::STATE_FAILURE:
 					$errors = array();
@@ -783,35 +783,41 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 					}
 					$order->update_status(
 						'failed',
-						join( '<br/>', $errors )
+						sanitize_text_field(join( '<br/>', $errors ))
 					);
-					$this->_transaction->update( array(
-						                             'payment_state'     => $return->getPaymentState(),
-						                             'message'           => 'error',
-						                             'modified'          => current_time( 'mysql', true )
-					                             ),
-					                             array( 'id_tx' => $transaction_id ) );
+          $this->_transaction->update( array_map( 'sanitize_text_field',
+                                          array(
+                                            'payment_state' => $return->getPaymentState(),
+                                            'message'       => 'error',
+                                            'modified'      => current_time( 'mysql', true )
+                                          )
+                                        ),
+                                        array_map( 'sanitize_text_field', array( 'id_tx' => $transaction_id ) )
+                                      );
 
 					print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-					die();
+					exit();
 
 				default:
 					break;
 			}
 		} catch ( Exception $e ) {
-			$order->update_status( 'failed', $e->getMessage() );
+			$order->update_status( 'failed', sanitize_text_field( $e->getMessage() ) );
 			$message = $e->getMessage();
-			$this->_logger->error( __METHOD__ . ':' . $message );
-			$this->_transaction->update( array(
-				                             'payment_state'     => $return->getPaymentState(),
-				                             'message'           => 'error',
-				                             'modified'          => current_time( 'mysql', true )
-			                             ),
-			                             array( 'id_tx' => $transaction_id ) );
+			$this->_logger->error( __METHOD__ . ':' . esc_html( $message ) );
+      $this->_transaction->update( array_map( 'sanitize_text_field',
+                                      array(
+                                        'payment_state' => $return->getPaymentState(),
+                                        'message'       => 'error',
+                                        'modified'      => current_time( 'mysql', true )
+                                      )
+                                    ),
+                                    array_map( 'sanitize_text_field', array( 'id_tx' => $transaction_id ) )
+                                  );
 		}
 
 		print QentaCEE\QMore\ReturnFactory::generateConfirmResponseString( $message );
-		die();
+		exit();
 	}
 
 	/**
@@ -823,7 +829,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	private function create_payment_data() {
 		$data = '';
-		foreach ( $_POST as $key => $value ) {
+    $params_post = array_map( 'sanitize_text_field', $_POST );
+		foreach ( $params_post as $key => $value ) {
 			$data .= "$key:$value\n";
 		}
 		$data = trim( $data );
@@ -839,9 +846,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return mixed
 	 */
 	public function return_request() {
-	    global $woocommerce;
+    global $woocommerce;
 
-	    // reset wcs_session_order_ident so that the new order gets new datastorage id
+    $params_request = array_map( 'sanitize_text_field', $_REQUEST );
+
+	  // reset wcs_session_order_ident so that the new order gets new datastorage id
 		$woocommerce->session->set( 'wcs_session_order_ident', null );
 
 		$redirectUrl = $this->get_return_url();
@@ -850,43 +859,43 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		if ( !array_key_exists( 'redirected', $_REQUEST ) ) {
         	$url = add_query_arg( array(
         		'wc-api' => 'WC_Gateway_Qenta_Checkout_Seamless_Return',
-        		'order-id' => isset( $_REQUEST['order-id'] ) ? $_REQUEST['order-id'] : '',
-        		'paymentState' => isset( $_REQUEST['paymentState'] ) ? $_REQUEST['paymentState'] : 'FAILURE'
+        		'order-id' => isset( $params_request['order-id'] ) ? $params_request['order-id'] : '',
+        		'paymentState' => isset( $params_request['paymentState'] ) ? $params_request['paymentState'] : 'FAILURE'
         		), home_url( '/', is_ssl() ? 'https' : 'http' ) );
         		wc_get_template(
         			'templates/back.php',
         			array(
         				'url' => $url
         			),
-        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR,
-        			WOOCOMMERCE_GATEWAY_WCS_BASEDIR
+        			WOOCOMMERCE_GATEWAY_QMORE_BASEDIR,
+        			WOOCOMMERCE_GATEWAY_QMORE_BASEDIR
         		);
         		exit();
         }
 
-        if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $_REQUEST['order-id'] ) ) {
-			wc_add_notice( __( 'Order-Id missing', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+        if ( ! isset( $_REQUEST['order-id'] ) || ! strlen( $params_request['order-id'] ) ) {
+			wc_add_notice( esc_html(__( 'Order-Id missing', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 			$this->_logger->notice( __METHOD__ . ': Order-Id missing' );
 
-			header( 'Location: ' . $redirectUrl );
+			header( 'Location: ' . esc_url_raw($redirectUrl) );
 
-			die();
+			exit();
 		}
 
-        $this->_logger->notice( __METHOD__ . ':' . print_r( $_REQUEST, true ) );
+    $this->_logger->notice( __METHOD__ . ':' . print_r( $params_request, true ) );
 
-		$order_id = $_REQUEST['order-id'];
+		$order_id = $params_request['order-id'];
 		$order    = new WC_Order( $order_id );
-        $consumerMessage = '';
+    $consumerMessage = '';
 
-		switch ( $_REQUEST['paymentState'] ) {
+		switch ( $params_request['paymentState'] ) {
 			case QentaCEE\QMore\ReturnFactory::STATE_SUCCESS:
 			case QentaCEE\QMore\ReturnFactory::STATE_PENDING:
 				$redirectUrl = $this->get_return_url( $order );
 				break;
 
 			case QentaCEE\QMore\ReturnFactory::STATE_CANCEL:
-				wc_add_notice( __( 'Payment has been cancelled.', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				wc_add_notice( esc_html(__( 'Payment has been cancelled.', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
 
@@ -901,17 +910,17 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			        }
 		        }
 		        if( strlen( $consumerMessage ) ) {
-			        wc_add_notice( __( $consumerMessage, 'woocommerce-qenta-checkout-seamless' ), 'error' );
+			        wc_add_notice( esc_html(__( $consumerMessage, 'woocommerce-qenta-checkout-seamless' )), 'error' );
 		        } else {
-				    wc_add_notice( __( 'Payment has failed.', 'woocommerce-qenta-checkout-seamless' ), 'error' );
+				    wc_add_notice( esc_html(__( 'Payment has failed.', 'woocommerce-qenta-checkout-seamless' )), 'error' );
 				}
 				$redirectUrl = $order->get_cancel_endpoint();
 				break;
 			default:
 				break;
 		}
-		header( 'Location: ' . $redirectUrl );
-		die();
+		header( 'Location: ' . esc_url_raw($redirectUrl) );
+		exit();
 	}
 
 	/**
@@ -942,11 +951,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
                 }
             }
             if ( $order->get_status() == 'on-hold' ) {
-                $var = '<h3>' . __( 'Payment verification is pending',
-                                    'woocommerce-qenta-checkout-seamless' ) . '</h3>' . __(
+                $var = '<h3>' . esc_html(__( 'Payment verification is pending',
+                                    'woocommerce-qenta-checkout-seamless' )) . '</h3>' . esc_html(__(
                            'Your order will be processed as soon as we receive the payment confirmation from your bank.',
                            'woocommerce-qenta-checkout-seamless'
-                       );
+                       ));
             }
 
             return $var;
@@ -966,20 +975,21 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 		$payment_class = 'WC_Gateway_Qenta_Checkout_Seamless_' . ucfirst( strtolower( str_replace( "-", "_",
 		                                                                                              $args['wcs_payment_method'] ) ) );
-		if ( class_exists( $payment_class ) ) {
-		    $payment_class = new $payment_class( $this->settings );
 
-		    if ( method_exists( $payment_class, 'validate_payment_fields' ) ) {
-			    $validation = $payment_class->validate_payment_fields( $args );
-			    if ( $validation === true ) {
-				    return true;
-			    } else {
-				    wc_add_notice( $validation, 'error' );
+    if (class_exists($payment_class)) {
+        $payment_class = new $payment_class($this->settings);
 
-				    return;
-			    }
-		    }
+        if (method_exists($payment_class, 'validate_payment_fields')) {
+            $validation = $payment_class->validate_payment_fields($args);
+            if (true === $validation) {
+                return true;
+            }
+            wc_add_notice($validation, 'error');
+
+            return;
         }
+    }
+
 		return true;
 	}
 
@@ -998,7 +1008,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function qenta_transaction_do_page() {
-
+    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_request = array_map( 'sanitize_text_field', $_REQUEST );
 		echo "<div class='wrap'>";
 
 		$this->_admin->include_backend_header( $this );
@@ -1011,18 +1022,18 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 
 		if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
-			if ( ! isset( $_POST['wcs-do-bop'] ) || ! wp_verify_nonce( $_POST['wcs-do-bop'], 'wcs-do-bop' ) ) {
-				$this->_logger->error( __METHOD__ . ":ERROR:" . __( "Prevented possible CSRF attack." ) );
-				die( 'CSRF Protection prevented you from doing this operation.' );
+			if ( ! isset( $_POST['wcs-do-bop'] ) || ! wp_verify_nonce( $params_post['wcs-do-bop'], 'wcs-do-bop' ) ) {
+				$this->_logger->error( __METHOD__ . ":ERROR:" . esc_html( __( "Prevented possible CSRF attack." ) ) );
+				exit( 'CSRF Protection prevented you from doing this operation.' );
 			}
 
 			$operation = $backend_operations->do_backend_operation(
-				( isset( $_POST['paymentNumber'] ) ) ? $_POST['paymentNumber'] : $_POST['creditNumber'],
-				$_POST['orderNumber'],
-				$_POST['currency'],
-				( isset( $_POST['amount'] ) ? round( $_POST['amount'], wc_get_rounding_precision() ) : 0 ),
-				$_POST['submitWcsBackendOperation'],
-				( isset( $_POST['wcOrder'] ) ) ? $_POST['wcOrder'] : null );
+				( isset( $_POST['paymentNumber'] ) ) ? $params_post['paymentNumber'] : $params_post['creditNumber'],
+				$params_post['orderNumber'],
+				$params_post['currency'],
+				( isset( $_POST['amount'] ) ? round( $params_post['amount'], wc_get_rounding_precision() ) : 0 ),
+				$params_post['submitWcsBackendOperation'],
+				( isset( $_POST['wcOrder'] ) ) ? $params_post['wcOrder'] : null );
 
 			add_settings_error( '', '', $operation['message'], $operation['type'] );
 		}
@@ -1030,7 +1041,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		settings_errors();
 
 
-		$id_tx = $_REQUEST['id'];
+		$id_tx = $params_request['id'];
 
 		$tx = $this->_transaction->get( $id_tx );
 
@@ -1071,10 +1082,11 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function qenta_transactions_do_page() {
+    $params_get = array_map( 'sanitize_text_field', $_GET );
 		echo "<div class='wrap woocommerce'>";
 		$this->_admin->include_backend_header( $this );
 
-		$transaction_start = ! isset( $_GET['transaction_start'] ) ? 1 : $_GET['transaction_start'];
+		$transaction_start = ! isset( $_GET['transaction_start'] ) ? 1 : $params_get['transaction_start'];
 		$this->_admin->print_transaction_table( $this->_transaction, $transaction_start );
 		unset( $_GET['transaction_start'] );
 		echo "</div>";
@@ -1085,7 +1097,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	public function qenta_transactions_error_page( $error_msg ) {
 		echo "<div class='wrap woocommerce'>";
-		echo htmlentities( $error_msg );
+		echo esc_html( $error_msg );
 		echo "</div>";
 	}
 
