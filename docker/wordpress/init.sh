@@ -90,6 +90,33 @@ function setup_store() {
   wp post delete 1 --force
 }
 
+function change_api_url() {
+  PATH_CONF_QMORE='/var/www/html/wp-content/plugins/woocommerce-qenta-checkout-seamless/vendor/qenta/checkout-client-library/src/QentaCEE/QMore/Config/client.config.php'
+  PATH_CONF_QPAY='/var/www/html/wp-content/plugins/woocommerce-qenta-checkout-seamless/vendor/qenta/checkout-client-library/src/QentaCEE/QPay/Config/client.config.php'
+
+  DEFAULT_API_URL='https://api.qenta.com'
+
+  new_api_url_protocol=$(sed -n 's,^\(https\?\):.\+,\1,p' <<< ${1})
+  new_api_url_protocol=${new_api_url_protocol:-https}
+  new_api_url_hostname=$(sed -n 's,^\(https\?://\)\?\([^:/]\+\).*,\2,p' <<< ${1})
+  new_api_url_port=$(sed -n 's,.\+:\([0-9]\+\).*,\1,p' <<< ${1})
+  # unused: path. must be configured then for every single entpoint
+  # new_api_url_path=$(sed -n 's,\(https\?://\)\?[^/]\+\(.\+\),\2,p' <<< ${1})
+
+  new_api_url_string=${new_api_url_protocol}://
+  new_api_url_string+=${new_api_url_hostname}
+  [[ -n ${new_api_url_port} ]] && new_api_url_string+=':'${new_api_url_port}
+
+  if [[ -z ${new_api_url_hostname} ]]; then
+    echo "NOTE: API hostname unchanged. Invalid specification: ${1}"
+    return 1
+  fi
+
+  for config_file in ${PATH_CONF_QMORE} ${PATH_CONF_QPAY}; do
+    sed -i 's,'${DEFAULT_API_URL}','${new_api_url_string}',g' ${config_file}
+  done
+}
+
 function print_info() {
   echo
   echo '####################################'
@@ -99,6 +126,10 @@ function print_info() {
   echo "Plugin Config: https://${WORDPRESS_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout&section=woocommerce_wcs"
   echo "User: ${WORDPRESS_ADMIN_USER}"
   echo "Password: ${WORDPRESS_ADMIN_PASS}"
+  if [[ ${_api_url_changed} ]]; then
+    echo
+    echo "API Override: ${OVERRIDE_API_URL}"
+  fi
   echo
   echo '####################################'
   echo
@@ -124,6 +155,11 @@ else
   if [[ -n ${PLUGIN_URL} ]]; then
     install_plugin
     _log "plugin installed"
+  fi
+  if [[ -n ${OVERRIDE_API_URL} ]]; then
+    change_api_url "${OVERRIDE_API_URL}" &&
+    _log "changed API URL to ${OVERRIDE_API_URL}" &&
+    _api_url_changed=true
   fi
 fi
 if [[ ${CI} != 'true' ]]; then

@@ -323,14 +323,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			?>
 			<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
 			<?php
-      $jsChangeWCSPayment = <<<JSCODE
-      function changeWCSPayment(code) {
-        var changer = document.getElementById('wcs_payment_method_changer');
-        changer.value = code;
-      }
-      JSCODE;
       wp_enqueue_script('javascriptUrlJS', esc_url_raw( $response->getJavascriptUrl() ));
-      wp_add_inline_script('javascriptUrlJS', $jsChangeWCSPayment, 'before');
       wp_enqueue_script('paymentJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
       wp_enqueue_style('paymentCSS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
       ?>
@@ -480,12 +473,8 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
 			$service_url   = $this->get_option( 'woo_wcs_serviceurl' );
 
-			// Check if service url is valid
-			if ( filter_var( $service_url, FILTER_VALIDATE_URL ) === false ) {
-				wc_add_notice( esc_html(__( "Service URL is invalid", 'woocommerce-qenta-checkout-seamless' )), 'error' );
-
-				return;
-			}
+      // use reasonable default instead of aborting payment process with useless error msg
+      $service_url   = $service_url ? $service_url : get_home_url();
 
 			$cart = new WC_Cart();
 			$cart->get_cart_from_session();

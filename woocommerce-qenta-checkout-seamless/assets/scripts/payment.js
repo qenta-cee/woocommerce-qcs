@@ -39,7 +39,7 @@ jQuery(function ($) {
         giropay = '#payment_method_wcs_GIROPAY',
         form = "form.woocommerce-checkout"
 
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function(event) {
         if ($(ccard).parent().find("div#woocommerce_wcs_iframe_ccard").length > 0)
             qenta_wcs.build_iframe('ccard');
         if ($(ccard_moto).parent().find("div#woocommerce_wcs_iframe_ccard_moto").length > 0)
