@@ -323,8 +323,16 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			?>
 			<input id="wcs_payment_method_changer" type="hidden" value="woocommerce_wcs" name="wcs_payment_method"/>
 			<?php
+      $jsChangeWCSPayment = <<<JSCODE
+      function changeWCSPayment(code) {
+        var changer = document.getElementById('wcs_payment_method_changer');
+        changer.value = code;
+        qenta_wcs.build_iframe(code.toLowerCase());
+      }
+      JSCODE;
       wp_enqueue_script('javascriptUrlJS', esc_url_raw( $response->getJavascriptUrl() ));
-      wp_enqueue_script('paymentJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS']);
+      wp_add_inline_script('javascriptUrlJS', $jsChangeWCSPayment, 'before');
+      wp_enqueue_script('paymentJS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/scripts/payment.js" ), ['javascriptUrlJS'], false, true);
       wp_enqueue_style('paymentCSS', esc_url_raw( WOOCOMMERCE_GATEWAY_QMORE_URL . "assets/styles/payment.css" ));
       ?>
 			<?php
