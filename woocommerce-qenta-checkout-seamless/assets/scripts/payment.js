@@ -36,6 +36,12 @@
 //   return document.querySelector(selector); 
 // };
 
+function changeWCSPayment(code) {
+  var changer = document.getElementById('wcs_payment_method_changer');
+  changer.value = code;
+  qenta_wcs.build_iframe(code.toLowerCase());
+}
+
 function waitForSelector(selector) {
   return new Promise((resolve, reject) => {
     var el = document.querySelector(selector);
@@ -57,6 +63,25 @@ function waitForSelector(selector) {
       });
   });
 }
+
+if (!Element.prototype.matches) {
+  Element.prototype.matches =
+    Element.prototype.msMatchesSelector ||
+    Element.prototype.webkitMatchesSelector;
+}
+
+if (!Element.prototype.closest) {
+  Element.prototype.closest = function(s) {
+    var el = this;
+
+    do {
+      if (Element.prototype.matches.call(el, s)) return el;
+      el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+  };
+}
+
 
 let qenta_wcs = {
   event_stop : function(event){
@@ -103,17 +128,20 @@ let qenta_wcs = {
       return false;
   },
   build_iframe: function (type) {
+    var elementName = 'woocommerce_wcs_iframe_' + type;
+    if (document.getElementById(elementName).children.length === 0) {
       switch (type) {
-          case 'ccard' :
-              this.data_storage.buildIframeCreditCard('woocommerce_wcs_iframe_ccard', '100%', '200px');
-              break;
-          case 'ccard_moto' :
-              this.data_storage.buildIframeCreditCardMoto('woocommerce_wcs_iframe_ccard_moto', '100%', '200px');
-              break;
-          case 'maestro' :
-              this.data_storage.buildIframeMaestro('woocommerce_wcs_iframe_maestro', '100%', '200px');
-              break;
+        case 'ccard':
+          this.data_storage.buildIframeCreditCard(elementName, '100%', '150px');
+          break;
+        case 'ccard_moto':
+          this.data_storage.buildIframeCreditCardMoto(elementName, '100%', '150px');
+          break;
+        case 'maestro':
+          this.data_storage.buildIframeMaestro(elementName, '100%', '150px');
+          break;
       }
+    }
   },
   store_card: function (type) {
       let has_iframe = false;
@@ -123,7 +151,7 @@ let qenta_wcs = {
                       ? ccard_moto
                       : maestro
               )
-          ).parent().querySelectorAll('iframe').length > 0) {
+          ).parentNode.querySelectorAll('iframe').length > 0) {
           has_iframe = true;
       }
 
@@ -199,9 +227,9 @@ form.addEventListener('submit', (event) => {
       return true;
 
   let serialized_array = [];
-  event.target.querySelectorAll('input:checked').parent().querySelectorAll('fieldset input').forEach(function (element) {
-      if (element.attr('name') != null)
-          serialized_array.push({ name : element.attr('name'), value : element.value});
+  event.target.querySelector('input:checked').parentNode.querySelectorAll('fieldset input').forEach(function (element) {
+      if (element.getAttribute('name') != null)
+          serialized_array.push({ name : element.getAttribute('name'), value : element.value});
   });
 
   qenta_wcs.prepare_data(serialized_array);
@@ -228,10 +256,36 @@ form.addEventListener('submit', (event) => {
   }
 });
 
-//waitForSelector('woocommerce_wcs_iframe_ccard').then(()=>{qenta_wcs.build_iframe('ccard');});
+// console.log('waiting 5s')
+// setTimeout(()=>{
+//   // select first available payment menthod
+//   console.log('waiting over')
+
+//   try {
+//     var code = document.querySelector('input.qcs_payment_method_list').getAttribute('data-qcs-payment-method');
+//     console.log('code: ' + code)
+//     qenta_wcs.build_iframe(code);
+//   }
+//   catch (e) { }
+
+// }, 15000);
+
+const checkElement = async selector => {
+  while ( document.querySelector(selector) === null) {
+    await new Promise( resolve =>  requestAnimationFrame(resolve) )
+  }
+  return document.querySelector(selector); 
+};
+
+
+//waitForSelector('#woocommerce_wcs_iframe_ccard').then(()=>{qenta_wcs.build_iframe('ccard');});
+
+
+
 // qenta_wcs.build_iframe('ccard');
 // qenta_wcs.build_iframe('ccard_moto');
 // qenta_wcs.build_iframe('maestro');
 
-
+// console.log('do CCARD now');
+qenta_wcs.build_iframe('ccard');
 
