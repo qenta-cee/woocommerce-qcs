@@ -29,39 +29,10 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-// const checkElement = async selector => {
-//   while ( document.querySelector(selector) === null) {
-//     await new Promise( resolve => requestAnimationFrame(resolve) )
-//   }
-//   return document.querySelector(selector); 
-// };
-
-function changeWCSPayment(code) {
+ function changeWCSPayment(code) {
   var changer = document.getElementById('wcs_payment_method_changer');
   changer.value = code;
   qenta_wcs.build_iframe(code.toLowerCase());
-}
-
-function waitForSelector(selector) {
-  return new Promise((resolve, reject) => {
-    var el = document.querySelector(selector);
-    if (el) {
-      resolve(el);
-      return;
-    }
-    new MutationObserver((mutationRecords, observer) => {
-      // on each mutation loop through selector and resolve, abort with first match
-      Array.from(document.querySelectorAll(selector)).forEach((element) => {
-        resolve(element);
-        observer.disconnect();
-        console.log('found');
-        console.log(element);
-      });
-    }).observe(document.documentElement, {
-        childList: true,
-        subtree: true
-      });
-  });
 }
 
 if (!Element.prototype.matches) {
@@ -81,7 +52,6 @@ if (!Element.prototype.closest) {
     return null;
   };
 }
-
 
 let qenta_wcs = {
   event_stop : function(event){
@@ -120,27 +90,31 @@ let qenta_wcs = {
       form.prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"><div class="woocommerce-error">' + errors.join("<br>") + '</div></div>');
       form.classList.remove("processing");
       form.querySelectorAll('.input-text, select, input:checkbox').blur();
-      // $('html,body').animate({
-      //     scrollTop: ( form.offset().top - 100 )
-      // }, 1000);
+      form.scrollIntoView({
+        behavior: 'smooth'
+      });
       document.getElementsByTagName('body')[0].dispatchEvent('checkout_error');
 
       return false;
   },
   build_iframe: function (type) {
-    var elementName = 'woocommerce_wcs_iframe_' + type;
-    if (document.getElementById(elementName).children.length === 0) {
+    var containerName = 'woocommerce_wcs_iframe_' + type;
+    var container = document.getElementById(containerName);
+    if (container && container.querySelectorAll('iframe').length === 0) {
       switch (type) {
         case 'ccard':
-          this.data_storage.buildIframeCreditCard(elementName, '100%', '150px');
+          this.data_storage.buildIframeCreditCard(containerName, '100%', '150px');
           break;
         case 'ccard_moto':
-          this.data_storage.buildIframeCreditCardMoto(elementName, '100%', '150px');
+          this.data_storage.buildIframeCreditCardMoto(containerName, '100%', '150px');
           break;
         case 'maestro':
-          this.data_storage.buildIframeMaestro(elementName, '100%', '150px');
+          this.data_storage.buildIframeMaestro(containerName, '100%', '150px');
           break;
       }
+      container.querySelector('iframe').addEventListener('load', (event) => {
+        container.classList.remove('iframe-loading');
+      });
     }
   },
   store_card: function (type) {
@@ -256,36 +230,6 @@ form.addEventListener('submit', (event) => {
   }
 });
 
-// console.log('waiting 5s')
-// setTimeout(()=>{
-//   // select first available payment menthod
-//   console.log('waiting over')
-
-//   try {
-//     var code = document.querySelector('input.qcs_payment_method_list').getAttribute('data-qcs-payment-method');
-//     console.log('code: ' + code)
-//     qenta_wcs.build_iframe(code);
-//   }
-//   catch (e) { }
-
-// }, 15000);
-
-const checkElement = async selector => {
-  while ( document.querySelector(selector) === null) {
-    await new Promise( resolve =>  requestAnimationFrame(resolve) )
-  }
-  return document.querySelector(selector); 
-};
-
-
-//waitForSelector('#woocommerce_wcs_iframe_ccard').then(()=>{qenta_wcs.build_iframe('ccard');});
-
-
-
-// qenta_wcs.build_iframe('ccard');
-// qenta_wcs.build_iframe('ccard_moto');
-// qenta_wcs.build_iframe('maestro');
-
-// console.log('do CCARD now');
-qenta_wcs.build_iframe('ccard');
-
+setTimeout(()=>{
+  qenta_wcs.build_iframe('ccard');
+}, 3500);
