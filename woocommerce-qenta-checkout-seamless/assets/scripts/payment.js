@@ -130,7 +130,11 @@ let qenta_wcs = {
           document.querySelector('form.woocommerce-checkout').append(elementOk);
           console.log('callback received setting woo_wcs_ok to true')
           document.woo_wcs_ok = true;
-          qcsSubmitForm();
+          console.log('im callback');
+          console.log(document.querySelector('form.woocommerce-checkout'));
+          jQuery(function($){
+            $(form).submit();
+          });
           return true;
       }
 
@@ -251,9 +255,9 @@ let qenta_wcs = {
 
 var form = document.querySelector('form.woocommerce-checkout');
 
-form.addEventListener('submit', (event) => { qcsSubmitForm(); });
-
-function qcsSubmitForm() {
+form.addEventListener('submit', (event) => { 
+  console.log('im event');
+  console.log(document.querySelector('form.woocommerce-checkout'));
   var ccard = document.getElementById('payment_method_wcs_CCARD');
   var ccard_moto = document.getElementById('payment_method_wcs_CCARD-MOTO');
   var maestro = document.getElementById('payment_method_wcs_MAESTRO');
@@ -269,10 +273,10 @@ function qcsSubmitForm() {
   //   console.log('input wcs ok NOT found, contnuing')
   // }
   
-  // if (document.woo_wcs_ok) {
+  if (document.woo_wcs_ok) {
   //   console.log('document.woo_wcs_ok ok found, return true')
-  //   return true;
-  // }
+     return true;
+  }
   // else {
   //   console.log('document.woo_wcs_ok NOT found, contnuing')
   // }
@@ -307,7 +311,7 @@ function qcsSubmitForm() {
       qenta_wcs.event_stop(event);
   }
 
-}
+});
 
 setTimeout(()=>{
   qenta_wcs.build_iframe('ccard');
