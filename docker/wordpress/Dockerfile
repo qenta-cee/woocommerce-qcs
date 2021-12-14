@@ -25,6 +25,10 @@ RUN chmod +x /usr/local/bin/*.sh
 # override default entrypoin with ours
 ENTRYPOINT [ "init.sh" ]
 
+# Enable stderr error logging for PHP
+RUN echo 'log_errors = On' > /usr/local/etc/php/conf.d/log_errors.ini
+RUN echo 'error_log = /dev/stderr' >> /usr/local/etc/php/conf.d/log_errors.ini
+
 # to avoid all too common aborts because of debian repo timeouts
 RUN echo 'APT::Acquire::Retries "30";' > /etc/apt/apt.conf.d/80-retries
 
