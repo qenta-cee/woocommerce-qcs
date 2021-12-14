@@ -177,7 +177,9 @@ let qenta_wcs = {
   },
   store_card: function (type) {
       let has_iframe = false;
-
+      var ccard = document.getElementById('payment_method_wcs_CCARD');
+      var ccard_moto = document.getElementById('payment_method_wcs_CCARD-MOTO');
+      var maestro = document.getElementById('payment_method_wcs_MAESTRO');
       if ((type == 'CCARD' ? ccard
                   : ((type == 'CCARD_MOTO')
                       ? ccard_moto
@@ -249,7 +251,7 @@ let qenta_wcs = {
 
 var form = document.querySelector('form.woocommerce-checkout');
 
-form.addEventListener('submit', (event) => { qcsSubmitForm() });
+form.addEventListener('submit', (event) => { qcsSubmitForm(); });
 
 function qcsSubmitForm() {
   var ccard = document.getElementById('payment_method_wcs_CCARD');
@@ -263,21 +265,21 @@ function qcsSubmitForm() {
     console.log('input wcs ok found, return true')
     return true;
   }
-  else {
-    console.log('input wcs ok NOT found, contnuing')
-
-  }
+  // else {
+  //   console.log('input wcs ok NOT found, contnuing')
+  // }
   
-  if (document.woo_wcs_ok) {
-    console.log('document.woo_wcs_ok ok found, return true')
-    return true;
-  }
-  else {
-    console.log('document.woo_wcs_ok NOT found, contnuing')
-  }
+  // if (document.woo_wcs_ok) {
+  //   console.log('document.woo_wcs_ok ok found, return true')
+  //   return true;
+  // }
+  // else {
+  //   console.log('document.woo_wcs_ok NOT found, contnuing')
+  // }
+
 
   let serialized_array = [];
-  event.target.querySelector('input:checked').parentNode.querySelectorAll('fieldset input').forEach(function (element) {
+  document.querySelector('form.woocommerce-checkout').querySelector('input:checked').parentNode.querySelectorAll('fieldset input').forEach(function (element) {
       if (element.getAttribute('name') != null)
           serialized_array.push({ name : element.getAttribute('name'), value : element.value});
   });
@@ -304,6 +306,7 @@ function qcsSubmitForm() {
       qenta_wcs.store_giropay();
       qenta_wcs.event_stop(event);
   }
+
 }
 
 setTimeout(()=>{
