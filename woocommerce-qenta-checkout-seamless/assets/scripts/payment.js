@@ -35,6 +35,55 @@
   qenta_wcs.build_iframe(code.toLowerCase());
 }
 
+// document.querySelectorAll('input.qcs_payment_method_list').forEach(function(element) {
+//   console.log(element);
+//   console.log('adding to element ' + element.getAttribute('id'))
+//   element.addEventListener('click', (event) => {
+//     console.log('event target:')
+//     console.log(event.target);
+//     event.target.checked = true;
+//   });
+// });
+
+if (!Element.prototype.trigger)
+  {
+    Element.prototype.trigger = function(event)
+    {
+        var ev;
+
+        try
+        {
+            if (this.dispatchEvent && CustomEvent)
+            {
+                ev = new CustomEvent(event, {detail : event + ' fired!'});
+                this.dispatchEvent(ev);
+            }
+            else
+            {
+                throw "CustomEvent Not supported";
+            }
+        }
+        catch(e)
+        {
+            if (document.createEvent)
+            {
+                ev = document.createEvent('HTMLEvents');
+                ev.initEvent(event, true, true);
+
+                this.dispatchEvent(event);
+            }
+            else
+            {
+                ev = document.createEventObject();
+                ev.eventType = event;
+                this.fireEvent('on'+event.eventType, event);
+            }
+        }
+    }
+  }
+
+
+
 if (!Element.prototype.matches) {
   Element.prototype.matches =
     Element.prototype.msMatchesSelector ||
@@ -71,10 +120,17 @@ let qenta_wcs = {
       return (this.data.hasOwnProperty(which)) ? this.data[which] : false;
   },
   callback: function (response) {
-
+    console.log('response.getStatus():');
+    console.log(response.getStatus());
       if (response.getStatus() === 0) {
-          form.append('<input type="hidden" name="woo_wcs_ok" value="bla">');
-          form.submit();
+          var elementOk = document.createElement('input');
+          elementOk.setAttribute('type', 'hidden');
+          elementOk.setAttribute('name', 'woo_wcs_ok');
+          elementOk.setAttribute('value', 'bla');
+          document.querySelector('form.woocommerce-checkout').append(elementOk);
+          console.log('callback received setting woo_wcs_ok to true')
+          document.woo_wcs_ok = true;
+          qcsSubmitForm();
           return true;
       }
 
@@ -87,13 +143,15 @@ let qenta_wcs = {
       Array.from(document.querySelectorAll('.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message')).forEach(function (el) {
         el.remove();
       });
-      form.prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"><div class="woocommerce-error">' + errors.join("<br>") + '</div></div>');
-      form.classList.remove("processing");
-      form.querySelectorAll('.input-text, select, input:checkbox').blur();
-      form.scrollIntoView({
+      document.querySelector('form.woocommerce-checkout').prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"><div class="woocommerce-error">' + errors.join("<br>") + '</div></div>');
+      document.querySelector('form.woocommerce-checkout').classList.remove("processing");
+      document.querySelector('form.woocommerce-checkout').querySelectorAll('.input-text, select, input[type=checkbox]').forEach(function (el) {
+        el.blur();
+      });
+      document.querySelector('form.woocommerce-checkout').scrollIntoView({
         behavior: 'smooth'
       });
-      document.getElementsByTagName('body')[0].dispatchEvent('checkout_error');
+      document.getElementsByTagName('body')[0].trigger('checkout_error');
 
       return false;
   },
@@ -103,13 +161,13 @@ let qenta_wcs = {
     if (container && container.querySelectorAll('iframe').length === 0) {
       switch (type) {
         case 'ccard':
-          this.data_storage.buildIframeCreditCard(containerName, '100%', '150px');
+          this.data_storage.buildIframeCreditCard(containerName, '100%', '170px');
           break;
         case 'ccard_moto':
-          this.data_storage.buildIframeCreditCardMoto(containerName, '100%', '150px');
+          this.data_storage.buildIframeCreditCardMoto(containerName, '100%', '170px');
           break;
         case 'maestro':
-          this.data_storage.buildIframeMaestro(containerName, '100%', '150px');
+          this.data_storage.buildIframeMaestro(containerName, '100%', '170px');
           break;
       }
       container.querySelector('iframe').addEventListener('load', (event) => {
@@ -188,17 +246,35 @@ let qenta_wcs = {
       this.data_storage.storeGiropayInformation(payment_information, qenta_wcs.callback);
   }
 }
-let ccard = document.getElementById('payment_method_wcs_CCARD'),
-  ccard_moto = document.getElementById('payment_method_wcs_CCARD-MOTO'),
-  maestro = document.getElementById('payment_method_wcs_MAESTRO'),
-  sepa_dd = document.getElementById('payment_method_wcs_SEPA-DD'),
-  paybox = document.getElementById('payment_method_wcs_PBX'),
-  giropay = document.getElementById('payment_method_wcs_GIROPAY'),
-  form = document.querySelector('form.woocommerce-checkout');
 
-form.addEventListener('submit', (event) => {
-  if (document.querySelector('input[name=woo_wcs_ok]'))
-      return true;
+var form = document.querySelector('form.woocommerce-checkout');
+
+form.addEventListener('submit', (event) => { qcsSubmitForm() });
+
+function qcsSubmitForm() {
+  var ccard = document.getElementById('payment_method_wcs_CCARD');
+  var ccard_moto = document.getElementById('payment_method_wcs_CCARD-MOTO');
+  var maestro = document.getElementById('payment_method_wcs_MAESTRO');
+  var sepa_dd = document.getElementById('payment_method_wcs_SEPA-DD');
+  var paybox = document.getElementById('payment_method_wcs_PBX');
+  var giropay = document.getElementById('payment_method_wcs_GIROPAY');
+
+  if (document.querySelector('input[name=woo_wcs_ok]')) {
+    console.log('input wcs ok found, return true')
+    return true;
+  }
+  else {
+    console.log('input wcs ok NOT found, contnuing')
+
+  }
+  
+  if (document.woo_wcs_ok) {
+    console.log('document.woo_wcs_ok ok found, return true')
+    return true;
+  }
+  else {
+    console.log('document.woo_wcs_ok NOT found, contnuing')
+  }
 
   let serialized_array = [];
   event.target.querySelector('input:checked').parentNode.querySelectorAll('fieldset input').forEach(function (element) {
@@ -228,7 +304,7 @@ form.addEventListener('submit', (event) => {
       qenta_wcs.store_giropay();
       qenta_wcs.event_stop(event);
   }
-});
+}
 
 setTimeout(()=>{
   qenta_wcs.build_iframe('ccard');
