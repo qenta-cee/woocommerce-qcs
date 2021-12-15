@@ -51,3 +51,7 @@ li.wc_payment_method {
 li.wc_payment_method:last-child {
     border: none;
 }
+
+fieldset.wc-credit-card-form label {
+  font-size: 1.4rem;
+}

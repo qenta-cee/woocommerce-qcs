@@ -94,7 +94,6 @@ class WC_Gateway_Qenta_Checkout_Seamless_Transaction {
 			'currency' => array(
 				'title' => __( "Currency", 'woocommerce-qenta-checkout-seamless' )
 			),
-
 			'id_order'          => array(
 				'title' => __( "Order number", 'woocommerce-qenta-checkout-seamless' )
 			),

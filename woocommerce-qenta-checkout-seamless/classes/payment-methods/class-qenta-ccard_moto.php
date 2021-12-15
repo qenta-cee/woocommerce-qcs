@@ -77,6 +77,10 @@ class WC_Gateway_Qenta_Checkout_Seamless_Ccard_Moto extends WC_Gateway_Qenta_Che
 		$user_roles             = wp_get_current_user()->roles;
 		$enabled_roles_for_moto = $this->_settings['woo_wcs_allowmotoforgroup'];
 
+    if ($enabled_roles_for_moto === '') {
+      return false;
+    }
+
 		return count( array_intersect( $user_roles, $enabled_roles_for_moto ) ) == 0 ? false : true;
 	}
 

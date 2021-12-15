@@ -25,6 +25,10 @@ RUN chmod +x /usr/local/bin/*.sh
 # override default entrypoin with ours
 ENTRYPOINT [ "init.sh" ]
 
+# Enable stderr error logging for PHP
+RUN echo 'log_errors = On' > /usr/local/etc/php/conf.d/log_errors.ini
+RUN echo 'error_log = /dev/stderr' >> /usr/local/etc/php/conf.d/log_errors.ini
+
 # to avoid all too common aborts because of debian repo timeouts
 RUN echo 'APT::Acquire::Retries "30";' > /etc/apt/apt.conf.d/80-retries
 
@@ -58,7 +62,7 @@ RUN a2ensite default-ssl
 RUN a2enmod ssl
 
 # get composer binary from composer docker image
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # add user and dir for executing composer
 RUN useradd -u 431 -r -g www-data -s /sbin/nologin -c "Wordpress user" wp
@@ -67,7 +71,7 @@ USER wp
 WORKDIR /home/wp
 
 # install ngrok
-COPY --from=ngrok/ngrok:debian /bin/ngrok /usr/bin/ngrok
+COPY --from=ngrok/ngrok:2-debian /bin/ngrok /usr/bin/ngrok
 
 # install WP-CLI and recommended packages
 RUN composer global require wp-cli/wp-cli-bundle
