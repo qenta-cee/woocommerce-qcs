@@ -80,6 +80,7 @@ function setup_store() {
   wp option set woocommerce_store_city "Graz"
   wp option set woocommerce_store_postcode "8020"
   wp option set woocommerce_default_country "AT"
+  wp option set woocommerce_currency "EUR"
   wp_set_array woocommerce_onboarding_profile skipped 1
   wp wc --user=admin tool run install_pages
   wp option update page_on_front 5
