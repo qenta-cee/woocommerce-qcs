@@ -225,11 +225,11 @@ function add_qenta_storage_check() {
   // this is to be added to the footer, see wp_register_script arguments
   wp_register_script( 'qentaStorageCheckJS', '', [], '', true );
   $jsQentaStorageCheck = <<<JSCODE
-  if ( 'undefined' != typeof WirecardCEE_DataStorage ) {
-    const originalMethod = WirecardCEE_DataStorage.prototype.storePaymentInformation;
-    WirecardCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
+  if ( 'undefined' != typeof QentaCEE_DataStorage ) {
+    const originalMethod = QentaCEE_DataStorage.prototype.storePaymentInformation;
+    QentaCEE_DataStorage.prototype.storePaymentInformation = function( paymentInformation, callback ) {
         if ( 'undefined' != typeof this.iframes && this.iframes.CCARD && ! this.iframes.CCARD.contentWindow ) {
-            this.iframes.CCARD = $('iframe')[0];
+            this.iframes.CCARD = document.querySelector('iframe');
         }
 
         return originalMethod.apply( this, arguments );
