@@ -35,16 +35,6 @@
   qenta_wcs.build_iframe(code.toLowerCase());
 }
 
-// document.querySelectorAll('input.qcs_payment_method_list').forEach(function(element) {
-//   console.log(element);
-//   console.log('adding to element ' + element.getAttribute('id'))
-//   element.addEventListener('click', (event) => {
-//     console.log('event target:')
-//     console.log(event.target);
-//     event.target.checked = true;
-//   });
-// });
-
 if (!Element.prototype.trigger)
   {
     Element.prototype.trigger = function(event)
@@ -120,18 +110,8 @@ let qenta_wcs = {
       return (this.data.hasOwnProperty(which)) ? this.data[which] : false;
   },
   callback: function (response) {
-    console.log('response.getStatus():');
-    console.log(response.getStatus());
       if (response.getStatus() === 0) {
-          var elementOk = document.createElement('input');
-          elementOk.setAttribute('type', 'hidden');
-          elementOk.setAttribute('name', 'woo_wcs_ok');
-          elementOk.setAttribute('value', 'bla');
-          document.querySelector('form.woocommerce-checkout').append(elementOk);
-          console.log('callback received setting woo_wcs_ok to true')
-          document.woo_wcs_ok = true;
-          console.log('im callback');
-          console.log(document.querySelector('form.woocommerce-checkout'));
+         document.woo_wcs_ok = true;
           jQuery(function($){
             $(form).submit();
           });
@@ -256,8 +236,6 @@ let qenta_wcs = {
 var form = document.querySelector('form.woocommerce-checkout');
 
 form.addEventListener('submit', (event) => { 
-  console.log('im event');
-  console.log(document.querySelector('form.woocommerce-checkout'));
   var ccard = document.getElementById('payment_method_wcs_CCARD');
   var ccard_moto = document.getElementById('payment_method_wcs_CCARD-MOTO');
   var maestro = document.getElementById('payment_method_wcs_MAESTRO');
@@ -265,22 +243,9 @@ form.addEventListener('submit', (event) => {
   var paybox = document.getElementById('payment_method_wcs_PBX');
   var giropay = document.getElementById('payment_method_wcs_GIROPAY');
 
-  if (document.querySelector('input[name=woo_wcs_ok]')) {
-    console.log('input wcs ok found, return true')
-    return true;
-  }
-  // else {
-  //   console.log('input wcs ok NOT found, contnuing')
-  // }
-  
   if (document.woo_wcs_ok) {
-  //   console.log('document.woo_wcs_ok ok found, return true')
      return true;
   }
-  // else {
-  //   console.log('document.woo_wcs_ok NOT found, contnuing')
-  // }
-
 
   let serialized_array = [];
   document.querySelector('form.woocommerce-checkout').querySelector('input:checked').parentNode.querySelectorAll('fieldset input').forEach(function (element) {
@@ -313,6 +278,9 @@ form.addEventListener('submit', (event) => {
 
 });
 
-setTimeout(()=>{
-  qenta_wcs.build_iframe('ccard');
+setTimeout(() => {
+  try {
+    qenta_wcs.build_iframe('ccard');
+  }
+  catch (e) { }
 }, 3500);
