@@ -119,7 +119,17 @@ let qenta_wcs = {
     Array.from(document.querySelectorAll('.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message')).forEach(function (el) {
       el.remove();
     });
-    document.querySelector('form.woocommerce-checkout').prepend('<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout"><div class="woocommerce-error">' + errors.join("<br>") + '</div></div>');
+
+    var noticeGroup = document.createElement('div');
+    noticeGroup.classList.add('woocommerce-NoticeGroup');
+    noticeGroup.classList.add('woocommerce-NoticeGroup-checkout');
+
+    var errorMessage = document.createElement('div');
+    errorMessage.classList.add('woocommerce-error');
+    errorMessage.innerHTML = errors.join('<br>');
+    noticeGroup.appendChild(errorMessage);
+    
+    document.querySelector('form.woocommerce-checkout').prepend(noticeGroup);
     document.querySelector('form.woocommerce-checkout').classList.remove("processing");
     document.querySelector('form.woocommerce-checkout').querySelectorAll('.input-text, select, input[type=checkbox]').forEach(function (el) {
       el.blur();
