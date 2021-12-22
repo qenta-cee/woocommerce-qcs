@@ -1,9 +1,9 @@
 === Qenta Checkout Seamless ===
 Contributors:
-Tags: ecommerce, e-commerce, sales, checkout, paypal, credit card, woocommerce, payment, gateway, visa, mastercard
+Tags: visa, mastercard, sofort, paypal, credit card, klarna, eps, giropay, sepa, ecommerce, checkout, payment
 Requires at least: 5.5.1
 Tested up to: 5.8.2
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,8 @@ Qenta Checkout Seamless offers:
 * MySQL version 5.6 or MariaDB 10.5
 * WordPress 5.5.1
 * WooCommerce 5
+
+= Manual Installation =
 
 1. Download woocommerce-qenta-checkout-seamless.zip from https://github.com/qenta-cee/woocommerce-qcs/releases
 2. Remove any older Version of Qenta Checkout Seamless. Your settings will stay safe!. (Plugins → Qenta Checkout Seamless → Deactivate → Delete)

@@ -89,7 +89,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	public function refund( $order_id = 0, $amount = 0, $reason = '' ) {
 		global $wpdb;
 
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post   = $this->get_post_data();
 		$order_id      = $params_post['order_id'];
 		$refund_amount = $params_post['refund_amount'];
 		if ( $refund_amount <= 0 ) {
@@ -507,7 +507,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Backend_Operations {
 	 * @return array
 	 */
 	public function approvereversal( $orderNumber ) {
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post = $this->get_post_data();
 		$response = $this->get_client()->approveReversal( $orderNumber );
 		$transaction = new WC_Gateway_Qenta_Checkout_Seamless_Transaction( $this->_settings );
 
