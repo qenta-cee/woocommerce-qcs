@@ -539,7 +539,7 @@ class WC_Gateway_Qenta_Checkout_Seamless_Admin {
 	 */
 	public function create_support_request() {
 		global $wp_version;
-		$postdata = array_map( 'sanitize_text_field', $_POST );
+		$postdata = $this->get_post_data();
 
 		$message = "WordPress: " . $wp_version . "\n";
 		$message .= "WooCommerce: " . WC()->version . "\n";

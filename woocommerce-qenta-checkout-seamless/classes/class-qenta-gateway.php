@@ -396,10 +396,18 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post = $this->get_post_data();
 		$order = wc_get_order( $order_id );
 
 		$payment_type = $params_post['wcs_payment_method'];
+
+    // payment_type woocommerce_wcs means no input was selected and the default value was sent
+    // this fails when instantiating $paymentClass
+    // we abort here and return a message to the consumer
+    if(strtolower($payment_type) === 'woocommerce_wcs'){
+      wc_add_notice( esc_html(__( 'Please select a payment method!', 'woocommerce-qenta-checkout-seamless' )), 'error' );
+      return;
+    }
 
 		$paymentClass = 'WC_Gateway_Qenta_Checkout_Seamless_'. str_replace('-', '_', ucfirst(strtolower($payment_type)));
 		$paymentClass = new $paymentClass( $this->settings );
@@ -641,7 +649,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function confirm_request() {
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post = $this->get_post_data();
     $params_request = array_map( 'sanitize_text_field', $_REQUEST );
 		$message = null;
 
@@ -819,7 +827,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 */
 	private function create_payment_data() {
 		$data = '';
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post = $this->get_post_data();
 		foreach ( $params_post as $key => $value ) {
 			$data .= "$key:$value\n";
 		}
@@ -998,7 +1006,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function qenta_transaction_do_page() {
-    $params_post = array_map( 'sanitize_text_field', $_POST );
+    $params_post = $this->get_post_data();
     $params_request = array_map( 'sanitize_text_field', $_REQUEST );
 		echo "<div class='wrap'>";
 

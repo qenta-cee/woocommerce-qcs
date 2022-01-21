@@ -245,6 +245,20 @@ form.addEventListener('submit', (event) => {
   var paybox = document.getElementById('payment_method_wcs_PBX');
   var giropay = document.getElementById('payment_method_wcs_GIROPAY');
 
+  var pmArray = Array.from(document.querySelectorAll('input.input-radio.qcs_payment_method_list'));
+  if(pmArray.length == 1) {
+    pmArray[0].click();
+  }
+
+  var pmSelected = !!pmArray.filter(function (pm) {
+    return pm.checked;
+  }).length;
+
+  if(pmSelected === false) {
+    event.preventDefault();
+    return false;
+  }
+
   if (document.woo_wcs_ok) {
     return true;
   }
