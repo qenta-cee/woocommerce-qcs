@@ -176,7 +176,7 @@ $fields = array(
 	'creditcardoptions'   => array(
 		'woo_wcs_saqacompliance'                         => array(
 			'type'        => 'switch',
-			'default'     => 0,
+			'default'     => 1,
 			'title'       => __( 'SAQ A compliance', 'woocommerce-qenta-checkout-seamless' ),
 			'description' => __( 'Selecting \'NO\', the stringent SAQ A-EP is applicable. Selecting \'YES\', Qenta Checkout Seamless is integrated with the \'PCI DSS SAQ A Compliance\' feature and SAQ A is applicable.',
 			                     'woocommerce-qenta-checkout-seamless' )
