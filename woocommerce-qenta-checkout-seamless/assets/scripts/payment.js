@@ -29,10 +29,32 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-function changeWCSPayment(code) {
+ function changeWCSPayment(code) {
   var changer = document.getElementById('wcs_payment_method_changer');
   changer.value = code;
   qenta_wcs.build_iframe(code.toLowerCase());
+}
+
+const umlautMap = {
+  '\u00dc': 'UE',
+  '\u00c4': 'AE',
+  '\u00d6': 'OE',
+  '\u00fc': 'ue',
+  '\u00e4': 'ae',
+  '\u00f6': 'oe',
+  '\u00df': 'ss',
+}
+
+// thx to https://stackoverflow.com/a/54346022
+function replaceUmlaute(str) {
+  return str
+    .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
+      const big = umlautMap[a.slice(0, 1)];
+      return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+    })
+    .replace(new RegExp('['+Object.keys(umlautMap).join('|')+']',"g"),
+      (a) => umlautMap[a]
+    );
 }
 
 if (!Element.prototype.trigger) {
@@ -185,7 +207,12 @@ let qenta_wcs = {
       };
 
       if (this.get_data(type + 'cardholder'))
-        payment_information.cardholdername = this.get_data(type + 'cardholder');
+        payment_information.cardholdername = replaceUmlaute(
+          this.get_data(type + 'cardholder')
+            .trim()
+          )
+          .replace(/[^a-z\ ]/gi, '')
+          .replace(/\ +/, ' ');
       if (this.get_data(type + 'issueMonth'))
         payment_information.issueMonth = this.get_data(type + 'issueMonth');
       if (this.get_data(type + 'issueYear'))
@@ -246,9 +273,6 @@ form.addEventListener('submit', (event) => {
   var giropay = document.getElementById('payment_method_wcs_GIROPAY');
 
   var pmArray = Array.from(document.querySelectorAll('input.input-radio.qcs_payment_method_list'));
-  if(pmArray.length == 1) {
-    pmArray[0].click();
-  }
 
   var pmSelected = !!pmArray.filter(function (pm) {
     return pm.checked;
