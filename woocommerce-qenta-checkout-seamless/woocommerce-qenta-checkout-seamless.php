@@ -3,9 +3,9 @@
  * Plugin Name: Qenta Checkout Seamless
  * Plugin URI: https://github.com/qenta-cee/woocommerce-qcs
  * Description: Qenta Checkout Seamless plugin for WooCommerce
- * Version: 2.0.5
+ * Version: 2.0.5.1
  * Author: Qenta Payment CEE GmbH
- * Author URI: https://www.qenta-cee.at/
+ * Author URI: https://www.qenta.com/
  * License: GPL2
  */
 
