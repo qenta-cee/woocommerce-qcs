@@ -1,18 +1,18 @@
 # Qenta Checkout Seamless plugin for WooCommerce
 
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/qenta-cee/woocommerce-qcs/master/LICENSE)
-[![WooCommerce](https://img.shields.io/badge/WooCommerce-v5.2-green.svg)](https://woocommerce.com/)
-[![WordPress](https://img.shields.io/badge/WordPress-v5.7-green.svg)](https://wordpress.org/)
+[![WooCommerce](https://img.shields.io/badge/WooCommerce-v6.2.1-green.svg)](https://woocommerce.com/)
+[![WordPress](https://img.shields.io/badge/WordPress-v5.9-green.svg)](https://wordpress.org/)
 [![PHP >=v7.4](https://img.shields.io/badge/php->=v7.4-green.svg)](http://www.php.net)
 
 ----
 
 Qenta Checkout Seamless plugin for WooCommerce.
 
-Our [Online Guides](https://guides.qenta.com/) provide further information on payment methods and additional features. Please observe our [terms of use](https://guides.qenta.com/shop_plugins/info/#TermsOfUse) regarding plugins.
+Our [Online Guides](https://guides.qenta.com/) provide further information on payment methods and additional features. Please observe our [terms of use](https://guides.qenta.com/plugins/#legalNotice) regarding plugins.
 
 ## Installation
-Our [Online Guides](https://guides.qenta.com/shop_plugins/qmore/woocommerce/start/ "Installation details") also provide technical documentation, installation and configuration instructions for the plugin.
+Our [Online Guides](https://guides.qenta.com/plugins/woocommerce-installation-seamless/ "Installation details") also provide technical documentation, installation and configuration instructions for the plugin.
 
 ## Qenta Checkout Seamless
 Qenta Checkout Seamless is designed to meet the ambitious demands of merchants offering a wide range of payment methods while at the same time fulfilling PCI DSS compliance. The interface is integrated seamlessly into the online shop and allows a customized configuration of the payment process (cross-selling and up-selling) based on your business.
