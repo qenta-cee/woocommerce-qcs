@@ -479,7 +479,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 			                             home_url( '/', is_ssl() ? 'https' : 'http' ) );
 
 			$consumer_data = $this->_config->get_consumer_data( $order, $this, $checkout_data );
-			$auto_deposit  = $this->get_option( 'woo_wcs_automateddeposit' );
+			$auto_deposit  = false;
 			$service_url   = $this->get_option( 'woo_wcs_serviceurl' );
 
       // use reasonable default instead of aborting payment process with useless error msg
@@ -1084,7 +1084,7 @@ class WC_Gateway_Qenta_Checkout_Seamless extends WC_Payment_Gateway {
 		echo "<div class='wrap woocommerce'>";
 		$this->_admin->include_backend_header( $this );
 
-		$transaction_start = ! isset( $_GET['transaction_start'] ) ? 1 : $params_get['transaction_start'];
+		$transaction_start = is_numeric( $_GET['transaction_start'] ) ? $_GET['transaction_start'] : 1;
 		$this->_admin->print_transaction_table( $this->_transaction, $transaction_start );
 		unset( $_GET['transaction_start'] );
 		echo "</div>";

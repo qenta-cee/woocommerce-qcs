@@ -17,7 +17,7 @@ services:
     depends_on:
       - wc_db
     ports:
-      - ${PORT_HTTP:-8000}:80
+      - ${PORT_HTTP:-8001}:80
       - ${PORT_SSL:-8443}:443
     volumes:
       - ./:/tmp/plugin:ro

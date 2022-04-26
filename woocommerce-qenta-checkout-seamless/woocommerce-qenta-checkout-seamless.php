@@ -235,7 +235,7 @@ function add_qenta_storage_check() {
         return originalMethod.apply( this, arguments );
     }
   }
-  JSCODE;
+JSCODE;
   wp_enqueue_script( 'qentaStorageCheckJS' );
   wp_add_inline_script( 'qentaStorageCheckJS', $jsQentaStorageCheck );
 }
