@@ -54,7 +54,7 @@ function install_woocommerce() {
 
   echo "Install Sample Data"
   wp plugin install wordpress-importer --activate
-  wp import wp-content/plugins/woocommerce/sample-data/sample_products.xml --authors=create
+  wp import wp-content/plugins/woocommerce/sample-data/sample_products.xml --authors=create >& /dev/null &
 }
 
 function wp_set_array() {
@@ -69,26 +69,33 @@ function install_plugin() {
   STR_PLUGIN=$(get_plugin.sh ${PLUGIN_URL} ${PLUGIN_VERSION})
   PLUGIN_NAME=$(echo ${STR_PLUGIN} | cut -d'^' -f1)
   PATH_TO_ZIP=$(echo ${STR_PLUGIN} | cut -d'^' -f2)
-  wp plugin install ${PATH_TO_ZIP} --activate  
+  wp plugin install ${PATH_TO_ZIP} --activate
 }
 
 function setup_store() {
-  wp option set woocommerce_onboarding_opt_in "yes"
-  wp option set woocommerce_onboarding_profile ""
-  wp option set woocommerce_store_address "Store Street 11"
-  wp option set woocommerce_store_address_2 ""
-  wp option set woocommerce_store_city "Graz"
-  wp option set woocommerce_store_postcode "8020"
-  wp option set woocommerce_default_country "AT"
-  wp option set woocommerce_currency "EUR"
-  wp_set_array woocommerce_onboarding_profile skipped 1
+  wp theme install twentytwenty --activate &
+  wp post delete 2 --force &
+  wp post delete 1 --force &
+  wp option set woocommerce_onboarding_opt_in "yes" &
+  wp option set woocommerce_store_address "Store Street 11" &
+  wp option set woocommerce_store_address_2 "" &
+  wp option set woocommerce_store_city "Graz" &
+  wp option set woocommerce_store_postcode "8020" &
+  wp option set woocommerce_default_country "AT" &
+  wp option set woocommerce_currency "EUR" &
+  wp option set woocommerce_product_type "physical" &
+  wp option set woocommerce_allow_tracking "no" &
+  wp option set --format=json woocommerce_stripe_settings '{"enabled":"no","create_account":false,"email":false}' &
+  wp option set --format=json woocommerce_ppec_paypal_settings '{"reroute_requests":false,"email":false}' &
+  wp option set --format=json woocommerce_cheque_settings '{"enabled":"no"}' &
+  wp option set --format=json woocommerce_bacs_settings '{"enabled":"no"}' &
+  wp option set --format=json woocommerce_cod_settings '{"enabled":"no"}' &
+  # wp_set_array woocommerce_onboarding_profile skipped 1
+  wp option update page_on_front 5 &
+  wp option update show_on_front page &
+  wp option update blogdescription "QENTA Plugin DEMO" &
+  wait
   wp wc --user=admin tool run install_pages
-  wp option update page_on_front 5
-  wp option update show_on_front page
-  wp option update blogdescription "QENTA Plugin DEMO"
-  wp theme install twentytwenty --activate
-  wp post delete 2 --force
-  wp post delete 1 --force
 }
 
 function change_api_url() {
@@ -164,7 +171,7 @@ else
   fi
 fi
 if [[ ${CI} != 'true' ]]; then
-  print_info
+  (sleep 1; print_info) &
 fi
 
 _log "url=https://${WORDPRESS_URL}"
