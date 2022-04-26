@@ -2,8 +2,8 @@
 Contributors:
 Tags: visa, mastercard, sofort, paypal, credit card, klarna, eps, giropay, sepa, ecommerce, checkout, payment
 Requires at least: 5.5.1
-Tested up to: 5.9
-Stable tag: 2.0.5.1
+Tested up to: 5.9.3
+Stable tag: 2.0.5.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

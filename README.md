@@ -1,8 +1,8 @@
 # Qenta Checkout Seamless plugin for WooCommerce
 
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://raw.githubusercontent.com/qenta-cee/woocommerce-qcs/master/LICENSE)
-[![WooCommerce](https://img.shields.io/badge/WooCommerce-v6.2.1-green.svg)](https://woocommerce.com/)
-[![WordPress](https://img.shields.io/badge/WordPress-v5.9-green.svg)](https://wordpress.org/)
+[![WooCommerce](https://img.shields.io/badge/WooCommerce-v6.4.1-green.svg)](https://woocommerce.com/)
+[![WordPress](https://img.shields.io/badge/WordPress-v5.9.3-green.svg)](https://wordpress.org/)
 [![PHP >=v7.4](https://img.shields.io/badge/php->=v7.4-green.svg)](http://www.php.net)
 
 ----
